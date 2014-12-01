@@ -16,8 +16,8 @@ I'm aiming for a suite of libraries that:
 Prerequesites
 -------------
 
-Python 3
-A working tkinter library
+* Python 3
+* A working tkinter library
 
 Examples
 --------
