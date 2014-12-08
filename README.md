@@ -22,6 +22,18 @@ Prerequesites
 Examples
 --------
 
+Start up python3 and run...
+
+    >>> from geekclub.pyscratch import *
+    >>> create_canvas()
+    >>> spriteimg = PhotoImage(file='geekclub/images/face.gif')
+    >>> sprite = Sprite(spriteimg, 100, 100)
+    >>> sprite.pen_down()
+	 >>> sprite.move(100,0)
+	 >>> sprite.move(0,100)
+	 >>> sprite.move(-100,0)
+	 >>> sprite.move(0,-1000)
+
 Check out the examples directory. The symbolic link (up one directory) makes it 
 possible to run the code from there, but ordinarily you'd write code and put
 the geekclub checkout in the same directory as your code.
