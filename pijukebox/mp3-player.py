@@ -2,9 +2,13 @@
 import os
 import pibrella
 import time
+import sys
 
-
-PLAYER = "/usr/bin/mpc"
+# Halt or just quit this program?
+REALLY_HALT = True
+if 'SUDO_UID' in os.environ or 'TERM' in os.environ:
+    print "Won't really halt -- running as sudo / from term"
+    REALLY_HALT = False
 
 # Show we're loaded
 pibrella.buzzer.buzz(500)
@@ -38,11 +42,14 @@ def set_up_playlist():
     mpc('repeat on')
 
 def play_next_mp3(pin):
+    pibrella.light.red.off()
     pibrella.light.green.pulse(0.5)
     mpc('play')
     mpc('next')
    
 def toggle_play(pin):
+    # Give the switch a chance to settle down
+    time.sleep(0.1)
     if pin.read() == 1:
 	mpc("pause")
 	pibrella.light.red.pulse(0.5)
@@ -50,7 +57,21 @@ def toggle_play(pin):
 	pibrella.light.red.off()
 	mpc("play")
 
+def check_halt(pin):
+    print "Checking whether to halt..."
+    print "keep button pressed for 5 seconds to halt"
+    time.sleep(5)
+    if pin.read() == 1:
+        print "Halting!"
+        mpc("pause")
+        if REALLY_HALT:
+            os.system('/sbin/halt')
+            time.sleep(5)
+        sys.exit()
+
+
 set_up_playlist()
 pibrella.button.released(play_next_mp3)
 pibrella.input.a.changed(toggle_play)
+pibrella.input.d.pressed(check_halt)
 pibrella.pause()
