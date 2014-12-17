@@ -23,10 +23,8 @@ pibrella.buzzer.buzz(125)
 time.sleep(0.5)
 pibrella.buzzer.off()
 time.sleep(0.5)
+
 pibrella.light.green.pulse(0.5)
-time.sleep(0.5)
-pibrella.light.yellow.pulse(0.5)
-time.sleep(0.5)
 
 def mpc(command):
     os.system('mpc %s' % command)
@@ -41,21 +39,45 @@ def set_up_playlist():
     mpc('random on')
     mpc('repeat on')
 
-def play_next_mp3(pin):
+def anti_bounce():
+    time.sleep(0.05)
+
+def really_pressed(pin):
+    """Deal with switch bounce"""
+    anti_bounce()
+    return pin.read()
+
+def next_prev_mp3(pin):
+    """A quick click is next, longer hold are back"""
+    if not(really_pressed(pin)): return
+
     pibrella.light.red.off()
-    pibrella.light.green.pulse(0.5)
+    time.sleep(0.5)
     mpc('play')
-    mpc('next')
+    if pin.read() == 1:
+        print "Prev"
+        mpc('prev')
+    else:
+        print "Next"
+        mpc('next')
    
 def toggle_play(pin):
-    # Give the switch a chance to settle down
-    time.sleep(0.1)
+    anti_bounce()
     if pin.read() == 1:
 	mpc("pause")
 	pibrella.light.red.pulse(0.5)
     else:
 	pibrella.light.red.off()
 	mpc("play")
+
+def toggle_random(pin):
+    anti_bounce()
+    if pin.read() == 1:
+        mpc("random on")
+	pibrella.light.yellow.pulse(0.5)
+    else:
+        mpc("random off")
+	pibrella.light.yellow.off()
 
 def check_halt(pin):
     print "Checking whether to halt..."
@@ -71,7 +93,8 @@ def check_halt(pin):
 
 
 set_up_playlist()
-pibrella.button.released(play_next_mp3)
+pibrella.button.changed(next_prev_mp3)
 pibrella.input.a.changed(toggle_play)
+pibrella.input.b.changed(toggle_random)
 pibrella.input.d.pressed(check_halt)
 pibrella.pause()
