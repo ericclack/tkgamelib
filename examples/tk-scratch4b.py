@@ -20,6 +20,7 @@ for x in range(5):
     sprite.pen_down()
     
     sprites.append(sprite)
+    # Each sprite gets a bit slower than the last one
     m = m * 0.9
 
 
