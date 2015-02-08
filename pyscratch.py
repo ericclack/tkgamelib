@@ -133,6 +133,9 @@ class Sprite:
         """Return (x,y) of this sprite"""
         return CANVAS.bbox(self.spriteid)[0:2]
 
+    def x(self): return self.pos()[0]
+    def y(self): return self.pos()[1]
+
     def move(self, x, y):
         """Move by x and y"""
         if self.pen:

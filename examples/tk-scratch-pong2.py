@@ -3,28 +3,29 @@
 
 """A set of 5 sprites that follow each other with acceleration and pens"""
 
-from tkinter import *
-import random
+import random, time
 from geekclub.pyscratch import *
 
 create_canvas()
 
-ball_img = PhotoImage(file='geekclub/images/ball.gif')
 bat_img = PhotoImage(file='geekclub/images/bat.gif')
-brick_img = PhotoImage(file='geekclub/images/brick.gif')
+ball_img = PhotoImage(file='geekclub/images/ball.gif')
+brick_img = PhotoImage(file='geekclub/images/small_brick.gif')
+
+bat = Sprite(bat_img)
 
 ball = Sprite(ball_img)
 ball.speed_x = random.randint(-4,4) * 2
 ball.speed_y = random.randint(-4,4) * 2
 ball.max_speed = 10
-
-bat = Sprite(bat_img)
+ball.move_to(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
 
 bricks = []
-for x in range(10):
-    brick = Sprite(brick_img)
-    brick.move_to_random_pos()
-    bricks.append(brick)
+for y in range(0, 400, 30):
+    for x in range(0, CANVAS_WIDTH, 110):
+        brick = Sprite(brick_img)
+        brick.move_to(x, y)
+        bricks.append(brick)
     
 
 def bat_follows_mouse():
@@ -36,6 +37,13 @@ def bounce_ball():
     if ball.touching(bat):
         ball.speed_y = -abs(ball.speed_y)
         ball.accelerate(1.05)
+
+    # Has the ball hit the bottom of the screen?
+    if ball.y() > CANVAS_HEIGHT - 10:
+        # Not sure how to quit!
+        time.sleep(10)
+
+    # Has the ball touched a brick?
     brick = ball.touching_any(bricks)
     if brick:
         if brick.below(ball):
