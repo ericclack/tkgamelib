@@ -143,6 +143,9 @@ class Sprite:
                                tags="pen")
         CANVAS.move(self.spriteid, x, y)
 
+    def delete(self):
+        CANVAS.delete(self.spriteid)
+
     def move_towards(self, to_x, to_y, steps=1):
         x, y = self.pos()
         dx = direction(to_x, x)
@@ -194,8 +197,13 @@ class Sprite:
         for s in sprites:
             if s == self: continue
             if self.touching(s):
-                return True
+                return s
         return False
+
+    def below(self, sprite):
+        x,y = self.pos()
+        sx, sy = sprite.pos()
+        return (sy > y)
 
     def move_with_speed(self):
         self.move(self.speed_x, self.speed_y)
@@ -213,6 +221,18 @@ class Sprite:
             speed = sign(speed)*self.max_speed
         return speed
 
+    def accelerate(self, speed_up):
+        if abs(self.speed_x) < self.max_speed:
+            self.speed_x *= speed_up
+        if abs(self.speed_y) < self.max_speed:
+            self.speed_y *= speed_up
+
+    def if_on_edge_bounce(self):
+        x, y = self.pos()
+        if x < 0: self.speed_x = abs(self.speed_x)
+        if y < 0: self.speed_y = abs(self.speed_y)
+        if x > CANVAS_WIDTH: self.speed_x = -abs(self.speed_x)
+        if y > CANVAS_HEIGHT: self.speed_y = -abs(self.speed_y)
 
 if __name__ == "__main__":
     import doctest
