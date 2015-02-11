@@ -15,7 +15,6 @@ bat_img = PhotoImage(file='geekclub/images/bat.gif')
 ball = Sprite(ball_img)
 ball.speed_x = random.randint(-4,4) * 2
 ball.speed_y = random.randint(-4,4) * 2
-ball.max_speed = 10
 
 bat = Sprite(bat_img)
 
@@ -27,7 +26,6 @@ def bounce_ball():
     ball.if_on_edge_bounce()
     if ball.touching(bat):
         ball.speed_y = -abs(ball.speed_y)
-        ball.accelerate(1.05)
     
 forever(bat_follows_mouse, 20)
 forever(bounce_ball, 20)

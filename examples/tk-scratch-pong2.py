@@ -21,8 +21,8 @@ ball.max_speed = 10
 ball.move_to(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
 
 bricks = []
-for y in range(0, 400, 30):
-    for x in range(0, CANVAS_WIDTH, 110):
+for y in range(0, 400, 28):
+    for x in range(0, CANVAS_WIDTH, 101):
         brick = Sprite(brick_img)
         brick.move_to(x, y)
         bricks.append(brick)
@@ -35,7 +35,7 @@ def bounce_ball():
     ball.move_with_speed()
     ball.if_on_edge_bounce()
     if ball.touching(bat):
-        ball.speed_y = -abs(ball.speed_y)
+        ball.bounce_up()
         ball.accelerate(1.05)
 
     # Has the ball hit the bottom of the screen?
@@ -47,9 +47,9 @@ def bounce_ball():
     brick = ball.touching_any(bricks)
     if brick:
         if brick.below(ball):
-            ball.speed_y = abs(ball.speed_y)            
+            ball.bounce_up()
         else:
-            ball.speed_y = -abs(ball.speed_y)
+            ball.bounce_down()
         bricks.remove(brick)
         brick.delete()
 

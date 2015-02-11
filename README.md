@@ -3,7 +3,7 @@ geekclub
 
 Code and examples for Plumpton Geek Club.
 
-An attempt to make Scratch styple programming in Python possible -- in
+An attempt to make Scratch style programming in Python possible -- in
 response to the question: "What shall I try after Scratch". Inspired by MIT Scratch: http://scratch.mit.edu/
 
 I'm aiming for a suite of libraries that:

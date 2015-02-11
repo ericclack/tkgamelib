@@ -206,7 +206,7 @@ class Sprite:
     def below(self, sprite):
         x,y = self.pos()
         sx, sy = sprite.pos()
-        return (sy > y)
+        return (sy < y)
 
     def move_with_speed(self):
         self.move(self.speed_x, self.speed_y)
@@ -236,6 +236,12 @@ class Sprite:
         if y < 0: self.speed_y = abs(self.speed_y)
         if x > CANVAS_WIDTH: self.speed_x = -abs(self.speed_x)
         if y > CANVAS_HEIGHT: self.speed_y = -abs(self.speed_y)
+
+    def bounce_up(self):
+        self.speed_y = -abs(self.speed_y)
+
+    def bounce_down(self):
+        self.speed_y = abs(self.speed_y)
 
 if __name__ == "__main__":
     import doctest
