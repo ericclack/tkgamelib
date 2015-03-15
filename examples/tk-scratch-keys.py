@@ -15,7 +15,6 @@ smallsprite = Sprite(spriteimg, 100, 100)
 bigspriteimg = spriteimg.zoom(2,2)
 bigsprite = Sprite(bigspriteimg, 500, 500)
 
-
 def move_left(event):
     smallsprite.move(-5, 0)
 
@@ -30,7 +29,12 @@ def move_down(event):
 
 def move_bigsprite():
     spritex, spritey = smallsprite.pos()
-    bigsprite.move_towards(spritex, spritey)
+    bigsprite.accelerate_towards(spritex, spritey, 0.1)
+    bigsprite.move_with_speed()
+
+    if bigsprite.touching(smallsprite):
+        smallsprite.move_to(50, 50)
+        bigsprite.move_to(500, 500)
 
 when_key_pressed('<Left>', move_left)
 when_key_pressed('<Right>', move_right)
