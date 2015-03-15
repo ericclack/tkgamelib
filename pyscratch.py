@@ -16,7 +16,7 @@ To Do:
 import colorsys
 from tkinter import *
 import random
-
+ 
 CANVAS = None
 def canvas(): return CANVAS
 
@@ -102,8 +102,9 @@ def when_button2_clicked(fn):
     CANVAS.bind('<ButtonPress-2>', fn)
 
 def when_key_pressed(key, fn):
-    assert False, "Doesn't work yet"
-    CANVAS.bind('<KeyPress-%s>' % key, fn)
+    CANVAS.focus_set()
+    CANVAS.bind('%s' % key, fn)
+#    CANVAS.bind('<KeyPress-%s>' % key, fn)
     
 
 def mousex(): return CANVAS.winfo_pointerx() - CANVAS.winfo_rootx()
