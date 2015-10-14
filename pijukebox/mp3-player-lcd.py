@@ -1,16 +1,24 @@
 import os, time, sys
 import Adafruit_CharLCD as LCD
 
+# Halt or just quit this program?
 REALLY_HALT = True
+if 'SUDO_UID' in os.environ or 'TERM' in os.environ:
+    print "Won't really halt -- running as sudo / from term"
+    REALLY_HALT = False
 
 lcd = LCD.Adafruit_CharLCDPlate()
-lcd.set_backlight(0.5)
 
 def mpc(command):
     output = os.popen("mpc %s" % command)
     s = output.read()
     output.close()
     return s
+
+def check_for_new_songs():
+    mpc("update")
+    mpc("clear")
+    mpc("ls | mpc add")
 
 def lcd_display(m):
     lcd.clear()
@@ -23,6 +31,11 @@ def lcd_display(m):
 
 def display_current():
     lcd_display(mpc("current"))
+
+def pick_random_first_song():
+    mpc("random on")    
+    mpc("play")
+    mpc("random off")
 
 def next_song():
     mpc("next")
@@ -42,6 +55,15 @@ def next_album():
         if current_album() != start:
             return
         
+def shutdown():
+    lcd.set_backlight(0)
+    lcd_display("")
+    time.sleep(1)
+    if REALLY_HALT: 
+        os.system('/sbin/halt')
+        time.sleep(5)
+    sys.exit()
+
 def are_we_shutting_down():
     """Called after pause button pressed"""
     time.sleep(0.5)
@@ -50,16 +72,17 @@ def are_we_shutting_down():
         time.sleep(2)
         if lcd.is_pressed(LCD.SELECT):
             lcd_display("Shutting down...")
-            time.sleep(1)
-            if REALLY_HALT: 
-                os.system('/sbin/halt')
-            lcd_display("")
-            sys.exit()
-
+            shutdown()
         else:
             display_current()
 
-display_current()
+lcd.set_backlight(1)
+lcd_display("Checking for new songs...")
+check_for_new_songs()
+mpc("volume 90")
+pick_random_first_song()
+mpc("pause")
+lcd_display("Press SELECT to start playing")
 
 while True:
     if lcd.is_pressed(LCD.RIGHT):
@@ -71,6 +94,7 @@ while True:
     if lcd.is_pressed(LCD.SELECT):
         mpc("toggle")
         are_we_shutting_down()
+        display_current()
 
     # Don't hog the CPU
     time.sleep(0.05)
