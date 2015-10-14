@@ -1,6 +1,7 @@
-import os, time
-
+import os, time, sys
 import Adafruit_CharLCD as LCD
+
+REALLY_HALT = True
 
 lcd = LCD.Adafruit_CharLCDPlate()
 lcd.set_backlight(0.5)
@@ -13,6 +14,8 @@ def mpc(command):
 
 def lcd_display(m):
     lcd.clear()
+    if m.find('Forever More') != -1:
+        m = 'Moloko - Endless cheese'
     # Wrap long messages
     if len(m)>16:
         m = m[:16] + "\n" + m[16:]
@@ -44,11 +47,15 @@ def are_we_shutting_down():
     time.sleep(0.5)
     if lcd.is_pressed(LCD.SELECT):        
         lcd_display("Keep pressing to shutdown!")
-        time.sleep(1)
+        time.sleep(2)
         if lcd.is_pressed(LCD.SELECT):
             lcd_display("Shutting down...")
             time.sleep(1)
-            #TODO: actually shutdown here!
+            if REALLY_HALT: 
+                os.system('/sbin/halt')
+            lcd_display("")
+            sys.exit()
+
         else:
             display_current()
 
