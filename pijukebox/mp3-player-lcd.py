@@ -15,6 +15,8 @@ def mpc(command):
     output.close()
     return s
 
+mpc("pause")
+
 def check_for_new_songs():
     mpc("update")
     mpc("clear")
@@ -84,6 +86,9 @@ pick_random_first_song()
 mpc("pause")
 lcd_display("Press SELECT to start playing")
 
+last_song = mpc("current")
+last_update = int(time.time())
+
 while True:
     if lcd.is_pressed(LCD.RIGHT):
         next_song()
@@ -98,3 +103,13 @@ while True:
 
     # Don't hog the CPU
     time.sleep(0.05)
+
+    # Tasks to run every second, rather than every
+    # iteration, to conserve CPU
+    if int(time.time()) > last_update: 
+        # New song? Update the display?
+        if last_song != mpc("current"):
+            display_current()
+            last_song = mpc("current")
+        last_update = int(time.time())
+
