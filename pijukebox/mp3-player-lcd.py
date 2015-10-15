@@ -15,8 +15,6 @@ def mpc(command):
     output.close()
     return s
 
-mpc("pause")
-
 def check_for_new_songs():
     mpc("update")
     mpc("clear")
@@ -41,11 +39,9 @@ def pick_random_first_song():
 
 def next_song():
     mpc("next")
-    display_current()
 
 def prev_song():
     mpc("prev")
-    display_current()
 
 def current_album():
     return mpc("current").split()[0]
@@ -58,6 +54,7 @@ def next_album():
             return
         
 def shutdown():
+    mpc("pause")
     lcd.set_backlight(0)
     lcd_display("")
     time.sleep(1)
@@ -67,7 +64,7 @@ def shutdown():
     sys.exit()
 
 def are_we_shutting_down():
-    """Called after pause button pressed"""
+    """Call after pause button pressed"""
     time.sleep(0.5)
     if lcd.is_pressed(LCD.SELECT):        
         lcd_display("Keep pressing to shutdown!")
@@ -75,8 +72,7 @@ def are_we_shutting_down():
         if lcd.is_pressed(LCD.SELECT):
             lcd_display("Shutting down...")
             shutdown()
-        else:
-            display_current()
+        display_current()
 
 lcd.set_backlight(1)
 lcd_display("Checking for new songs...")
