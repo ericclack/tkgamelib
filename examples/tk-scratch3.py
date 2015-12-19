@@ -10,10 +10,10 @@ from geekclub.pyscratch import *
 create_canvas()
 
 spriteimg = PhotoImage(file='../images/face.gif')
-smallsprite = Sprite(spriteimg, 100, 100)
+smallsprite = ImageSprite(spriteimg, 100, 100)
 
 bigspriteimg = spriteimg.zoom(2,2)
-bigsprite = Sprite(bigspriteimg, 100, 100)
+bigsprite = ImageSprite(bigspriteimg, 100, 100)
 
 
 def move_towards_mouse():

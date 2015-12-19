@@ -14,7 +14,7 @@ img = PhotoImage(file='geekclub/images/face.gif')
 sprites = []
 m = 4
 for x in range(5):
-    sprite = Sprite(img)
+    sprite = ImageSprite(img)
     sprite.move_to_random_pos()
     sprite.max_speed = m
     sprite.pen_down()

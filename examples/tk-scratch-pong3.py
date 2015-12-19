@@ -41,7 +41,7 @@ def bounce_ball():
     # Has the ball hit the bottom of the screen?
     if ball.y() > CANVAS_HEIGHT - 10:
         # Not sure how to quit!
-        time.sleep(10)
+        time.sleep(5)
 
     # Has the ball touched a brick?
     brick = ball.touching_any(bricks)
@@ -53,7 +53,11 @@ def bounce_ball():
         bricks.remove(brick)
         brick.delete()
 
+def move_bricks_down():
+    for b in bricks:
+        b.move(0, 5)
     
 forever(bat_follows_mouse, 20)
 forever(bounce_ball, 20)
+forever(move_bricks_down, 1000)
 mainloop()

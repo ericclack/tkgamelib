@@ -11,7 +11,7 @@ create_canvas()
 
 spriteimg = PhotoImage(file='../images/face.gif')
 
-sprite = Sprite(spriteimg,
+sprite = ImageSprite(spriteimg,
              random.randint(1,1000),
              random.randint(1,1000))
 sprite.pen_down()

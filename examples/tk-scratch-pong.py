@@ -12,11 +12,11 @@ create_canvas()
 ball_img = PhotoImage(file='geekclub/images/face.gif')
 bat_img = PhotoImage(file='geekclub/images/bat.gif')
 
-ball = Sprite(ball_img)
+ball = ImageSprite(ball_img)
 ball.speed_x = random.randint(-4,4) * 2
 ball.speed_y = random.randint(-4,4) * 2
 
-bat = Sprite(bat_img)
+bat = ImageSprite(bat_img)
 
 def bat_follows_mouse():
     bat.move_to(mousex(), mousey())

@@ -119,10 +119,9 @@ def forever(fn, ms=100):
     
 
 class Sprite:
-    """An image sprite"""
 
-    def __init__(self, img, x=100, y=100):
-        self.spriteid = CANVAS.create_image(x,y, image=img)
+    def __init__(self, spriteid):
+        self.spriteid = spriteid
         self.pen = False
         self.pen_width = 1
         self.pen_colour_hex = "#000"
@@ -243,6 +242,16 @@ class Sprite:
 
     def bounce_down(self):
         self.speed_y = abs(self.speed_y)
+
+
+class ImageSprite(Sprite):
+
+    def __init__(self, img, x=100, y=100):
+        spriteid = CANVAS.create_image(x,y, image=img)
+        super(ImageSprite, self).__init__(spriteid)
+
+
+
 
 if __name__ == "__main__":
     import doctest

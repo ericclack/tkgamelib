@@ -13,7 +13,7 @@ spriteimg = PhotoImage(file='../images/face.gif')
 
 sprites = []
 for x in range(10):
-    sprites.append( Sprite(spriteimg,
+    sprites.append( ImageSprite(spriteimg,
                         random.randint(1,1000),
                         random.randint(1,1000)) )
 
