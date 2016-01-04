@@ -1,8 +1,8 @@
 import os, time, sys
 import Adafruit_CharLCD as LCD
 
-# Documentation for LCD driver here:
-# https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code/blob/master/Adafruit_CharLCD/Adafruit_CharLCD.py
+# Documentation for LCD library here:
+# https://github.com/adafruit/Adafruit_Python_CharLCD
 
 # Halt or just quit this program?
 REALLY_HALT = True
