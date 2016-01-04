@@ -22,11 +22,11 @@ Prerequesites
 Examples
 --------
 
-Start up `idle3` from the geekclub directory and run...
+Start up `idle3` and run...
 
-    >>> from pyscratch import *
+    >>> from geekclub.pyscratch import *
     >>> create_canvas()
-    >>> spriteimg = PhotoImage(file='images/face.gif')
+    >>> spriteimg = PhotoImage(file='examples/images/face.gif')
     >>> sprite = ImageSprite(spriteimg)
     >>> sprite.move(100,0)
     >>> sprite.move(0,100)
