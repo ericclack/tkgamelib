@@ -25,6 +25,7 @@ def fly_forwards():
     STARS = move_stars(STARS)
 
 def move_stars(stars):
+    """Make a new list of stars that have been moved and refreshed"""
     stars2 = []
     for star in stars:
         if star_out_of_view(star):

@@ -9,7 +9,7 @@ from geekclub.pyscratch import *
 
 create_canvas()
 
-img = PhotoImage(file='geekclub/images/face.gif')
+img = PhotoImage(file='images/face.gif')
 
 sprites = []
 m = 4

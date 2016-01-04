@@ -3,7 +3,7 @@
 
 """An attempt to make Scratch style coding in Python easier.
 
-See examples in the folder examples, or  more info on github.com:
+See examples in the folder examples, or more info on github.com:
 https://github.com/ericclack/geekclub
 
 Author: Eric Clack, eric@bn7.net
@@ -249,8 +249,6 @@ class ImageSprite(Sprite):
     def __init__(self, img, x=100, y=100):
         spriteid = CANVAS.create_image(x,y, image=img)
         super(ImageSprite, self).__init__(spriteid)
-
-
 
 
 if __name__ == "__main__":

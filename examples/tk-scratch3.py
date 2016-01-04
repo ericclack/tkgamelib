@@ -9,7 +9,7 @@ from geekclub.pyscratch import *
 
 create_canvas()
 
-spriteimg = PhotoImage(file='../images/face.gif')
+spriteimg = PhotoImage(file='images/face.gif')
 smallsprite = ImageSprite(spriteimg, 100, 100)
 
 bigspriteimg = spriteimg.zoom(2,2)

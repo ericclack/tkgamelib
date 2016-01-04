@@ -1,16 +1,22 @@
 # Copyright 2014, Eric Clack, eric@bn7.net
 # This program is distributed under the terms of the GNU General Public License
 
-"""A set of 5 sprites that follow each other with acceleration and pens"""
+"""A simple bat and ball game. 
+
+TODO:
+- Move bricks down as you play, if the bricks hit the bottom
+  you lose a life.
+- If you can get the ball to the top you go to the next level.
+"""
 
 import random, time
 from geekclub.pyscratch import *
 
 create_canvas()
 
-bat_img = PhotoImage(file='geekclub/images/bat.gif')
-ball_img = PhotoImage(file='geekclub/images/ball.gif')
-brick_img = PhotoImage(file='geekclub/images/small_brick.gif')
+bat_img = PhotoImage(file='images/bat.gif')
+ball_img = PhotoImage(file='images/ball.gif')
+brick_img = PhotoImage(file='images/small_brick.gif')
 
 bat = ImageSprite(bat_img)
 

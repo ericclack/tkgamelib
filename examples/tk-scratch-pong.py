@@ -1,7 +1,7 @@
 # Copyright 2014, Eric Clack, eric@bn7.net
 # This program is distributed under the terms of the GNU General Public License
 
-"""A set of 5 sprites that follow each other with acceleration and pens"""
+"""A simple bat and ball game. """
 
 from tkinter import *
 import random
@@ -9,8 +9,8 @@ from geekclub.pyscratch import *
 
 create_canvas()
 
-ball_img = PhotoImage(file='geekclub/images/face.gif')
-bat_img = PhotoImage(file='geekclub/images/bat.gif')
+ball_img = PhotoImage(file='images/face.gif')
+bat_img = PhotoImage(file='images/bat.gif')
 
 ball = ImageSprite(ball_img)
 ball.speed_x = random.randint(-4,4) * 2

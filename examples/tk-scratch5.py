@@ -9,7 +9,7 @@ from geekclub.pyscratch import *
 
 create_canvas()
 
-spriteimg = PhotoImage(file='../images/face.gif')
+spriteimg = PhotoImage(file='images/face.gif')
 
 sprite = ImageSprite(spriteimg,
              random.randint(1,1000),
