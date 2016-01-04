@@ -1,6 +1,9 @@
 import os, time, sys
 import Adafruit_CharLCD as LCD
 
+# Documentation for LCD driver here:
+# https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code/blob/master/Adafruit_CharLCD/Adafruit_CharLCD.py
+
 # Halt or just quit this program?
 REALLY_HALT = True
 if 'SUDO_UID' in os.environ or 'TERM' in os.environ:
