@@ -23,6 +23,8 @@ def canvas(): return CANVAS
 CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 800
 
+BANNER=None
+
 
 def hexs(v):
     """Return a number in range 0-255 as two hex digits 0-ff"""
@@ -73,11 +75,13 @@ def point_inside_box(point, box):
 
 
 
-def create_canvas():
+def create_canvas(window_title="Pyscratch Game"):
     global CANVAS
     master = Tk()
     CANVAS = Canvas(master, width=CANVAS_WIDTH, height=CANVAS_HEIGHT)
     CANVAS.pack()
+    if window_title:
+        master.wm_title(window_title)
 
 def clear_canvas():
     CANVAS.delete(ALL)
@@ -85,6 +89,14 @@ def clear_canvas():
 def clear_pen():
     CANVAS.delete("pen")        
 
+def banner(message):
+    global BANNER
+    if BANNER: clear_banner()
+    BANNER = CANVAS.create_text(CANVAS_WIDTH/2, CANVAS_HEIGHT/2,
+                             font=("default", 50), text=message)
+
+def clear_banner():
+    CANVAS.delete(BANNER)
 
 def when_button1_clicked(fn):
     CANVAS.bind('<Button-1>', fn)
