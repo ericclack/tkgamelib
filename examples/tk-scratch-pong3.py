@@ -9,7 +9,7 @@ TODO:
 - If you can get the ball to the top you go to the next level.
 """
 
-import random, time
+import random, time, sys
 from geekclub.pyscratch import *
 
 create_canvas()
@@ -32,7 +32,6 @@ for y in range(0, 400, 28):
         brick = ImageSprite(brick_img)
         brick.move_to(x, y)
         bricks.append(brick)
-    
 
 def bat_follows_mouse():
     bat.move_to(mousex(), mousey())
@@ -46,8 +45,7 @@ def bounce_ball():
 
     # Has the ball hit the bottom of the screen?
     if ball.y() > CANVAS_HEIGHT - 10:
-        # Not sure how to quit!
-        time.sleep(5)
+        end_game()
 
     # Has the ball touched a brick?
     brick = ball.touching_any(bricks)
@@ -58,6 +56,12 @@ def bounce_ball():
             ball.bounce_down()
         bricks.remove(brick)
         brick.delete()
+
+def end_game():
+    banner("You lose!")
+    time.sleep(2)
+    sys.exit()
+
 
 def move_bricks_down():
     for b in bricks:
