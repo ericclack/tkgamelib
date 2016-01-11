@@ -128,7 +128,10 @@ def forever(fn, ms=100):
         fn()
         CANVAS.after(ms, wrapper)
     CANVAS.after(ms, wrapper)
-    
+
+def future(fn, ms):
+    CANVAS.after(ms, fn)
+
 
 class Sprite:
 
@@ -262,6 +265,10 @@ class ImageSprite(Sprite):
         spriteid = CANVAS.create_image(x,y, image=img)
         super(ImageSprite, self).__init__(spriteid)
 
+
+class Struct:
+    def __init__(self, **entries): self.__dict__.update(entries)
+    
 
 if __name__ == "__main__":
     import doctest
