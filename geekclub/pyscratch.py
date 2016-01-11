@@ -151,6 +151,14 @@ class Sprite:
     def x(self): return self.pos()[0]
     def y(self): return self.pos()[1]
 
+    def width(self):
+        box = CANVAS.bbox(self.spriteid)
+        return box[2]-box[0]
+
+    def height(self):
+        box = CANVAS.bbox(self.spriteid)
+        return box[3]-box[1]
+
     def move(self, x, y):
         """Move by x and y"""
         if self.pen:
