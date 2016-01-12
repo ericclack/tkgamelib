@@ -17,18 +17,30 @@ fred_img = PhotoImage(file='images/smallface.gif')
 
 BLOCK_SIZE=50
 
+class MudSprite(ImageSprite):
+    def __init__(self, x=0, y=0):
+        super(MudSprite, self).__init__(earth_img, x, y)
+
+class BoulderSprite(ImageSprite):
+    def __init__(self, x=0, y=0):
+        super(BoulderSprite, self).__init__(boulder_img, x, y)
+
+class FredSprite(ImageSprite):
+    def __init__(self, x=0, y=0):
+        super(FredSprite, self).__init__(fred_img, x, y)
+
 landscape = []
 for y in range(20):
     landscape.append([])
     for x in range(20):
         if random.random() < 0.1:
-            block = ImageSprite(boulder_img)
+            block = BoulderSprite()
         else:
-            block = ImageSprite(earth_img)
+            block = MudSprite()
         block.move_to(x*BLOCK_SIZE, y*BLOCK_SIZE)
         landscape[-1].append(block)
 
-fred = ImageSprite(fred_img)
+fred = FredSprite()
 fred.move_to(0,0)
 
 
