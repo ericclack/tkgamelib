@@ -3,8 +3,10 @@
 
 """A Boulder Dash clone
 
-TODO:
+DONE:
 - Push boulders left or right
+
+TODO:
 - Stop going off edge of screen
 - Gems to collect
 - Die if a boulder falls on you
@@ -19,9 +21,10 @@ create_canvas()
 earth_img = PhotoImage(file='images/earth.gif')
 boulder_img = PhotoImage(file='images/ball.gif')
 fred_img = PhotoImage(file='images/smallface.gif')
-edge_img = PhotoImage(file='images/ball.gif')
+wall_img = PhotoImage(file='images/wall.gif')
 
 BLOCK_SIZE=50
+SCREEN_SIZE=16
 
 class MudSprite(ImageSprite):
     def __init__(self, x=0, y=0):
@@ -31,19 +34,23 @@ class BoulderSprite(ImageSprite):
     def __init__(self, x=0, y=0):
         super(BoulderSprite, self).__init__(boulder_img, x, y)
 
-class EdgeSprite(ImageSprite):
+class WallSprite(ImageSprite):
     def __init__(self, x=0, y=0):
-        super(EdgeSprite, self).__init__(edge_img, x, y)
+        super(WallSprite, self).__init__(wall_img, x, y)
 
 class FredSprite(ImageSprite):
     def __init__(self, x=0, y=0):
         super(FredSprite, self).__init__(fred_img, x, y)
 
 landscape = []
-for y in range(20):
+for y in range(SCREEN_SIZE):
     landscape.append([])
-    for x in range(20):
-        if random.random() < 0.1:
+    for x in range(SCREEN_SIZE):
+        if x in (0, (SCREEN_SIZE-1)) or y in (0, (SCREEN_SIZE-1)):
+            block = WallSprite()
+        elif random.random() < 0.02:
+            block = WallSprite()
+        elif random.random() < 0.1:
             block = BoulderSprite()
         else:
             block = MudSprite()
@@ -51,10 +58,13 @@ for y in range(20):
         landscape[-1].append(block)
 
 fred = FredSprite()
-fred.move_to(0,0)
+fred.move_to(2*BLOCK_SIZE,2*BLOCK_SIZE)
 
 def is_mud(sprite):
     return isinstance(sprite, MudSprite)
+
+def is_boulder(sprite):
+    return isinstance(sprite, BoulderSprite)
 
 def coords(sprite):
     cx, cy = sprite.pos()
@@ -93,7 +103,17 @@ def move(dx, dy):
     if can_move(dx, dy):
         fred.move(dx*BLOCK_SIZE, dy*BLOCK_SIZE)
         delete_mud()
-
+    elif dy == 0:
+        next_block = what_is_next_to(fred, dx, 0)
+        next_next_block = what_is_next_to(fred, dx*2, 0)
+        if is_boulder(next_block) and next_next_block is None:
+            # We can move a boulder
+            set_landscape(coords(next_block), None)
+            next_block.move(dx*BLOCK_SIZE, 0)
+            set_landscape(coords(next_block), next_block)
+            # Now we can move too
+            fred.move(dx*BLOCK_SIZE, 0)
+        
 def move_left(event):
     move(-1, 0)
 
