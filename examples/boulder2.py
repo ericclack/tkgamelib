@@ -18,53 +18,46 @@ from geekclub.pyscratch import *
 
 create_canvas()
 
-earth_img = PhotoImage(file='images/earth.gif')
-boulder_img = PhotoImage(file='images/ball.gif')
+block_images = {
+    'mud': PhotoImage(file='images/earth.gif'),
+    'boulder': PhotoImage(file='images/ball.gif'),
+    'wall': PhotoImage(file='images/wall.gif'),
+}
+
 fred_img = PhotoImage(file='images/smallface.gif')
-wall_img = PhotoImage(file='images/wall.gif')
+
 
 BLOCK_SIZE=50
 SCREEN_SIZE=16
 
-class MudSprite(ImageSprite):
-    def __init__(self, x=0, y=0):
-        super(MudSprite, self).__init__(earth_img, x, y)
+class BlockSprite(ImageSprite):
+    def __init__(self, what, x=0, y=0):
+        self.what = what
+        image = block_images[what]
+        super(BlockSprite, self).__init__(image, x, y)
 
-class BoulderSprite(ImageSprite):
-    def __init__(self, x=0, y=0):
-        super(BoulderSprite, self).__init__(boulder_img, x, y)
+    def is_a(self, what):
+        return (self.what == what)
 
-class WallSprite(ImageSprite):
-    def __init__(self, x=0, y=0):
-        super(WallSprite, self).__init__(wall_img, x, y)
-
-class FredSprite(ImageSprite):
-    def __init__(self, x=0, y=0):
-        super(FredSprite, self).__init__(fred_img, x, y)
 
 landscape = []
 for y in range(SCREEN_SIZE):
     landscape.append([])
     for x in range(SCREEN_SIZE):
         if x in (0, (SCREEN_SIZE-1)) or y in (0, (SCREEN_SIZE-1)):
-            block = WallSprite()
+            what = 'wall'
         elif random.random() < 0.02:
-            block = WallSprite()
+            what = 'wall' 
         elif random.random() < 0.1:
-            block = BoulderSprite()
+            what = 'boulder'
         else:
-            block = MudSprite()
+            what = 'mud'
+        block = BlockSprite(what)
         block.move_to(x*BLOCK_SIZE, y*BLOCK_SIZE)
         landscape[-1].append(block)
 
-fred = FredSprite()
+fred = ImageSprite(fred_img)
 fred.move_to(2*BLOCK_SIZE,2*BLOCK_SIZE)
-
-def is_mud(sprite):
-    return isinstance(sprite, MudSprite)
-
-def is_boulder(sprite):
-    return isinstance(sprite, BoulderSprite)
 
 def coords(sprite):
     cx, cy = sprite.pos()
@@ -85,8 +78,8 @@ def what_is_next_to(sprite, dx, dy):
         return EdgeSprite()
 
 def can_move(dx, dy):
-    what = what_is_next_to(fred, dx, dy)
-    return what is None or is_mud(what)
+    sprite = what_is_next_to(fred, dx, dy)
+    return sprite is None or sprite.is_a('mud')
 
 def set_landscape(a_pair, what):
     x, y = a_pair
@@ -106,7 +99,7 @@ def move(dx, dy):
     elif dy == 0:
         next_block = what_is_next_to(fred, dx, 0)
         next_next_block = what_is_next_to(fred, dx*2, 0)
-        if is_boulder(next_block) and next_next_block is None:
+        if next_block.is_a('boulder') and next_next_block is None:
             # We can move a boulder
             set_landscape(coords(next_block), None)
             next_block.move(dx*BLOCK_SIZE, 0)
@@ -130,7 +123,7 @@ def all_boulders():
     b = []
     for rows in landscape:
         for i in rows:
-            if isinstance(i, BoulderSprite):
+            if i and i.is_a('boulder'):
                 b.append(i)
     return b
 
