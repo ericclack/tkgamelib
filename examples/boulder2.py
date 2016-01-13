@@ -45,7 +45,7 @@ class BlockSprite(ImageSprite):
 
 def block_choices():
     """More gems, boulders and walls the higher the level"""
-    c1 = ['mud'] * 10
+    c1 = ['mud'] * 20
     c2 = ['wall', 'boulder', 'gem'] * world.level
     c1.extend(c2)
     return c1
@@ -55,15 +55,26 @@ def make_landscape():
     for y in range(SCREEN_SIZE):
         landscape.append([])
         for x in range(SCREEN_SIZE):
-            r = random.random()
-            if x in (0, (SCREEN_SIZE-1)) or y in (0, (SCREEN_SIZE-1)):
+            if x = 2 and y = 2:
+                # This is where fred starts
+                what = None
+            elif x in (0, (SCREEN_SIZE-1)) or y in (0, (SCREEN_SIZE-1)):
                 what = 'wall'
             else:
                 what = random.choice(block_choices())
-            block = BlockSprite(what)
-            block.move_to(x*BLOCK_SIZE, y*BLOCK_SIZE)
+            if what:
+                block = BlockSprite(what)
+                block.move_to(x*BLOCK_SIZE, y*BLOCK_SIZE)
+            else:
+                block = None
             landscape[-1].append(block)
     return landscape
+
+def clear_landscape():
+    for row in world.landscape:
+        for i in row:
+            if i: i.delete()
+    landscape = []
 
 def coords(sprite):
     cx, cy = sprite.pos()
@@ -173,7 +184,16 @@ def boulders_fall():
                 b.falling = False
 
 def check_status():
-    pass
+    if world.status == 'next_level':
+        world.status = 'building'
+        clear_banner()
+        clear_landscape()
+        world.level += 1
+        world.landscape = make_landscape() 
+        fred.move_to(2*BLOCK_SIZE,2*BLOCK_SIZE)
+        world.gems_left = len(all_gems())
+        world.status = 'play'
+        
 
 when_key_pressed('<Left>', move_left)
 when_key_pressed('<Right>', move_right)
