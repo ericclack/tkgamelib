@@ -55,7 +55,7 @@ def make_landscape():
     for y in range(SCREEN_SIZE):
         landscape.append([])
         for x in range(SCREEN_SIZE):
-            if x = 2 and y = 2:
+            if x == 2 and y == 2:
                 # This is where fred starts
                 what = None
             elif x in (0, (SCREEN_SIZE-1)) or y in (0, (SCREEN_SIZE-1)):
@@ -99,7 +99,10 @@ def what_is_next_to(sprite, dx, dy):
     cx, cy = coords(sprite)
     if sprite != fred and (cx+dx, cy+dy) == coords(fred):
         return fred
-    return world.landscape[cy+dy][cx+dx]    
+    try:
+        return world.landscape[cy+dy][cx+dx]    
+    except IndexError:
+        return None
 
 def can_move(dx, dy):
     sprite = what_is_next_to(fred, dx, dy)
@@ -119,6 +122,8 @@ def clear_block():
         block.delete()
 
 def move(dx, dy):
+    if world.status != 'play': return
+
     if can_move(dx, dy):
         fred.move(dx*BLOCK_SIZE, dy*BLOCK_SIZE)
         clear_block()
@@ -183,6 +188,14 @@ def boulders_fall():
             else:
                 b.falling = False
 
+def end_game():
+    banner('Game Over')
+    #clear_landscape()
+    future(end_game2, 2000)
+
+def end_game2():
+    quit()
+
 def check_status():
     if world.status == 'next_level':
         world.status = 'building'
@@ -193,6 +206,8 @@ def check_status():
         fred.move_to(2*BLOCK_SIZE,2*BLOCK_SIZE)
         world.gems_left = len(all_gems())
         world.status = 'play'
+    if world.status == 'end':
+        future(end_game, 2000)
         
 
 when_key_pressed('<Left>', move_left)
