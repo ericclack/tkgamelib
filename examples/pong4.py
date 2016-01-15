@@ -70,7 +70,7 @@ def next_level():
     banner("Next level!")
     world.status = 'next'
     ball.move_to(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
-    future(next_level2, 1000)
+    future_action(next_level2, 1000)
 
 def next_level2():
     for b in world.bricks:
@@ -78,7 +78,7 @@ def next_level2():
     world.level += 1
     world.bricks = make_bricks_for_level(world.level)
     banner("Ready...?")
-    future(next_level3, 1000)
+    future_action(next_level3, 1000)
 
 def next_level3():
     clear_banner()
@@ -87,7 +87,7 @@ def next_level3():
 def end_game():
     world.status = 'end'
     banner("You lose!")
-    future(end_game2, 2000)
+    future_action(end_game2, 2000)
 
 def end_game2():
     quit()

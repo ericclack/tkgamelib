@@ -7,6 +7,7 @@ DONE:
 - Push boulders left or right
 - Stop going off edge of screen
 - Gems to collect
+- r to restart
 
 TODO:
 - Die if a boulder falls on you
@@ -191,29 +192,35 @@ def boulders_fall():
 def end_game():
     banner('Game Over')
     #clear_landscape()
-    future(end_game2, 2000)
+    future_action(end_game2, 2000)
 
 def end_game2():
     quit()
 
+def start_level(event):
+    """Start or restart a level"""
+    world.status = 'building'
+    clear_banner()
+    clear_landscape()
+    world.landscape = make_landscape() 
+    fred.move_to(2*BLOCK_SIZE,2*BLOCK_SIZE)
+    world.gems_left = len(all_gems())
+    world.status = 'play'
+
 def check_status():
     if world.status == 'next_level':
-        world.status = 'building'
-        clear_banner()
-        clear_landscape()
         world.level += 1
-        world.landscape = make_landscape() 
-        fred.move_to(2*BLOCK_SIZE,2*BLOCK_SIZE)
-        world.gems_left = len(all_gems())
-        world.status = 'play'
+        start_level(None)
     if world.status == 'end':
-        future(end_game, 2000)
+        future_action(end_game, 2000)
         
 
 when_key_pressed('<Left>', move_left)
 when_key_pressed('<Right>', move_right)
 when_key_pressed('<Up>', move_up)
 when_key_pressed('<Down>', move_down)
+when_key_pressed('r', start_level)
+
 forever(boulders_fall, 200)
 forever(check_status, 1000)
 mainloop()

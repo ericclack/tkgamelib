@@ -129,7 +129,8 @@ def forever(fn, ms=100):
         CANVAS.after(ms, wrapper)
     CANVAS.after(ms, wrapper)
 
-def future(fn, ms):
+def future_action(fn, ms):
+    """Do something in the future"""
     CANVAS.after(ms, fn)
 
 
