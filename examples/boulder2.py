@@ -8,9 +8,9 @@ DONE:
 - Stop going off edge of screen
 - Gems to collect
 - r to restart
+- Die if a boulder falls on you
 
 TODO:
-- Die if a boulder falls on you
 - Aliens
 """
 

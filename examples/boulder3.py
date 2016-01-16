@@ -8,10 +8,12 @@ DONE:
 - Stop going off edge of screen
 - Gems to collect
 - r to restart
+- Die if a boulder falls on you
+- Some way to save and reload one level
 
 TODO:
-- Some way to save and reload good levels
-- Die if a boulder falls on you
+- Boulder on boulder falls into gap (either side)
+- Some way to load multiple levels
 - Aliens
 """
 
@@ -52,18 +54,26 @@ def block_choices():
     c1.extend(c2)
     return c1
 
-def make_landscape():
+def block_at_xy(x, y, landscape_data=None):
+    if landscape_data:
+        what = landscape_data[y][x]
+        return what if what != 'None' else None
+    if x == 2 and y == 2:
+        # This is where fred starts
+        what = None
+    elif x in (0, (SCREEN_SIZE-1)) or y in (0, (SCREEN_SIZE-1)):
+        what = 'wall'
+    else:
+        what = random.choice(block_choices())
+    return what
+
+def make_landscape(landscape_data=None):
+    """Generate or load a landscape"""
     landscape = []
     for y in range(SCREEN_SIZE):
         landscape.append([])
         for x in range(SCREEN_SIZE):
-            if x == 2 and y == 2:
-                # This is where fred starts
-                what = None
-            elif x in (0, (SCREEN_SIZE-1)) or y in (0, (SCREEN_SIZE-1)):
-                what = 'wall'
-            else:
-                what = random.choice(block_choices())
+            what = block_at_xy(x, y, landscape_data)
             if what:
                 block = BlockSprite(what)
                 block.move_to(x*BLOCK_SIZE, y*BLOCK_SIZE)
@@ -112,6 +122,16 @@ def what_is_next_to(sprite, dx, dy):
         return world.landscape[cy+dy][cx+dx]    
     except IndexError:
         return None
+
+def what_is_below(sprite): return what_is_next_to(sprite, 0, 1)
+def what_is_left_of(sprite): return what_is_next_to(sprite, -1, 0)
+def what_is_right_of(sprite): return what_is_next_to(sprite, 1, 0)
+def nothing_left_and_lbelow(sprite):
+    return (what_is_left_of(sprite) is None 
+            and what_is_next_to(sprite, -1, 1) is None)
+def nothing_right_and_rbelow(sprite):
+    return (what_is_right_of(sprite) is None 
+            and what_is_next_to(sprite, 1, 1) is None)
 
 def can_move(dx, dy):
     sprite = what_is_next_to(fred, dx, dy)
@@ -183,20 +203,33 @@ def move_up(event):
 def move_down(event):
     move(0, 1)
 
+def boulder_fall_down(b, left_right=0):
+    set_landscape(coords(b), None)
+    b.move(left_right*BLOCK_SIZE, BLOCK_SIZE)
+    b.falling = True
+    set_landscape(coords(b), b)
+
 def boulders_fall():
+    if world.status != 'play': return
+
     for b in all_boulders():
-        what = what_is_next_to(b, 0, 1)
-        if what is None:
-            set_landscape(coords(b), None)
-            b.move(0, BLOCK_SIZE)
-            b.falling = True
-            set_landscape(coords(b), b)
-        else:
-            if what is world.fred and b.falling:
+        below = what_is_below(b)
+        if below is None:
+            boulder_fall_down(b)
+        elif below == world.fred:
+            if b.falling:
                 banner("Ouch!")
                 world.status = 'end'
-            else:
-                b.falling = False
+        elif below.what in ('boulder', 'gem'):
+            if nothing_left_and_lbelow(b) and nothing_right_and_rbelow(b):
+                boulder_fall_down(b, left_right=random.choice([-1,1]))
+            elif nothing_left_and_lbelow(b):
+                boulder_fall_down(b, left_right=-1)
+            elif nothing_right_and_rbelow(b):
+                boulder_fall_down(b, left_right=1)
+        else:
+            b.falling = False
+        
 
 def end_game():
     banner('Game Over')
@@ -220,9 +253,16 @@ def start_level(event):
 def load_level(event):
     """Load level.txt"""
     file = open("boulder-levels/level.txt")
-    landscape_data = [l.strip() for l in file.readlines()]
-    print(landscape_data)
+    landscape_data = [l.strip().split(',') for l in file.readlines()]
     file.close()
+
+    world.status = 'loading'
+    clear_banner()
+    clear_landscape()
+    world.landscape = make_landscape(landscape_data)
+    fred.move_to(2*BLOCK_SIZE,2*BLOCK_SIZE)
+    world.gems_left = len(all_gems())
+    world.status = 'play'
 
 def check_status():
     if world.status == 'next_level':
