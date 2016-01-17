@@ -10,9 +10,9 @@ DONE:
 - r to restart
 - Die if a boulder falls on you
 - Some way to save and reload one level
+- Boulder on boulder falls into gap (either side)
 
 TODO:
-- Boulder on boulder falls into gap (either side)
 - Some way to load multiple levels
 - Aliens
 """
