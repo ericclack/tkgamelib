@@ -9,8 +9,10 @@ https://github.com/ericclack/geekclub
 Author: Eric Clack, eric@bn7.net
 
 To Do:
-- When Key Pressed
 - Moving in a direction (degrees)
+
+To generate doc for this module run:
+pydoc3 -w pyscratch
 """
 
 import colorsys
@@ -33,11 +35,28 @@ def hexs(v):
     return h
 
 def hsv_to_hex(h, s, v):
-    """Convert HSV values (0-1) to a hex string #000000-#ffffff"""
+    """Convert HSV values (0-1) to a hex string #000000-#ffffff.
+
+    The first number is hue: red=0, green=0.333
+    The second saturation (how much colour)
+    And last brightness: black=0, brightest=1
+
+    White:
+    >>> hsv_to_hex(0, 0, 1)
+    '#ffffff'
+
+    Red:
+    >>> hsv_to_hex(0, 1, 1)
+    '#ff0000'
+    """
     (r, g, b) = colorsys.hsv_to_rgb(h, s, v)
     return "#" + hexs(255*r) + hexs(255*g) + hexs(255*b)
 
 def direction(mousepos, objpos):
+    """Is mousepos > or < objpos, return 1 or -1
+
+    TODO: rename this method, not a good name.
+    """
     if mousepos > objpos:
         return 1
     else:
@@ -74,8 +93,11 @@ def point_inside_box(point, box):
     return (x2 >= x >= x1) and (y2 >= y >= y1)
 
 
-
 def create_canvas(window_title="Pyscratch Game"):
+    """Create the drawing / game area on the screen
+
+    Ready for our sprites or drawing.
+    """
     global CANVAS
     master = Tk()
     CANVAS = Canvas(master, width=CANVAS_WIDTH, height=CANVAS_HEIGHT)
@@ -84,18 +106,22 @@ def create_canvas(window_title="Pyscratch Game"):
         master.wm_title(window_title)
 
 def clear_canvas():
+    """Remove everything from the canvas"""
     CANVAS.delete(ALL)
 
 def clear_pen():
+    """Clear pen drawings"""
     CANVAS.delete("pen")        
 
 def banner(message):
+    """Display a basic text banner in the middle of the screen."""
     global BANNER
     if BANNER: clear_banner()
     BANNER = CANVAS.create_text(CANVAS_WIDTH/2, CANVAS_HEIGHT/2,
                              font=("default", 50), text=message)
 
 def clear_banner():
+    """Clear any banner set by `banner` method."""
     CANVAS.delete(BANNER)
 
 def when_button1_clicked(fn):
@@ -116,7 +142,6 @@ def when_button2_clicked(fn):
 def when_key_pressed(key, fn):
     CANVAS.focus_set()
     CANVAS.bind('%s' % key, fn)
-#    CANVAS.bind('<KeyPress-%s>' % key, fn)
     
 
 def mousex(): return CANVAS.winfo_pointerx() - CANVAS.winfo_rootx()
@@ -124,17 +149,19 @@ def mousey(): return CANVAS.winfo_pointery() - CANVAS.winfo_rooty()
 
 
 def forever(fn, ms=100):
+    """Keep doing something forever, every ms milliseconds"""
     def wrapper():
         fn()
         CANVAS.after(ms, wrapper)
     CANVAS.after(ms, wrapper)
 
 def future_action(fn, ms):
-    """Do something in the future"""
+    """Do something in the future, in ms milliseconds"""
     CANVAS.after(ms, fn)
 
 
 class Sprite:
+    """A sprite that can be moved around the screen."""
 
     def __init__(self, spriteid):
         self.spriteid = spriteid
@@ -153,15 +180,17 @@ class Sprite:
     def y(self): return self.pos()[1]
 
     def width(self):
+        """The width in px of this sprite"""
         box = CANVAS.bbox(self.spriteid)
         return box[2]-box[0]
 
     def height(self):
+        """The height in px of this sprite"""
         box = CANVAS.bbox(self.spriteid)
         return box[3]-box[1]
 
     def move(self, x, y):
-        """Move by x and y"""
+        """Move by x and y pixels"""
         if self.pen:
             cx, cy = self.pos()
             CANVAS.create_line(cx,cy, cx+x,cy+y,
@@ -171,25 +200,31 @@ class Sprite:
         CANVAS.move(self.spriteid, x, y)
 
     def delete(self):
+        """Delete this sprite from the canvas"""
         CANVAS.delete(self.spriteid)
 
     def move_towards(self, to_x, to_y, steps=1):
+        """Fairly clumsy movement towards a new x,y point"""
         x, y = self.pos()
         dx = direction(to_x, x)
         dy = direction(to_y, y)
         self.move(dx*steps, dy*steps)
 
     def move_to(self, x, y):
+        """Move to a new x,y pos"""
         cx, cy = self.pos()
         self.move(x-cx, y-cy)
 
     def move_to_random_pos(self):
+        """Move to a random pos on the canvas"""
         self.move_to(random.randint(1,CANVAS_WIDTH), random.randint(1,CANVAS_HEIGHT))
 
     def pen_down(self):
+        """Start drawing when the sprite moves"""
         self.pen = True
 
     def pen_up(self):
+        """Pick up the pen so that no lines are drawn"""
         self.pen = False
 
     def toggle_pen(self):
@@ -228,6 +263,7 @@ class Sprite:
         return False
 
     def below(self, sprite):
+        """Is this sprite below another sprite"""
         x,y = self.pos()
         sx, sy = sprite.pos()
         return (sy < y)
@@ -269,6 +305,13 @@ class Sprite:
 
 
 class ImageSprite(Sprite):
+    """A sprite for a bitmap image.
+
+    Create like this:
+    > create_canvas()
+    > image = PhotoImage(file='images/face.gif')
+    > s = ImageSprite(image)
+    """
 
     def __init__(self, img, x=100, y=100):
         spriteid = CANVAS.create_image(x,y, image=img)
