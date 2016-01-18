@@ -17,6 +17,7 @@ pydoc3 -w pyscratch
 
 import colorsys
 from tkinter import *
+from tkinter import simpledialog
 import random
  
 CANVAS = None
@@ -119,6 +120,12 @@ def banner(message):
     if BANNER: clear_banner()
     BANNER = CANVAS.create_text(CANVAS_WIDTH/2, CANVAS_HEIGHT/2,
                              font=("default", 50), text=message)
+
+def askstring(title, prompt):
+    return simpledialog.askstring(title, prompt)
+
+def askinteger(title, prompt):
+    return simpledialog.askinteger(title, prompt)
 
 def clear_banner():
     """Clear any banner set by `banner` method."""
