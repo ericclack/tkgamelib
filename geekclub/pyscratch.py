@@ -1,5 +1,6 @@
 # Copyright 2014, Eric Clack, eric@bn7.net
-# This program is distributed under the terms of the GNU General Public License
+# This program is distributed under the terms of the GNU General 
+# Public License
 
 """An attempt to make Scratch style coding in Python easier.
 
@@ -15,10 +16,11 @@ To generate doc for this module run:
 pydoc3 -w pyscratch
 """
 
+import random
+import math
 import colorsys
 from tkinter import *
 from tkinter import simpledialog
-import random
  
 CANVAS = None
 def canvas(): return CANVAS
@@ -211,11 +213,14 @@ class Sprite:
         CANVAS.delete(self.spriteid)
 
     def move_towards(self, to_x, to_y, steps=1):
-        """Fairly clumsy movement towards a new x,y point"""
         x, y = self.pos()
-        dx = direction(to_x, x)
-        dy = direction(to_y, y)
-        self.move(dx*steps, dy*steps)
+        dx = to_x - x
+        dy = to_y - y
+        print(dx, dy)
+        distance = math.sqrt(dx**2+dy**2)
+        if distance > 0.1:
+            scale = steps/distance
+            self.move(dx*scale, dy*scale)
 
     def move_to(self, x, y):
         """Move to a new x,y pos"""
