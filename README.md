@@ -33,9 +33,10 @@ Start up `idle3` and run...
     >>> sprite.move(-100,0)
     >>> sprite.move(0,-1000)
 
-Check out the examples directory. The symbolic link (up one directory) makes it 
-possible to run the code from there, but ordinarily you'd write code and put
-the geekclub checkout in the same directory as your code.
+Check out the examples directory. You should be able to run the code straight
+from that directory. 
+
+![boulder screen shot](/images/boulder.png)
 
 
 
