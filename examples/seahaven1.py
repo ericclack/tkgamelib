@@ -3,7 +3,8 @@
 # This program is distributed under the terms of the GNU General
 # Public License
 
-import random
+import random, sys
+sys.path.append('..')
 from geekclub.pyscratch import *
 
 create_canvas()

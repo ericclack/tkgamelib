@@ -3,8 +3,8 @@
 
 """A small sprite and a big one, that follows"""
 
-from tkinter import *
-import random
+import random, sys
+sys.path.append('..')
 from geekclub.pyscratch import *
 
 create_canvas()

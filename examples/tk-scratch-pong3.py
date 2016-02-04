@@ -10,6 +10,7 @@ TODO:
 """
 
 import random, time, sys
+sys.path.append('..')
 from geekclub.pyscratch import *
 
 create_canvas()

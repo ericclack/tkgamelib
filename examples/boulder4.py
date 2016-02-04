@@ -252,8 +252,9 @@ def start_level(event):
     dump_landscape()
 
 def load_level(event):
-    """Load level.txt"""
-    file = open("boulder-levels/level.txt")
+    level = askstring("What level to load?", "Level")
+
+    file = open("boulder-levels/level-%s.txt" % level)
     landscape_data = [l.strip().split(',') for l in file.readlines()]
     file.close()
 

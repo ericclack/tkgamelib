@@ -3,7 +3,8 @@
 
 """Test out of python for Racket stars game"""
 
-import random, time
+import random, time, sys
+sys.path.append('..')
 from geekclub.pyscratch import *
 
 create_canvas()

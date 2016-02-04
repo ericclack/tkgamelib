@@ -15,6 +15,7 @@ TODO:
 """
 
 import random, time, sys
+sys.path.append('..')
 from geekclub.pyscratch import *
 
 BLOCK_SIZE=50

@@ -3,8 +3,8 @@
 
 """An oval that follows the mouse."""
 
-from tkinter import *
-import random
+import random, sys
+sys.path.append('..')
 from geekclub.pyscratch import *
 
 create_canvas()

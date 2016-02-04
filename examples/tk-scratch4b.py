@@ -3,8 +3,8 @@
 
 """A set of 5 sprites that follow each other with acceleration and pens"""
 
-from tkinter import *
-import random
+import random, sys
+sys.path.append('..')
 from geekclub.pyscratch import *
 
 create_canvas()

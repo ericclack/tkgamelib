@@ -3,8 +3,8 @@
 
 """A drawing sprite, click to toggle the pen."""
 
-from tkinter import *
-import random
+import random, sys
+sys.path.append('..')
 from geekclub.pyscratch import *
 
 create_canvas()

@@ -3,8 +3,8 @@
 
 """A simple bat and ball game. """
 
-from tkinter import *
-import random
+import random, sys
+sys.path.append('..')
 from geekclub.pyscratch import *
 
 create_canvas()
@@ -13,8 +13,8 @@ ball_img = PhotoImage(file='images/face.gif')
 bat_img = PhotoImage(file='images/bat.gif')
 
 ball = ImageSprite(ball_img)
-ball.speed_x = random.randint(-4,4) * 2
-ball.speed_y = random.randint(-4,4) * 2
+ball.speed_x = random.randint(-8,8)
+ball.speed_y = random.randint(-8,8)
 
 bat = ImageSprite(bat_img)
 
