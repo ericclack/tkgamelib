@@ -216,7 +216,6 @@ class Sprite:
         x, y = self.pos()
         dx = to_x - x
         dy = to_y - y
-        print(dx, dy)
         distance = math.sqrt(dx**2+dy**2)
         if distance > 0.1:
             scale = steps/distance
