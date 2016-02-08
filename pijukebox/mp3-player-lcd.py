@@ -1,6 +1,10 @@
 import os, time, sys
 import Adafruit_CharLCD as LCD
 
+# You'll need this library in your path (or put it in the same
+# directory as this script)
+# git clone git://github.com/adafruit/Adafruit_Python_CharLCD.git
+
 # Documentation for LCD library here:
 # https://github.com/adafruit/Adafruit_Python_CharLCD
 
