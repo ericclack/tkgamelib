@@ -96,6 +96,14 @@ def point_inside_box(point, box):
     return (x2 >= x >= x1) and (y2 >= y >= y1)
 
 
+def translate_point(x, y, distance, angle):
+    """Return a new point moving x,y by distance along angle"""
+
+    x2 = x + math.cos(math.radians(angle))*distance
+    y2 = y + math.sin(math.radians(angle))*distance
+    return(x2, y2)
+
+
 def create_canvas(window_title="Pyscratch Game"):
     """Create the drawing / game area on the screen
 
