@@ -1,12 +1,10 @@
 import os, time, sys
 import Adafruit_CharLCD as LCD
 
-# You'll need this library in your path (or put it in the same
-# directory as this script)
-# git clone git://github.com/adafruit/Adafruit_Python_CharLCD.git
-
-# Documentation for LCD library here:
-# https://github.com/adafruit/Adafruit_Python_CharLCD
+# You'll need to set up your Pi for the Adafruit LCD Plate
+# https://learn.adafruit.com/adafruit-16x2-character-lcd-plus-keypad-for-raspberry-pi/usage
+# Including I2C Kernel support
+# https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c
 
 # Halt or just quit this program?
 REALLY_HALT = True
@@ -85,6 +83,7 @@ lcd.set_backlight(1)
 lcd_display("Checking for new songs...")
 check_for_new_songs()
 mpc("volume 90")
+mpc("repeat on")
 pick_random_first_song()
 mpc("pause")
 lcd_display("Press SELECT to start playing")
