@@ -63,8 +63,14 @@ def prev_album():
     for go in range(100):
         prev_song()
         if current_album() != start:
-            return
-        
+            break
+    start = current_album()
+    for go in range(100):
+        prev_song()
+        if current_album() != start:
+            break
+    next_song()
+                
 def shutdown():
     mpc("pause")
     lcd.set_backlight(0)
