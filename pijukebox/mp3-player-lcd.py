@@ -57,6 +57,13 @@ def next_album():
         next_song()
         if current_album() != start:
             return
+
+def prev_album():
+    start = current_album()
+    for go in range(100):
+        prev_song()
+        if current_album() != start:
+            return
         
 def shutdown():
     mpc("pause")
@@ -98,6 +105,8 @@ while True:
         prev_song()
     if lcd.is_pressed(LCD.DOWN):
         next_album()
+    if lcd.is_pressed(LCD.UP):
+        prev_album()
     if lcd.is_pressed(LCD.SELECT):
         mpc("toggle")
         are_we_shutting_down()
