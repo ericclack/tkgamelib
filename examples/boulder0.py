@@ -11,17 +11,12 @@ import random, time, sys
 sys.path.append('..')
 from geekclub.pyscratch import *
 
+BLOCK_SIZE=50
+
 create_canvas()
 
 fred_img = PhotoImage(file='images/smallface.gif')
-
-BLOCK_SIZE=50
-
-class FredSprite(ImageSprite):
-    def __init__(self, x=0, y=0):
-        super(FredSprite, self).__init__(fred_img, x, y)
-
-fred = FredSprite()
+fred = ImageSprite(fred_img)
 fred.move_to(0,0)
 
 def move(dx, dy):
