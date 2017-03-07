@@ -9,9 +9,6 @@ https://github.com/ericclack/geekclub
 
 Author: Eric Clack, eric@bn7.net
 
-To Do:
-- Moving in a direction (degrees)
-
 To generate doc for this module run:
 pydoc3 -w pyscratch
 """
@@ -324,7 +321,7 @@ class Sprite:
 
 
 class ImageSprite(Sprite):
-    """A sprite for a bitmap image.
+    """A sprite for a bitmap GIF image.
 
     Create like this:
     > create_canvas()
