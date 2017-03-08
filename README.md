@@ -10,7 +10,8 @@ I'm aiming for a suite of libraries that:
 
 * Makes it easy to get visual or audio effects
 * Gives immediate results (like Scratch does), type some commands, press run, see results
-* Runs easily on the Pi (of course)
+* Runs easily on the Raspberry Pi
+* Runs easily on Windows PCs in schools, to support my STEM Ambassador work
 * Has depth with plenty to explore.
 
 Prerequesites
