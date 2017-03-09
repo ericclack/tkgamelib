@@ -1,7 +1,7 @@
 # Copyright 2014, Eric Clack, eric@bn7.net
 # This program is distributed under the terms of the GNU General Public License
 
-"""Test out of python for Racket stars game"""
+"""Animate a star field"""
 
 import random, time, sys
 sys.path.append('..')
