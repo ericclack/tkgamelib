@@ -15,8 +15,7 @@ BLOCK_SIZE=50
 
 create_canvas()
 
-fred_img = PhotoImage(file='images/smallface.gif')
-fred = ImageSprite(fred_img)
+fred = ImageSprite('images/smallface.gif')
 fred.move_to(0,0)
 
 def move(dx, dy):

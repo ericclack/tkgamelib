@@ -325,12 +325,19 @@ class ImageSprite(Sprite):
 
     Create like this:
     > create_canvas()
+    > s = ImageSprite('images/face.gif')
+    Or:
     > image = PhotoImage(file='images/face.gif')
     > s = ImageSprite(image)
     """
 
     def __init__(self, img, x=100, y=100):
-        spriteid = CANVAS.create_image(x,y, image=img)
+        if isinstance(img, str):
+            assert img.lower().endswith(".gif"), "Sorry, ImageSprite only works with GIFs"
+            self.photo_image = PhotoImage(file=img)
+        else:
+            self.photo_image = img
+        spriteid = CANVAS.create_image(x,y, image=self.photo_image)
         super(ImageSprite, self).__init__(spriteid)
 
 
