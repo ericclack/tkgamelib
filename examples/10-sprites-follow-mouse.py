@@ -1,7 +1,7 @@
 # Copyright 2014, Eric Clack, eric@bn7.net
 # This program is distributed under the terms of the GNU General Public License
 
-"""A set of 10 sprites that follow each other."""
+"""A list of 10 sprites that follow each other, and the mouse."""
 
 import random, sys
 sys.path.append('..')
