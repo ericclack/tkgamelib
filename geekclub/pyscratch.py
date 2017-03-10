@@ -2,7 +2,7 @@
 # This program is distributed under the terms of the GNU General 
 # Public License
 
-"""An attempt to make Scratch style coding in Python easier.
+"""An attempt to make Scratch-style coding in Python easier.
 
 See examples in the folder examples, or more info on github.com:
 https://github.com/ericclack/geekclub
@@ -342,6 +342,7 @@ class ImageSprite(Sprite):
 
 
 class Struct:
+    """A handy store for related variables."""
     def __init__(self, **entries): self.__dict__.update(entries)
     
 

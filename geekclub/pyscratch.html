@@ -9,15 +9,12 @@
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>pyscratch</strong></big></big></font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/eric/Code/geekclub/geekclub/pyscratch.py">/Users/eric/Code/geekclub/geekclub/pyscratch.py</a></font></td></tr></table>
-    <p><tt>An&nbsp;attempt&nbsp;to&nbsp;make&nbsp;Scratch&nbsp;style&nbsp;coding&nbsp;in&nbsp;Python&nbsp;easier.<br>
+    <p><tt>An&nbsp;attempt&nbsp;to&nbsp;make&nbsp;Scratch-style&nbsp;coding&nbsp;in&nbsp;Python&nbsp;easier.<br>
 &nbsp;<br>
 See&nbsp;examples&nbsp;in&nbsp;the&nbsp;folder&nbsp;examples,&nbsp;or&nbsp;more&nbsp;info&nbsp;on&nbsp;github.com:<br>
 https://github.com/ericclack/geekclub<br>
 &nbsp;<br>
 Author:&nbsp;Eric&nbsp;Clack,&nbsp;eric@bn7.net<br>
-&nbsp;<br>
-To&nbsp;Do:<br>
--&nbsp;Moving&nbsp;in&nbsp;a&nbsp;direction&nbsp;(degrees)<br>
 &nbsp;<br>
 To&nbsp;generate&nbsp;doc&nbsp;for&nbsp;this&nbsp;module&nbsp;run:<br>
 pydoc3&nbsp;-w&nbsp;pyscratch</tt></p>
@@ -30,11 +27,12 @@ pydoc3&nbsp;-w&nbsp;pyscratch</tt></p>
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="colorsys.html">colorsys</a><br>
 <a href="tkinter.constants.html">tkinter.constants</a><br>
-</td><td width="25%" valign=top><a href="random.html">random</a><br>
-<a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="math.html">math</a><br>
+<a href="random.html">random</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
+<a href="tkinter.simpledialog.html">tkinter.simpledialog</a><br>
 </td><td width="25%" valign=top><a href="sys.html">sys</a><br>
-<a href="warnings.html">warnings</a><br>
-</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+</td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -62,10 +60,12 @@ pydoc3&nbsp;-w&nbsp;pyscratch</tt></p>
 <font color="#000000" face="helvetica, arial"><a name="ImageSprite">class <strong>ImageSprite</strong></a>(<a href="pyscratch.html#Sprite">Sprite</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt>A&nbsp;sprite&nbsp;for&nbsp;a&nbsp;bitmap&nbsp;image.<br>
+<td colspan=2><tt>A&nbsp;sprite&nbsp;for&nbsp;a&nbsp;bitmap&nbsp;GIF&nbsp;image.<br>
 &nbsp;<br>
 Create&nbsp;like&nbsp;this:<br>
 &gt;&nbsp;<a href="#-create_canvas">create_canvas</a>()<br>
+&gt;&nbsp;s&nbsp;=&nbsp;<a href="#ImageSprite">ImageSprite</a>('images/face.gif')<br>
+Or:<br>
 &gt;&nbsp;image&nbsp;=&nbsp;PhotoImage(file='images/face.gif')<br>
 &gt;&nbsp;s&nbsp;=&nbsp;<a href="#ImageSprite">ImageSprite</a>(image)<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
@@ -76,13 +76,13 @@ Create&nbsp;like&nbsp;this:<br>
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="ImageSprite-__init__"><strong>__init__</strong></a>(self, img, x<font color="#909090">=100</font>, y<font color="#909090">=100</font>)</dt></dl>
+<dl><dt><a name="ImageSprite-__init__"><strong>__init__</strong></a>(self, img, x=100, y=100)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
 
 <hr>
 Methods inherited from <a href="pyscratch.html#Sprite">Sprite</a>:<br>
 <dl><dt><a name="ImageSprite-accelerate"><strong>accelerate</strong></a>(self, speed_up)</dt></dl>
 
-<dl><dt><a name="ImageSprite-accelerate_towards"><strong>accelerate_towards</strong></a>(self, to_x, to_y, steps<font color="#909090">=1</font>)</dt></dl>
+<dl><dt><a name="ImageSprite-accelerate_towards"><strong>accelerate_towards</strong></a>(self, to_x, to_y, steps=1)</dt></dl>
 
 <dl><dt><a name="ImageSprite-accelerate_upto_max"><strong>accelerate_upto_max</strong></a>(self, speed, increase)</dt></dl>
 
@@ -104,11 +104,11 @@ Methods inherited from <a href="pyscratch.html#Sprite">Sprite</a>:<br>
 
 <dl><dt><a name="ImageSprite-move_to_random_pos"><strong>move_to_random_pos</strong></a>(self)</dt><dd><tt>Move&nbsp;to&nbsp;a&nbsp;random&nbsp;pos&nbsp;on&nbsp;the&nbsp;canvas</tt></dd></dl>
 
-<dl><dt><a name="ImageSprite-move_towards"><strong>move_towards</strong></a>(self, to_x, to_y, steps<font color="#909090">=1</font>)</dt><dd><tt>Fairly&nbsp;clumsy&nbsp;movement&nbsp;towards&nbsp;a&nbsp;new&nbsp;x,y&nbsp;point</tt></dd></dl>
+<dl><dt><a name="ImageSprite-move_towards"><strong>move_towards</strong></a>(self, to_x, to_y, steps=1)</dt></dl>
 
 <dl><dt><a name="ImageSprite-move_with_speed"><strong>move_with_speed</strong></a>(self)</dt></dl>
 
-<dl><dt><a name="ImageSprite-pen_colour"><strong>pen_colour</strong></a>(self, h, s<font color="#909090">=100</font>, v<font color="#909090">=100</font>)</dt></dl>
+<dl><dt><a name="ImageSprite-pen_colour"><strong>pen_colour</strong></a>(self, h, s=100, v=100)</dt></dl>
 
 <dl><dt><a name="ImageSprite-pen_down"><strong>pen_down</strong></a>(self)</dt><dd><tt>Start&nbsp;drawing&nbsp;when&nbsp;the&nbsp;sprite&nbsp;moves</tt></dd></dl>
 
@@ -146,11 +146,11 @@ Data descriptors inherited from <a href="pyscratch.html#Sprite">Sprite</a>:<br>
 <td colspan=2><tt>A&nbsp;sprite&nbsp;that&nbsp;can&nbsp;be&nbsp;moved&nbsp;around&nbsp;the&nbsp;screen.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<dl><dt><a name="Sprite-__init__"><strong>__init__</strong></a>(self, spriteid)</dt></dl>
+<dl><dt><a name="Sprite-__init__"><strong>__init__</strong></a>(self, spriteid)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
 
 <dl><dt><a name="Sprite-accelerate"><strong>accelerate</strong></a>(self, speed_up)</dt></dl>
 
-<dl><dt><a name="Sprite-accelerate_towards"><strong>accelerate_towards</strong></a>(self, to_x, to_y, steps<font color="#909090">=1</font>)</dt></dl>
+<dl><dt><a name="Sprite-accelerate_towards"><strong>accelerate_towards</strong></a>(self, to_x, to_y, steps=1)</dt></dl>
 
 <dl><dt><a name="Sprite-accelerate_upto_max"><strong>accelerate_upto_max</strong></a>(self, speed, increase)</dt></dl>
 
@@ -172,11 +172,11 @@ Data descriptors inherited from <a href="pyscratch.html#Sprite">Sprite</a>:<br>
 
 <dl><dt><a name="Sprite-move_to_random_pos"><strong>move_to_random_pos</strong></a>(self)</dt><dd><tt>Move&nbsp;to&nbsp;a&nbsp;random&nbsp;pos&nbsp;on&nbsp;the&nbsp;canvas</tt></dd></dl>
 
-<dl><dt><a name="Sprite-move_towards"><strong>move_towards</strong></a>(self, to_x, to_y, steps<font color="#909090">=1</font>)</dt><dd><tt>Fairly&nbsp;clumsy&nbsp;movement&nbsp;towards&nbsp;a&nbsp;new&nbsp;x,y&nbsp;point</tt></dd></dl>
+<dl><dt><a name="Sprite-move_towards"><strong>move_towards</strong></a>(self, to_x, to_y, steps=1)</dt></dl>
 
 <dl><dt><a name="Sprite-move_with_speed"><strong>move_with_speed</strong></a>(self)</dt></dl>
 
-<dl><dt><a name="Sprite-pen_colour"><strong>pen_colour</strong></a>(self, h, s<font color="#909090">=100</font>, v<font color="#909090">=100</font>)</dt></dl>
+<dl><dt><a name="Sprite-pen_colour"><strong>pen_colour</strong></a>(self, h, s=100, v=100)</dt></dl>
 
 <dl><dt><a name="Sprite-pen_down"><strong>pen_down</strong></a>(self)</dt><dd><tt>Start&nbsp;drawing&nbsp;when&nbsp;the&nbsp;sprite&nbsp;moves</tt></dd></dl>
 
@@ -210,9 +210,11 @@ Data descriptors defined here:<br>
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="Struct">class <strong>Struct</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
     
-<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;handy&nbsp;store&nbsp;for&nbsp;related&nbsp;variables.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<dl><dt><a name="Struct-__init__"><strong>__init__</strong></a>(self, **entries)</dt></dl>
+<dl><dt><a name="Struct-__init__"><strong>__init__</strong></a>(self, **entries)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
 
 <hr>
 Data descriptors defined here:<br>
@@ -229,18 +231,20 @@ Data descriptors defined here:<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-banner"><strong>banner</strong></a>(message)</dt><dd><tt>Display&nbsp;a&nbsp;basic&nbsp;text&nbsp;banner&nbsp;in&nbsp;the&nbsp;middle&nbsp;of&nbsp;the&nbsp;screen.</tt></dd></dl>
+<td width="100%"><dl><dt><a name="-askinteger"><strong>askinteger</strong></a>(title, prompt)</dt></dl>
+ <dl><dt><a name="-askstring"><strong>askstring</strong></a>(title, prompt)</dt></dl>
+ <dl><dt><a name="-banner"><strong>banner</strong></a>(message)</dt><dd><tt>Display&nbsp;a&nbsp;basic&nbsp;text&nbsp;banner&nbsp;in&nbsp;the&nbsp;middle&nbsp;of&nbsp;the&nbsp;screen.</tt></dd></dl>
  <dl><dt><a name="-canvas"><strong>canvas</strong></a>()</dt></dl>
  <dl><dt><a name="-clear_banner"><strong>clear_banner</strong></a>()</dt><dd><tt>Clear&nbsp;any&nbsp;banner&nbsp;set&nbsp;by&nbsp;`banner`&nbsp;method.</tt></dd></dl>
  <dl><dt><a name="-clear_canvas"><strong>clear_canvas</strong></a>()</dt><dd><tt>Remove&nbsp;everything&nbsp;from&nbsp;the&nbsp;canvas</tt></dd></dl>
  <dl><dt><a name="-clear_pen"><strong>clear_pen</strong></a>()</dt><dd><tt>Clear&nbsp;pen&nbsp;drawings</tt></dd></dl>
- <dl><dt><a name="-create_canvas"><strong>create_canvas</strong></a>(window_title<font color="#909090">='Pyscratch Game'</font>)</dt><dd><tt>Create&nbsp;the&nbsp;drawing&nbsp;/&nbsp;game&nbsp;area&nbsp;on&nbsp;the&nbsp;screen<br>
+ <dl><dt><a name="-create_canvas"><strong>create_canvas</strong></a>(window_title='Pyscratch Game')</dt><dd><tt>Create&nbsp;the&nbsp;drawing&nbsp;/&nbsp;game&nbsp;area&nbsp;on&nbsp;the&nbsp;screen<br>
 &nbsp;<br>
 Ready&nbsp;for&nbsp;our&nbsp;sprites&nbsp;or&nbsp;drawing.</tt></dd></dl>
  <dl><dt><a name="-direction"><strong>direction</strong></a>(mousepos, objpos)</dt><dd><tt>Is&nbsp;mousepos&nbsp;&gt;&nbsp;or&nbsp;&lt;&nbsp;objpos,&nbsp;return&nbsp;1&nbsp;or&nbsp;-1<br>
 &nbsp;<br>
 TODO:&nbsp;rename&nbsp;this&nbsp;method,&nbsp;not&nbsp;a&nbsp;good&nbsp;name.</tt></dd></dl>
- <dl><dt><a name="-forever"><strong>forever</strong></a>(fn, ms<font color="#909090">=100</font>)</dt><dd><tt>Keep&nbsp;doing&nbsp;something&nbsp;forever,&nbsp;every&nbsp;ms&nbsp;milliseconds</tt></dd></dl>
+ <dl><dt><a name="-forever"><strong>forever</strong></a>(fn, ms=100)</dt><dd><tt>Keep&nbsp;doing&nbsp;something&nbsp;forever,&nbsp;every&nbsp;ms&nbsp;milliseconds</tt></dd></dl>
  <dl><dt><a name="-future_action"><strong>future_action</strong></a>(fn, ms)</dt><dd><tt>Do&nbsp;something&nbsp;in&nbsp;the&nbsp;future,&nbsp;in&nbsp;ms&nbsp;milliseconds</tt></dd></dl>
  <dl><dt><a name="-hexs"><strong>hexs</strong></a>(v)</dt><dd><tt>Return&nbsp;a&nbsp;number&nbsp;in&nbsp;range&nbsp;0-255&nbsp;as&nbsp;two&nbsp;hex&nbsp;digits&nbsp;0-ff</tt></dd></dl>
  <dl><dt><a name="-hsv_to_hex"><strong>hsv_to_hex</strong></a>(h, s, v)</dt><dd><tt>Convert&nbsp;HSV&nbsp;values&nbsp;(0-1)&nbsp;to&nbsp;a&nbsp;hex&nbsp;string&nbsp;#000000-#ffffff.<br>
@@ -276,6 +280,7 @@ True</tt></dd></dl>
 1<br>
 &gt;&gt;&gt;&nbsp;<a href="#-sign">sign</a>(0)<br>
 1</tt></dd></dl>
+ <dl><dt><a name="-translate_point"><strong>translate_point</strong></a>(x, y, distance, angle)</dt><dd><tt>Return&nbsp;a&nbsp;new&nbsp;point&nbsp;moving&nbsp;x,y&nbsp;by&nbsp;distance&nbsp;along&nbsp;angle</tt></dd></dl>
  <dl><dt><a name="-when_button1_clicked"><strong>when_button1_clicked</strong></a>(fn)</dt></dl>
  <dl><dt><a name="-when_button1_dragged"><strong>when_button1_dragged</strong></a>(fn)</dt></dl>
  <dl><dt><a name="-when_button2_clicked"><strong>when_button2_clicked</strong></a>(fn)</dt></dl>
