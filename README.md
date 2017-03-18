@@ -1,5 +1,5 @@
-geekclub
-========
+geekclub: Scratch style programming in Python
+=============================================
 
 Code and examples for Plumpton Geek Club.
 
@@ -41,7 +41,11 @@ mainloop()
 ```
 
 Check out the examples directory. You should be able to run the code straight
-from that directory. 
+from that directory.
+
+You can browse basic [documentation for the geekclub module](http://htmlpreview.github.io/?https://github.com/ericclack/geekclub/blob/master/geekclub/pyscratch.html) or [see the source code](https://github.com/ericclack/geekclub/blob/master/geekclub/pyscratch.py).
+
+## Bolder game in `examples/boulder4.py`:
 
 ![boulder screen shot](/images/boulder.png)
 
