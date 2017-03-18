@@ -23,16 +23,22 @@ Prerequesites
 Examples
 --------
 
-Start up `idle3` and run...
+Start up `idle3` and create a new file, save it to the directory `my_work`, then add the following code...
 
-    >>> from geekclub.pyscratch import *
-    >>> create_canvas()
-    >>> spriteimg = PhotoImage(file='examples/images/face.gif')
-    >>> sprite = ImageSprite(spriteimg)
-    >>> sprite.move(100,0)
-    >>> sprite.move(0,100)
-    >>> sprite.move(-100,0)
-    >>> sprite.move(0,-1000)
+```
+import sys; sys.path.append('..')
+from geekclub.pyscratch import *
+  
+create_canvas()
+sprite = ImageSprite('my_images/face.gif')
+sprite.pen_down()
+
+def move_sprite(event):
+    sprite.move(10,10)
+
+when_key_pressed('<space>', move_sprite)
+mainloop()
+```
 
 Check out the examples directory. You should be able to run the code straight
 from that directory. 
