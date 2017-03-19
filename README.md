@@ -1,8 +1,6 @@
 geekclub: Scratch style programming in Python
 =============================================
 
-Code and examples for Plumpton Geek Club.
-
 An attempt to make Scratch style programming in Python possible -- in
 response to the question: "What shall I try after Scratch". Inspired by MIT Scratch: http://scratch.mit.edu/
 
