@@ -18,6 +18,14 @@ Prerequesites
 * Python 3
 * A working tkinter library
 
+Get the code
+------------
+
+You can use `git` or download a [zip file of the code](https://github.com/ericclack/geekclub/archive/master.zip):
+
+    git clone https://github.com/ericclack/geekclub.git
+
+
 Examples
 --------
 
