@@ -43,9 +43,9 @@ mainloop()
 Check out the examples directory. You should be able to run the code straight
 from that directory.
 
-You can browse basic [documentation for the geekclub module](http://htmlpreview.github.io/?https://github.com/ericclack/geekclub/blob/master/geekclub/pyscratch.html) or [see the source code](https://github.com/ericclack/geekclub/blob/master/geekclub/pyscratch.py).
+Have a look at the [wiki](https://github.com/ericclack/geekclub/wiki) to get started. There's some basic [documentation for the geekclub module](http://htmlpreview.github.io/?https://github.com/ericclack/geekclub/blob/master/geekclub/pyscratch.html) or you can [view the source code](https://github.com/ericclack/geekclub/blob/master/geekclub/pyscratch.py).
 
-## Bolder game in `examples/boulder4.py`:
+## Bolder game in examples/boulder4.py:
 
 ![boulder screen shot](/images/boulder.png)
 
