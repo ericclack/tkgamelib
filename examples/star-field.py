@@ -18,7 +18,7 @@ def new_star():
     return star
 
 def star_out_of_view(star):
-    x, y = star.x(), star.y()
+    x, y = star.x, star.y
     return (x < 0 or x > CANVAS_WIDTH or y < 0 or y > CANVAS_HEIGHT)
 
 def fly_forwards():
@@ -33,8 +33,8 @@ def move_stars(stars):
             star.delete()
             stars2.append(new_star())
         else:            
-            dx = (star.x() - CANVAS_WIDTH/2) / (CANVAS_WIDTH/50)
-            dy = (star.y() - CANVAS_HEIGHT/2) / (CANVAS_HEIGHT/50)
+            dx = (star.x - CANVAS_WIDTH/2) / (CANVAS_WIDTH/50)
+            dy = (star.y - CANVAS_HEIGHT/2) / (CANVAS_HEIGHT/50)
             star.move(dx, dy)
             stars2.append(star)
     return stars2

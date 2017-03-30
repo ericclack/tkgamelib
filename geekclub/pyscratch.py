@@ -191,14 +191,19 @@ class Sprite:
         """Return (x,y) of this sprite"""
         return CANVAS.bbox(self.spriteid)[0:2]
 
+    @property
     def x(self): return self.pos()[0]
+
+    @property
     def y(self): return self.pos()[1]
 
+    @property
     def width(self):
         """The width in px of this sprite"""
         box = CANVAS.bbox(self.spriteid)
         return box[2]-box[0]
 
+    @property
     def height(self):
         """The height in px of this sprite"""
         box = CANVAS.bbox(self.spriteid)
@@ -236,8 +241,11 @@ class Sprite:
     def turn(self, degrees):
         self.direction = (self.direction + degrees) % 360
 
+    def turn_to(self, degrees):
+        self.direction = degrees
+        
     def move_forward(self, steps):
-        x2, y2 = translate_point(self.x(), self.y(), steps, self.direction)
+        x2, y2 = translate_point(self.x, self.y, steps, self.direction)
         self.move_to(x2, y2)
         
     def move_to_random_pos(self):

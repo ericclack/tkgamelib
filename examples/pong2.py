@@ -40,7 +40,7 @@ def bounce_ball():
         ball.accelerate(1.05)
 
     # Has the ball hit the bottom of the screen?
-    if ball.y() > CANVAS_HEIGHT - 10:
+    if ball.y > CANVAS_HEIGHT - 10:
         # Not sure how to quit!
         time.sleep(10)
 

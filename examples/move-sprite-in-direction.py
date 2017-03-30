@@ -2,12 +2,13 @@ import sys; sys.path.append('..')
 from geekclub.pyscratch import *
   
 create_canvas()
-sprite = ImageSprite('my_images/face.gif')
+sprite = ImageSprite('images/face.gif')
 sprite.pen_down()
+sprite.turn_to(90)
 
 def move_sprite(event):
     sprite.move_forward(5)
-
+    
 def turn_left(event):
     sprite.turn(-5)
 
