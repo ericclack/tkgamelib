@@ -16,6 +16,7 @@ pydoc3 -w pyscratch
 import random
 import math
 import colorsys
+import time
 from tkinter import *
 from tkinter import simpledialog
  
@@ -26,6 +27,9 @@ CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 800
 
 BANNER=None
+
+KEYS_DOWN = {}
+KEYDOWN_DELAY = .1
 
 
 def hexs(v):
@@ -101,6 +105,23 @@ def translate_point(x, y, distance, angle):
     return(x2, y2)
 
 
+def _key_pressed(event):
+    """Record time of last key down event"""
+    KEYS_DOWN[event.char] = time.time()
+
+def _key_released(event):
+    """Because on Mac OS X, key_press and key_release
+    events alternate when a key is held down, we use the 
+    last time the key was pressed, and ignore the key down
+    event"""
+    pass
+    #del(KEYS_DOWN[event.char])
+
+def is_key_down(key):
+    """Experimental tracking of multiple key presses"""
+    return key in KEYS_DOWN and KEYS_DOWN[key] > (time.time() - KEYDOWN_DELAY)
+    
+
 def create_canvas(window_title="Pyscratch Game"):
     """Create the drawing / game area on the screen
 
@@ -112,6 +133,11 @@ def create_canvas(window_title="Pyscratch Game"):
     CANVAS.pack()
     if window_title:
         master.wm_title(window_title)
+
+    CANVAS.focus_set()    
+    CANVAS.bind('<KeyPress>', _key_pressed)
+    CANVAS.bind('<KeyRelease>', _key_released)
+        
 
 def clear_canvas():
     """Remove everything from the canvas"""
@@ -154,9 +180,8 @@ def when_button2_clicked(fn):
     CANVAS.bind('<ButtonPress-2>', fn)
 
 def when_key_pressed(key, fn):
-    CANVAS.focus_set()
     CANVAS.bind('%s' % key, fn)
-    
+
 
 def mousex(): return CANVAS.winfo_pointerx() - CANVAS.winfo_rootx()
 def mousey(): return CANVAS.winfo_pointery() - CANVAS.winfo_rooty()
