@@ -185,6 +185,7 @@ class Sprite:
         self.speed_x = 0
         self.speed_y = 0
         self.max_speed = 5
+        self.direction = 0
 
     def pos(self):
         """Return (x,y) of this sprite"""
@@ -218,6 +219,7 @@ class Sprite:
         CANVAS.delete(self.spriteid)
 
     def move_towards(self, to_x, to_y, steps=1):
+        """Move towards a point"""
         x, y = self.pos()
         dx = to_x - x
         dy = to_y - y
@@ -231,6 +233,13 @@ class Sprite:
         cx, cy = self.pos()
         self.move(x-cx, y-cy)
 
+    def turn(self, degrees):
+        self.direction = (self.direction + degrees) % 360
+
+    def move_forward(self, steps):
+        x2, y2 = translate_point(self.x(), self.y(), steps, self.direction)
+        self.move_to(x2, y2)
+        
     def move_to_random_pos(self):
         """Move to a random pos on the canvas"""
         self.move_to(random.randint(1,CANVAS_WIDTH), random.randint(1,CANVAS_HEIGHT))
