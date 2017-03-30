@@ -46,6 +46,9 @@ when_key_pressed('<space>', move_sprite)
 mainloop()
 ```
 
+Documentation
+-------------
+
 Check out the examples directory. You should be able to run the code straight
 from that directory.
 
