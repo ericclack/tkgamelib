@@ -47,7 +47,7 @@ def bounce_ball():
     if ball.touching(bat):
         ball.bounce_up()
         ball.accelerate(1.05)
-        mid_bat_x = bat.x + (bat.width() / 2)
+        mid_bat_x = bat.x + (bat.width / 2)
         ball.speed_x = (ball.x - mid_bat_x) / 10
 
     if ball.y < 10:
