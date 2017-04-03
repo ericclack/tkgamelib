@@ -27,6 +27,7 @@ CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 800
 
 BANNER=None
+END_GAME=False
 
 KEYS_DOWN = {}
 KEYDOWN_DELAY = .1
@@ -191,14 +192,24 @@ def forever(fn, ms=100):
     """Keep doing something forever, every ms milliseconds"""
     def wrapper():
         fn()
-        CANVAS.after(ms, wrapper)
+        if not END_GAME:
+            CANVAS.after(ms, wrapper)
     CANVAS.after(ms, wrapper)
 
 def future_action(fn, ms):
     """Do something in the future, in ms milliseconds"""
     CANVAS.after(ms, fn)
 
+def end_game(message='Game Over', ms=2000):
+    global END_GAME
+    END_GAME = True
+    banner(message)
+    future_action(_quit_game, ms)
+    
+def _quit_game():
+    quit()
 
+    
 class Sprite:
     """A sprite that can be moved around the screen."""
 
@@ -262,6 +273,9 @@ class Sprite:
         """Move to a new x,y pos"""
         cx, cy = self.pos()
         self.move(x-cx, y-cy)
+
+    def centre(self):
+        self.move_to(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
 
     def turn(self, degrees):
         self.direction = (self.direction + degrees) % 360
