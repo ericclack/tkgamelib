@@ -6,7 +6,7 @@ create_canvas()
 
 # Create a game from this template in 3 steps:
 # 1. Create sprites
-# 2. Add game controls
+# 2. Add game controls (at the end of this file)
 # 3. Write the control functions
 
 
@@ -26,7 +26,7 @@ alien = Sprite(canvas().create_oval(10,10, 50,50, fill='red'))
 
 # You can also make lists of sprites
 gems = [] # An empty list
-for i in range(10): # Make 10
+for i in range(30): # Make 30
     gem = Sprite(canvas().create_oval(10,10, 50,50, fill='blue'))
     gem.move_to_random_pos()
     gems.append(gem)  
@@ -35,10 +35,14 @@ for i in range(10): # Make 10
 # ---------------------------------------------------------
 # STEP 3
 # Define your functions to control the game and its sprites
+# -- these must be defined before the event handlers
 
 def follow_mouse():
-    sprite.move_towards(mousex(), mousey(), 20)
-    show_variable("Score", sprite.score)
+    sprite.move_towards(mousex(), mousey(), 10)
+    show_variables([
+        ("Score", sprite.score),
+        ("Gems left", len(gems))
+    ])
     if sprite.touching(alien):
         end_game()
         
@@ -58,16 +62,18 @@ def collect_gems():
         
     gem = alien.touching_any(gems)    
     if gem:
+        sprite.score = sprite.score + 1
         collect_gem(gem)        
     
 
 def move_alien():
-    alien.move_towards(sprite.x, sprite.y, 10)
+    alien.move_towards(sprite.x, sprite.y, 5)
 
 
 # ---------------------------------------------------------
 # STEP 2    
-# How will the user control the game? Add event handlers here
+# How will the user control the game? What will other
+# sprites do? Add your event handlers here.
 
 forever(follow_mouse)
 forever(collect_gems)
