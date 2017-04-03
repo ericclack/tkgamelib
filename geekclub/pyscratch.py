@@ -28,6 +28,8 @@ CANVAS_HEIGHT = 800
 
 BANNER=None
 END_GAME=False
+VARIABLES={}
+VAR_FONT_SIZE=30
 
 KEYS_DOWN = {}
 KEYDOWN_DELAY = .1
@@ -155,6 +157,18 @@ def banner(message):
     BANNER = CANVAS.create_text(CANVAS_WIDTH/2, CANVAS_HEIGHT/2,
                              font=("default", 50), text=message)
 
+def show_variable(label, value, slot=0):
+    if slot in VARIABLES:
+        CANVAS.delete(VARIABLES[slot])
+    VARIABLES[slot] = CANVAS.create_text(15, 15 + VAR_FONT_SIZE*slot,
+                                         font=("default", VAR_FONT_SIZE),
+                                         text="%s: %s" % (label, value),
+                                         anchor="nw")
+
+def show_variables(vars):
+    for i, (label, value) in enumerate(vars):
+        show_variable(label, value, i)
+    
 def askstring(title, prompt):
     return simpledialog.askstring(title, prompt, parent=CANVAS)
 
