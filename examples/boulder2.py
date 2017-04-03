@@ -190,14 +190,6 @@ def boulders_fall():
             else:
                 b.falling = False
 
-def end_game():
-    banner('Game Over')
-    #clear_landscape()
-    future_action(end_game2, 2000)
-
-def end_game2():
-    quit()
-
 def start_level(event):
     """Start or restart a level"""
     world.status = 'building'
@@ -213,7 +205,7 @@ def check_status():
         world.level += 1
         start_level(None)
     if world.status == 'end':
-        future_action(end_game, 2000)
+        end_game()
         
 
 when_key_pressed('<Left>', move_left)

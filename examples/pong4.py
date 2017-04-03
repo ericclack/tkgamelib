@@ -85,15 +85,6 @@ def next_level3():
     clear_banner()
     world.status = 'play'
 
-def end_game():
-    world.status = 'end'
-    banner("You lose!")
-    future_action(end_game2, 2000)
-
-def end_game2():
-    quit()
-    #sys.exit()
-
 def move_bricks_down():
     if world.status != 'play': return
     for b in world.bricks:

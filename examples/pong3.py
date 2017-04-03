@@ -58,12 +58,6 @@ def bounce_ball():
         bricks.remove(brick)
         brick.delete()
 
-def end_game():
-    banner("You lose!")
-    time.sleep(2)
-    sys.exit()
-
-
 def move_bricks_down():
     for b in bricks:
         b.move(0, 5)
