@@ -15,9 +15,11 @@ create_canvas()
 # Find or draw your sprites and save them as GIFs to my_work/my_images
 # Give them short names so that they are easy to enter here.
 
-# Create your sprite objects, either images
+# Create your sprite objects
 sprite = ImageSprite('my_images/face.gif')
 sprite.centre()
+# Add any variables you like
+sprite.score = 0
 
 # Or you can use simple shapes
 alien = Sprite(canvas().create_oval(10,10, 50,50, fill='red'))
@@ -36,17 +38,28 @@ for i in range(10): # Make 10
 
 def follow_mouse():
     sprite.move_towards(mousex(), mousey(), 20)
+    show_variable("Score", sprite.score)
     if sprite.touching(alien):
         end_game()
         
 
-def collect_gems():
-    gem = sprite.touching_any(gems)
+def collect_gem(gem):
+    "Helper function to collect a gem"
     if gem:
         # Remove gem from our list and from the screen
         gems.remove(gem)
-        gem.delete()
+        gem.delete()    
         
+def collect_gems():
+    gem = sprite.touching_any(gems)
+    if gem:
+        sprite.score = sprite.score + 1
+        collect_gem(gem)
+        
+    gem = alien.touching_any(gems)    
+    if gem:
+        collect_gem(gem)        
+    
 
 def move_alien():
     alien.move_towards(sprite.x, sprite.y, 10)
