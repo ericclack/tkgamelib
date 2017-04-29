@@ -125,12 +125,15 @@ def is_key_down(key):
     return key in KEYS_DOWN and KEYS_DOWN[key] > (time.time() - KEYDOWN_DELAY)
     
 
-def create_canvas(window_title="Pyscratch Game"):
+def create_canvas(window_title="Pyscratch Game", canvas_width=CANVAS_WIDTH, canvas_height=CANVAS_HEIGHT):
     """Create the drawing / game area on the screen
 
     Ready for our sprites or drawing.
     """
-    global CANVAS
+    global CANVAS, CANVAS_WIDTH, CANVAS_HEIGHT
+    CANVAS_WIDTH=canvas_width
+    CANVAS_HEIGHT=canvas_height
+    
     master = Tk()
     CANVAS = Canvas(master, width=CANVAS_WIDTH, height=CANVAS_HEIGHT)
     CANVAS.pack()
