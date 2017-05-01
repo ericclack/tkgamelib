@@ -59,6 +59,12 @@ def hsv_to_hex(h, s, v):
     (r, g, b) = colorsys.hsv_to_rgb(h, s, v)
     return "#" + hexs(255*r) + hexs(255*g) + hexs(255*b)
 
+def random_colour(s=1, v=1):
+    """A random colour as a hex string, suitable for passing to canvas shapes.
+
+    With optional saturation and value (brightness)."""
+    return hsv_to_hex(random.random(), s, v)
+
 def direction(mousepos, objpos):
     """Is mousepos > or < objpos, return 1 or -1
 
@@ -100,6 +106,17 @@ def point_inside_box(point, box):
     return (x2 >= x >= x1) and (y2 >= y >= y1)
 
 
+def mouse_touching(sprite):
+    return point_inside_box((mousex(), mousey()),
+                            CANVAS.bbox(sprite.spriteid))
+
+
+def mouse_touching_any(sprites):
+    for s in sprites:
+        if mouse_touching(s):
+            return s
+
+
 def translate_point(x, y, distance, angle):
     """Return a new point moving x,y by distance along angle"""
 
@@ -121,7 +138,10 @@ def _key_released(event):
     #del(KEYS_DOWN[event.char])
 
 def is_key_down(key):
-    """Experimental tracking of multiple key presses"""
+    """Experimental tracking of multiple key presses.
+
+    Works well with ascii chars, including space, needs some
+    work for arrow keys etc (with event.keysym prop?)."""
     return key in KEYS_DOWN and KEYS_DOWN[key] > (time.time() - KEYDOWN_DELAY)
     
 
@@ -153,12 +173,16 @@ def clear_pen():
     """Clear pen drawings"""
     CANVAS.delete("pen")        
 
-def banner(message):
-    """Display a basic text banner in the middle of the screen."""
+def banner(message, ms=None):
+    """Display a basic text banner in the middle of the screen.
+
+    Clear it after a period if ms set"""
     global BANNER
     if BANNER: clear_banner()
     BANNER = CANVAS.create_text(CANVAS_WIDTH/2, CANVAS_HEIGHT/2,
                              font=("default", 50), text=message)
+    if ms:
+        future_action(clear_banner, ms)
 
 def show_variable(label, value, slot=0):
     if slot in VARIABLES:
@@ -224,7 +248,7 @@ def end_game(message='Game Over', ms=2000):
     future_action(_quit_game, ms)
     
 def _quit_game():
-    quit()
+    canvas().quit()
 
     
 class Sprite:

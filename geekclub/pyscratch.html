@@ -93,6 +93,8 @@ Methods inherited from <a href="pyscratch.html#Sprite">Sprite</a>:<br>
 
 <dl><dt><a name="ImageSprite-bounce_up"><strong>bounce_up</strong></a>(self)</dt></dl>
 
+<dl><dt><a name="ImageSprite-centre"><strong>centre</strong></a>(self)</dt></dl>
+
 <dl><dt><a name="ImageSprite-delete"><strong>delete</strong></a>(self)</dt><dd><tt>Delete&nbsp;this&nbsp;sprite&nbsp;from&nbsp;the&nbsp;canvas</tt></dd></dl>
 
 <dl><dt><a name="ImageSprite-if_on_edge_bounce"><strong>if_on_edge_bounce</strong></a>(self)</dt></dl>
@@ -168,6 +170,8 @@ Data descriptors inherited from <a href="pyscratch.html#Sprite">Sprite</a>:<br>
 <dl><dt><a name="Sprite-bounce_down"><strong>bounce_down</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="Sprite-bounce_up"><strong>bounce_up</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Sprite-centre"><strong>centre</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="Sprite-delete"><strong>delete</strong></a>(self)</dt><dd><tt>Delete&nbsp;this&nbsp;sprite&nbsp;from&nbsp;the&nbsp;canvas</tt></dd></dl>
 
@@ -250,17 +254,20 @@ Data descriptors defined here:<br>
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl><dt><a name="-askinteger"><strong>askinteger</strong></a>(title, prompt)</dt></dl>
  <dl><dt><a name="-askstring"><strong>askstring</strong></a>(title, prompt)</dt></dl>
- <dl><dt><a name="-banner"><strong>banner</strong></a>(message)</dt><dd><tt>Display&nbsp;a&nbsp;basic&nbsp;text&nbsp;banner&nbsp;in&nbsp;the&nbsp;middle&nbsp;of&nbsp;the&nbsp;screen.</tt></dd></dl>
+ <dl><dt><a name="-banner"><strong>banner</strong></a>(message, ms=None)</dt><dd><tt>Display&nbsp;a&nbsp;basic&nbsp;text&nbsp;banner&nbsp;in&nbsp;the&nbsp;middle&nbsp;of&nbsp;the&nbsp;screen.<br>
+&nbsp;<br>
+Clear&nbsp;it&nbsp;after&nbsp;a&nbsp;period&nbsp;if&nbsp;ms&nbsp;set</tt></dd></dl>
  <dl><dt><a name="-canvas"><strong>canvas</strong></a>()</dt></dl>
  <dl><dt><a name="-clear_banner"><strong>clear_banner</strong></a>()</dt><dd><tt>Clear&nbsp;any&nbsp;banner&nbsp;set&nbsp;by&nbsp;`banner`&nbsp;method.</tt></dd></dl>
  <dl><dt><a name="-clear_canvas"><strong>clear_canvas</strong></a>()</dt><dd><tt>Remove&nbsp;everything&nbsp;from&nbsp;the&nbsp;canvas</tt></dd></dl>
  <dl><dt><a name="-clear_pen"><strong>clear_pen</strong></a>()</dt><dd><tt>Clear&nbsp;pen&nbsp;drawings</tt></dd></dl>
- <dl><dt><a name="-create_canvas"><strong>create_canvas</strong></a>(window_title='Pyscratch Game')</dt><dd><tt>Create&nbsp;the&nbsp;drawing&nbsp;/&nbsp;game&nbsp;area&nbsp;on&nbsp;the&nbsp;screen<br>
+ <dl><dt><a name="-create_canvas"><strong>create_canvas</strong></a>(window_title='Pyscratch Game', canvas_width=800, canvas_height=800)</dt><dd><tt>Create&nbsp;the&nbsp;drawing&nbsp;/&nbsp;game&nbsp;area&nbsp;on&nbsp;the&nbsp;screen<br>
 &nbsp;<br>
 Ready&nbsp;for&nbsp;our&nbsp;sprites&nbsp;or&nbsp;drawing.</tt></dd></dl>
  <dl><dt><a name="-direction"><strong>direction</strong></a>(mousepos, objpos)</dt><dd><tt>Is&nbsp;mousepos&nbsp;&gt;&nbsp;or&nbsp;&lt;&nbsp;objpos,&nbsp;return&nbsp;1&nbsp;or&nbsp;-1<br>
 &nbsp;<br>
 TODO:&nbsp;rename&nbsp;this&nbsp;method,&nbsp;not&nbsp;a&nbsp;good&nbsp;name.</tt></dd></dl>
+ <dl><dt><a name="-end_game"><strong>end_game</strong></a>(message='Game Over', ms=2000)</dt></dl>
  <dl><dt><a name="-forever"><strong>forever</strong></a>(fn, ms=100)</dt><dd><tt>Keep&nbsp;doing&nbsp;something&nbsp;forever,&nbsp;every&nbsp;ms&nbsp;milliseconds</tt></dd></dl>
  <dl><dt><a name="-future_action"><strong>future_action</strong></a>(fn, ms)</dt><dd><tt>Do&nbsp;something&nbsp;in&nbsp;the&nbsp;future,&nbsp;in&nbsp;ms&nbsp;milliseconds</tt></dd></dl>
  <dl><dt><a name="-hexs"><strong>hexs</strong></a>(v)</dt><dd><tt>Return&nbsp;a&nbsp;number&nbsp;in&nbsp;range&nbsp;0-255&nbsp;as&nbsp;two&nbsp;hex&nbsp;digits&nbsp;0-ff</tt></dd></dl>
@@ -277,7 +284,12 @@ White:<br>
 Red:<br>
 &gt;&gt;&gt;&nbsp;<a href="#-hsv_to_hex">hsv_to_hex</a>(0,&nbsp;1,&nbsp;1)<br>
 '#ff0000'</tt></dd></dl>
- <dl><dt><a name="-is_key_down"><strong>is_key_down</strong></a>(key)</dt><dd><tt>Experimental&nbsp;tracking&nbsp;of&nbsp;multiple&nbsp;key&nbsp;presses</tt></dd></dl>
+ <dl><dt><a name="-is_key_down"><strong>is_key_down</strong></a>(key)</dt><dd><tt>Experimental&nbsp;tracking&nbsp;of&nbsp;multiple&nbsp;key&nbsp;presses.<br>
+&nbsp;<br>
+Works&nbsp;well&nbsp;with&nbsp;ascii&nbsp;chars,&nbsp;including&nbsp;space,&nbsp;needs&nbsp;some<br>
+work&nbsp;for&nbsp;arrow&nbsp;keys&nbsp;etc&nbsp;(with&nbsp;event.keysym&nbsp;prop?).</tt></dd></dl>
+ <dl><dt><a name="-mouse_touching"><strong>mouse_touching</strong></a>(sprite)</dt></dl>
+ <dl><dt><a name="-mouse_touching_any"><strong>mouse_touching_any</strong></a>(sprites)</dt></dl>
  <dl><dt><a name="-mousex"><strong>mousex</strong></a>()</dt></dl>
  <dl><dt><a name="-mousey"><strong>mousey</strong></a>()</dt></dl>
  <dl><dt><a name="-point_inside_box"><strong>point_inside_box</strong></a>(point, box)</dt><dd><tt>Is&nbsp;point&nbsp;(x,y)&nbsp;inside&nbsp;box&nbsp;(x1,&nbsp;y1,&nbsp;x2,&nbsp;y2)?<br>
@@ -290,6 +302,11 @@ False<br>
 False<br>
 &gt;&gt;&gt;&nbsp;<a href="#-point_inside_box">point_inside_box</a>((50,50),&nbsp;(50,&nbsp;50,&nbsp;100,&nbsp;100))<br>
 True</tt></dd></dl>
+ <dl><dt><a name="-random_colour"><strong>random_colour</strong></a>(s=1, v=1)</dt><dd><tt>A&nbsp;random&nbsp;colour&nbsp;as&nbsp;a&nbsp;hex&nbsp;string,&nbsp;suitable&nbsp;for&nbsp;passing&nbsp;to&nbsp;canvas&nbsp;shapes.<br>
+&nbsp;<br>
+With&nbsp;optional&nbsp;saturation&nbsp;and&nbsp;value&nbsp;(brightness).</tt></dd></dl>
+ <dl><dt><a name="-show_variable"><strong>show_variable</strong></a>(label, value, slot=0)</dt></dl>
+ <dl><dt><a name="-show_variables"><strong>show_variables</strong></a>(vars)</dt></dl>
  <dl><dt><a name="-sign"><strong>sign</strong></a>(v)</dt><dd><tt>Return&nbsp;-1&nbsp;or&nbsp;1&nbsp;indicating&nbsp;the&nbsp;sign&nbsp;of&nbsp;v<br>
 &nbsp;<br>
 &gt;&gt;&gt;&nbsp;<a href="#-sign">sign</a>(-10)<br>
@@ -337,6 +354,7 @@ True</tt></dd></dl>
 <strong>DOTBOX</strong> = 'dotbox'<br>
 <strong>E</strong> = 'e'<br>
 <strong>END</strong> = 'end'<br>
+<strong>END_GAME</strong> = False<br>
 <strong>EW</strong> = 'ew'<br>
 <strong>EXCEPTION</strong> = 8<br>
 <strong>EXTENDED</strong> = 'extended'<br>
@@ -393,6 +411,8 @@ True</tt></dd></dl>
 <strong>TkVersion</strong> = 8.5<br>
 <strong>UNDERLINE</strong> = 'underline'<br>
 <strong>UNITS</strong> = 'units'<br>
+<strong>VARIABLES</strong> = {}<br>
+<strong>VAR_FONT_SIZE</strong> = 30<br>
 <strong>VERTICAL</strong> = 'vertical'<br>
 <strong>W</strong> = 'w'<br>
 <strong>WORD</strong> = 'word'<br>
