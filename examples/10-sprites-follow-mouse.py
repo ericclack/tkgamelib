@@ -13,10 +13,11 @@ spriteimg = PhotoImage(file='images/face.gif')
 
 sprites = []
 for x in range(10):
-    sprites.append( ImageSprite(spriteimg,
-                        random.randint(1,1000),
-                        random.randint(1,1000)) )
-
+    i = ImageSprite(spriteimg)
+    i.move_to_random_pos()
+    i.pen_width = 2
+    i.pen_down()
+    sprites.append(i)
 
 def follow_mouse():
     """The first sprite follows the mouse, the others follow each other"""
@@ -32,11 +33,9 @@ def follow_mouse():
         sprite.move_towards(fx, fy, steps)
         followsprite = sprite
 
-def randomise_sprites(event):
-    sprite = random.choice(sprites)
-    sprite.move_to( random.randint(1,1000), random.randint(1,1000) )
-
+def clear(event):
+    clear_pen()
 
 forever(follow_mouse, 10)
-when_button1_clicked(randomise_sprites)
+when_button1_clicked(clear)
 mainloop()

@@ -9,34 +9,22 @@ from geekclub.pyscratch import *
 
 create_canvas()
 
-spriteid = canvas().create_oval(100,100, 150,150)
-
-def direction(mouse, obj):
-    if mouse > obj:
-        return 1
-    else:
-        return -1
+oval = canvas().create_oval(100,100, 150,150)
+sprite = Sprite(oval)
+sprite.pen_down()
 
 def move_towards_mouse():
-    bbox = canvas().bbox(spriteid)
-    x = direction(mousex(), bbox[0])
-    y = direction(mousey(), bbox[1])
-    canvas().move(spriteid, x, y)
+    dx = (mousex() - sprite.x)
+    dy = (mousey() - sprite.y)
+    scale = 1+ abs(dx + dy)
+    sprite.move(2 * dx / scale, 2 * dy / scale)
 
 
-def move_away_from_mouse(event):
-    bbox = canvas().bbox(spriteid)
-    x = direction(event.x, bbox[0])
-    y = direction(event.y, bbox[1])
-    canvas().move(spriteid, -x*15, -y*15)
+def move_here(event):
+    sprite.move_to(event.x, event.y)
 
 
-def clear(event):
-    print('Clear')
-    canvas().delete(ALL)
-
-forever(move_towards_mouse, 100)
-when_button1_clicked(move_away_from_mouse)
-#when_key_pressed('C', clear)
+forever(move_towards_mouse, 50)
+when_button1_clicked(move_here)
 
 mainloop()

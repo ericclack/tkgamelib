@@ -65,16 +65,6 @@ def random_colour(s=1, v=1):
     With optional saturation and value (brightness)."""
     return hsv_to_hex(random.random(), s, v)
 
-def direction(mousepos, objpos):
-    """Is mousepos > or < objpos, return 1 or -1
-
-    TODO: rename this method, not a good name.
-    """
-    if mousepos > objpos:
-        return 1
-    else:
-        return -1
-
 def sign(v):
     """Return -1 or 1 indicating the sign of v
 
@@ -211,6 +201,9 @@ def when_button1_clicked(fn):
 
 def when_button1_dragged(fn):
     CANVAS.bind('<B1-Motion>', fn)
+
+def when_button1_released(fn):
+    CANVAS.bind('<ButtonRelease-1>', fn)    
 
 def when_mouse_enter(fn):
     CANVAS.bind('<Enter>', fn)
@@ -386,22 +379,24 @@ class Sprite:
 
     def accelerate_towards(self, to_x, to_y, steps=1):
         x, y = self.pos()
-        dx = direction(to_x, x)
-        dy = direction(to_y, y)
-        self.speed_x = self.accelerate_upto_max(self.speed_x, dx*steps)
-        self.speed_y = self.accelerate_upto_max(self.speed_y, dy*steps)
-        
-    def accelerate_upto_max(self, speed, increase):
-        speed += increase
-        if abs(speed) > self.max_speed:
-            speed = sign(speed)*self.max_speed
-        return speed
+        dx = sign(to_x - x)
+        dy = sign(to_y - y)
+        self.speed_x += dx*steps
+        self.speed_y += dy*steps
+        self._limit_speed()
 
     def accelerate(self, speed_up):
-        if abs(self.speed_x) < self.max_speed:
-            self.speed_x *= speed_up
-        if abs(self.speed_y) < self.max_speed:
-            self.speed_y *= speed_up
+        self.speed_x *= speed_up
+        self.speed_y *= speed_up
+        self._limit_speed()
+            
+    def _limit_speed(self):
+        """Check and reduce speed so it never exceeds +/- max_speed"""
+        def _limit(s, max):
+            if abs(s) > max: return sign(s)*max
+            else: return s
+        self.speed_x = _limit(self.speed_x, self.max_speed)
+        self.speed_y = _limit(self.speed_y, self.max_speed)
 
     def if_on_edge_bounce(self):
         x, y = self.pos()

@@ -33,7 +33,7 @@ def tree(branches, branch_angle, x, y, length, angle):
     length = random_change(length)
     angle = random_change(angle)
     x2, y2 = translate_point(x, y, length, angle)
-    canvas().create_line(x,y, x2, y2, width=length/20)
+    canvas().create_line(x,y, x2, y2, width=length/20, fill=random_colour(1,.5))
     
     # Draw a smaller tree at the end of this branch
     for i in range(branches):
