@@ -248,6 +248,7 @@ class Sprite:
     """A sprite that can be moved around the screen."""
 
     def __init__(self, spriteid):
+        """spriteid can be a number or tag"""
         self.spriteid = spriteid
         self.pen = False
         self.pen_width = 1
@@ -411,6 +412,12 @@ class Sprite:
     def bounce_down(self):
         self.speed_y = abs(self.speed_y)
 
+    def switch_costume(self):
+        """If this sprite is composed of multiple elements, move next to front"""
+        spriteids = canvas().find_withtag(self.spriteid)
+        if len(spriteids) == 1: return # Only one sprite
+        canvas().tag_raise(spriteids[0])
+        
 
 class ImageSprite(Sprite):
     """A sprite for a bitmap GIF image.
