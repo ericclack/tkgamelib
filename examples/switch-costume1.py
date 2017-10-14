@@ -16,8 +16,8 @@ create_canvas()
 # Give them short names so that they are easy to enter here.
 
 # Create your sprite objects
-img1 = PhotoImage(file="my_images/face.gif")
-img2 = PhotoImage(file="my_images/face2.gif")
+img1 = PhotoImage(file="images/face.gif")
+img2 = PhotoImage(file="images/face2.gif")
 elt1 = canvas().create_image(100,100, image=img1, tag="face")
 elt2 =canvas().create_image(100,100, image=img2, tag="face")
 sprite = Sprite("face")
@@ -73,7 +73,7 @@ def collect_gems():
 def move_alien():
     alien.move_towards(sprite.x, sprite.y, 5)
 
-def toggle(event):
+def toggle():
     sprite.switch_costume()
 
 
@@ -85,7 +85,7 @@ def toggle(event):
 forever(follow_mouse)
 forever(collect_gems)
 forever(move_alien)
-when_key_pressed("<space>", toggle)
+forever(toggle, 500)
 
 
 # ---------------------------------------------------------
