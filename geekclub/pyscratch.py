@@ -115,6 +115,13 @@ def translate_point(x, y, distance, angle):
     return(x2, y2)
 
 
+def rotate_point(x, y, angle):
+    """Rotate a point (x,y) around origin (0,0) by angle in degrees"""
+    rad = math.radians(angle)
+    return (x*math.cos(rad) - y*math.sin(rad),
+            y*math.cos(rad) + x*math.sin(rad))
+
+
 def _key_pressed(event):
     """Record time of last key down event"""
     KEYS_DOWN[event.char] = time.time()
@@ -456,13 +463,13 @@ class PolygonSprite(Sprite):
         super(PolygonSprite, self).__init__(spriteid)
         self.created_at_x, self.created_at_y = self.pos()
 
-    def rotate(self, degrees):
-        rad = math.radians(degrees)
-        current_x, current_y = self.pos() # Capture where this sprite got to
+    def rotate(self, angle):
+        """Rotate this polygon by an angle and redraw it"""
+        # Capture where this sprite got to
+        current_x, current_y = self.pos() 
         dx = current_x - self.created_at_x; dy = current_y - self.created_at_y
         
-        self.points = [(x*math.cos(rad) - y*math.sin(rad),
-                        y*math.cos(rad) + x*math.sin(rad)) for x,y in self.points]
+        self.points = [rotate_point(x, y, angle) for x,y in self.points]
         self.replace_canvas_object(CANVAS.create_polygon(self.points, self.attribs))
         self.created_at_x, self.created_at_y = self.pos()
         self.move(dx+1, dy+1) # Why is +1 needed?
