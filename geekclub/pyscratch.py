@@ -457,10 +457,11 @@ class PolygonSprite(Sprite):
 
     def rotate(self, degrees):
         rad = math.radians(degrees)
+        currentx, currenty = self.pos()
         self.points = [(x*math.cos(rad) - y*math.sin(rad),
                         y*math.cos(rad) + x*math.sin(rad)) for x,y in self.points]
         self.replace_canvas_object(CANVAS.create_polygon(self.points, self.attribs))
-
+        self.move_to(currentx+1, currenty+1)
         
 class Struct:
     """A handy store for related variables."""
