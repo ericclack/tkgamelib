@@ -448,20 +448,25 @@ class PolygonSprite(Sprite):
     """A multi-sided sprite that can be rotated and scaled."""
 
     def __init__(self, points, **attribs):
-        """Points is a list of (x,y) tuples"""
+        """Points is a list of (x,y) tuples, with its centre at (0,0)"""
         assert isinstance(points[0][0] + points[0][1], int), "Points should be a list of (x,y) tuples"
         self.points = points
         self.attribs = attribs
         spriteid = CANVAS.create_polygon(points, attribs)
         super(PolygonSprite, self).__init__(spriteid)
+        self.created_at_x, self.created_at_y = self.pos()
 
     def rotate(self, degrees):
         rad = math.radians(degrees)
-        currentx, currenty = self.pos()
+        current_x, current_y = self.pos() # Capture where this sprite got to
+        dx = current_x - self.created_at_x; dy = current_y - self.created_at_y
+        
         self.points = [(x*math.cos(rad) - y*math.sin(rad),
                         y*math.cos(rad) + x*math.sin(rad)) for x,y in self.points]
         self.replace_canvas_object(CANVAS.create_polygon(self.points, self.attribs))
-        self.move_to(currentx+1, currenty+1)
+        self.created_at_x, self.created_at_y = self.pos()
+        self.move(dx+1, dy+1) # Why is +1 needed?
+        
         
 class Struct:
     """A handy store for related variables."""
