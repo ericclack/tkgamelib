@@ -9,5 +9,5 @@ p.centre()
 def rotate():
     p.rotate(5)
 
-forever(rotate, 500)
+forever(rotate, 50)
 mainloop()

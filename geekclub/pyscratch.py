@@ -456,10 +456,12 @@ class PolygonSprite(Sprite):
         super(PolygonSprite, self).__init__(spriteid)
 
     def rotate(self, degrees):
-        # Just for testing
-        self.points = [(x+1, y+3) for x,y in self.points]
+        rad = math.radians(degrees)
+        self.points = [(x*math.cos(rad) - y*math.sin(rad),
+                        y*math.cos(rad) + x*math.sin(rad)) for x,y in self.points]
         self.replace_canvas_object(CANVAS.create_polygon(self.points, self.attribs))
 
+        
 class Struct:
     """A handy store for related variables."""
     def __init__(self, **entries): self.__dict__.update(entries)
