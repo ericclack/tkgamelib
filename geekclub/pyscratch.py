@@ -417,6 +417,10 @@ class Sprite:
         spriteids = canvas().find_withtag(self.spriteid)
         if len(spriteids) == 1: return # Only one sprite
         canvas().tag_raise(spriteids[0])
+
+    def replace_canvas_object(self, newobjid):
+        self.delete()
+        self.spriteid = newobjid
         
 
 class ImageSprite(Sprite):
@@ -440,6 +444,22 @@ class ImageSprite(Sprite):
         super(ImageSprite, self).__init__(spriteid)
 
 
+class PolygonSprite(Sprite):
+    """A multi-sided sprite that can be rotated and scaled."""
+
+    def __init__(self, points, **attribs):
+        """Points is a list of (x,y) tuples"""
+        assert isinstance(points[0][0] + points[0][1], int), "Points should be a list of (x,y) tuples"
+        self.points = points
+        self.attribs = attribs
+        spriteid = CANVAS.create_polygon(points, attribs)
+        super(PolygonSprite, self).__init__(spriteid)
+
+    def rotate(self, degrees):
+        # Just for testing
+        self.points = [(x+1, y+3) for x,y in self.points]
+        self.replace_canvas_object(CANVAS.create_polygon(self.points, self.attribs))
+
 class Struct:
     """A handy store for related variables."""
     def __init__(self, **entries): self.__dict__.update(entries)
@@ -448,3 +468,5 @@ class Struct:
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
+
+
