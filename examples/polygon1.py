@@ -3,7 +3,8 @@ from geekclub.pyscratch import *
   
 create_canvas()
 
-p = PolygonSprite( [(-100,-100), (100,-100), (100,100), (-100,100), (0,0), (-100,-100)], fill='red', outline='black' )
+p = PolygonSprite( [(-100,-100), (100,-100), (100,100), (-100,100), (0,0), (-100,-100)],
+                   fill='red', outline='black' )
 p.centre()
 
 def move(event):
