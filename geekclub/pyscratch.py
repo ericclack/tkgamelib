@@ -17,6 +17,7 @@ import random
 import math
 import colorsys
 import time
+import inspect
 from tkinter import *
 from tkinter import simpledialog
  
@@ -203,26 +204,42 @@ def clear_banner():
     """Clear any banner set by `banner` method."""
     CANVAS.delete(BANNER)
 
+def _bind_fn(event, fn):
+    """Bind an event to a function, including those with no args.
+
+    Event callbacks must have one argument to receive the event, 
+    but often this is not used. So for convenience we allow
+    user to supply zero argument event callbacks."""
+    
+    arity = len(inspect.signature(fn).parameters)
+    if arity == 1:
+        CANVAS.bind(event, fn)
+    elif arity == 0:
+        # Wrap fn with a new fn that discards event arg
+        CANVAS.bind(event, lambda event: fn())
+    else:
+        assert False, "Your event function must have zero or one argument"
+    
 def when_button1_clicked(fn):
-    CANVAS.bind('<Button-1>', fn)
+    _bind_fn('<Button-1>', fn)
 
 def when_button1_dragged(fn):
-    CANVAS.bind('<B1-Motion>', fn)
+    _bind_fn('<B1-Motion>', fn)
 
 def when_button1_released(fn):
-    CANVAS.bind('<ButtonRelease-1>', fn)    
+    _bind_fn('<ButtonRelease-1>', fn)    
 
 def when_mouse_enter(fn):
-    CANVAS.bind('<Enter>', fn)
+    _bind_fn('<Enter>', fn)
 
 def when_mouse_motion(fn):
-    CANVAS.bind('<Motion>', fn)        
+    _bind_fn('<Motion>', fn)        
 
 def when_button2_clicked(fn):
-    CANVAS.bind('<ButtonPress-2>', fn)
+    _bind_fn('<ButtonPress-2>', fn)
 
 def when_key_pressed(key, fn):
-    CANVAS.bind('%s' % key, fn)
+    _bind_fn('%s' % key, fn)
 
 
 def mousex(): return CANVAS.winfo_pointerx() - CANVAS.winfo_rootx()
