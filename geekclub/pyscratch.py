@@ -427,8 +427,8 @@ class Sprite:
         x, y = self.pos()
         if x < 0: self.speed_x = abs(self.speed_x)
         if y < 0: self.speed_y = abs(self.speed_y)
-        if x > CANVAS_WIDTH: self.speed_x = -abs(self.speed_x)
-        if y > CANVAS_HEIGHT: self.speed_y = -abs(self.speed_y)
+        if x + self.width > CANVAS_WIDTH: self.speed_x = -abs(self.speed_x)
+        if y + self.height > CANVAS_HEIGHT: self.speed_y = -abs(self.speed_y)
 
     def bounce_up(self):
         self.speed_y = -abs(self.speed_y)
