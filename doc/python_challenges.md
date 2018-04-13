@@ -51,7 +51,7 @@ Make another copy (ex1_3.py) and get it to print the following:
 ## 2 Maths
 For each of these you will need to create a new file. The instructions will not list it, but you will need to do it.
 
-### 2.1 Testing Plus
+### 2.1 The Plus (+)
 Enter the following code:
 ```Python
 print("lets do some maths")
@@ -65,7 +65,7 @@ Add to 2.1 to include:
 * print with a /
 
 ### 2.3 What about fractions?
-Add to 2.2 a print command to print a fraction.
+Add to 2.2 a print command to print a fraction (2/3, 3/4 or similar).
 
 Does it work?
 
@@ -162,3 +162,56 @@ print(one more)
 one_last_one=70
 print(one_last_one)
 ```
+
+## 4 Input
+### 4.1 Basic Input
+It’s time we got the computer to listen to us, type in the following program:
+```python
+a=input("type something")
+print(a)
+```
+Test this then move on to the next question
+
+### 4.2 Python Greeter
+Write a program to ask a user their name and then print a greeting to them. It should look like this:
+
+	What is your name?
+	>>> fred
+	Hello fred
+
+### 4.3 Python Greeter 2.0
+Improve upon the previous program to add a request for the persons age, and then display this too.
+
+	What is your name?
+	>>> fred
+	How old are you?
+	>>> 15
+	fred is 15
+
+### 4.4 Maths doubler
+Write a program which asks the user for a number, multiplies it by two and then prints it out. It will look like this:
+
+	Give me a number:
+	>>> 5
+	When doubled it is 10
+
+> **Hint:** input only works with strings, to double it you will need to convert the string to a number:
+>
+> `num = int(input('type something'))`
+
+### 4.5 Maths test
+Write a program which asks the user for two numbers, then adds, subtracts, multiplies, and divides them. It will look like this:
+
+	Give me a number:
+	>>> 8
+	And another one:
+	>>> 2
+	8 + 2 = 10
+	8 - 2 = 6
+	8 * 2 = 16
+	8 / 2 = 8
+
+Thats a lot of code to write, so solve it bit at a time. Get both numbers in and print them both. Then replace the print with the proper maths, bit by bit.
+
+### Challenge: Decimals
+The code for 4.5 will only work with whole numbers. But if you replace the `int` with a `float` in the input routine it will support decimals. Make that change and see if it works correctly.
