@@ -267,6 +267,9 @@ def end_game(message='Game Over', ms=2000):
 def _quit_game():
     canvas().quit()
 
+def unique_tagname():
+    return str(time.time())
+
     
 class Sprite:
     """A sprite that can be moved around the screen."""
@@ -448,7 +451,7 @@ class Sprite:
         
 
 class ImageSprite(Sprite):
-    """A sprite for a bitmap GIF image.
+    """A sprite for a bitmap GIF image or sequence of image costumes.
 
     Create like this:
     > create_canvas()
@@ -458,14 +461,22 @@ class ImageSprite(Sprite):
     > s = ImageSprite(image)
     """
 
-    def __init__(self, img, x=100, y=100):
-        if isinstance(img, str):
-            assert img.lower().endswith(".gif"), "Sorry, ImageSprite only works with GIFs"
-            self.photo_image = PhotoImage(file=img)
+    def __init__(self, imgs, x=100, y=100):
+        if isinstance(imgs, list):
+            tag = unique_tagname()
         else:
-            self.photo_image = img
-        spriteid = CANVAS.create_image(x,y, image=self.photo_image)
-        super(ImageSprite, self).__init__(spriteid)
+            imgs = [imgs]
+            tag = None # Use spriteid
+        
+        for img in imgs:
+            if isinstance(img, str):
+                assert img.lower().endswith(".gif"), "Sorry, ImageSprite only works with GIFs"
+                self.photo_image = PhotoImage(file=img)
+            else:
+                self.photo_image = img
+            spriteid = CANVAS.create_image(x,y, image=self.photo_image, tag=tag)
+        
+        super(ImageSprite, self).__init__(tag or spriteid)
 
 
 class PolygonSprite(Sprite):
