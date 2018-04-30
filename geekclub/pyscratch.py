@@ -268,7 +268,7 @@ def _quit_game():
     canvas().quit()
 
 def unique_tagname():
-    return str(time.time())
+    return "tag" + str(time.time())
 
     
 class Sprite:
@@ -439,7 +439,7 @@ class Sprite:
     def bounce_down(self):
         self.speed_y = abs(self.speed_y)
 
-    def switch_costume(self):
+    def next_costume(self):
         """If this sprite is composed of multiple elements, move next to front"""
         spriteids = canvas().find_withtag(self.spriteid)
         if len(spriteids) == 1: return # Only one sprite
@@ -477,6 +477,9 @@ class ImageSprite(Sprite):
             spriteid = CANVAS.create_image(x,y, image=self.photo_image, tag=tag)
         
         super(ImageSprite, self).__init__(tag or spriteid)
+        # Make sure the right image is on top
+        if len(imgs) > 1: self.next_costume()
+        
 
 
 class PolygonSprite(Sprite):

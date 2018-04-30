@@ -19,7 +19,9 @@ bat_img = PhotoImage(file='images/bat.gif')
 ball_img = PhotoImage(file='images/ball.gif')
 
 brick_img = PhotoImage(file='images/small_brick.gif')
-brick_hit_img = PhotoImage(file='images/small_brick.gif')
+brick_img_2 = PhotoImage(file='images/small_brick_2.gif')
+brick_img_3 = PhotoImage(file='images/small_brick_3.gif')
+brick_hit_img = PhotoImage(file='images/small_brick_hit.gif')
 
 bat = ImageSprite(bat_img)
 
@@ -33,7 +35,8 @@ def make_bricks_for_level(level):
     bricks = []
     for y in range(0, 100*level, 28):
         for x in range(0, CANVAS_WIDTH, 101):
-            brick = ImageSprite([brick_img, brick_hit_img])
+            brick = ImageSprite([brick_img, brick_img_2,
+                                 brick_img_3, brick_hit_img])
             brick.move_to(x, y)
             bricks.append(brick)
     return bricks
@@ -66,8 +69,10 @@ def bounce_ball():
             ball.bounce_up()
         else:
             ball.bounce_down()
-        world.bricks.remove(brick)
-        brick.delete()
+        brick.next_costume()
+        #time.sleep(.1)
+        #world.bricks.remove(brick)
+        #brick.delete()
 
 def next_level():
     banner("Next level!")
