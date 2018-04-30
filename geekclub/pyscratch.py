@@ -462,6 +462,7 @@ class ImageSprite(Sprite):
     """
 
     def __init__(self, imgs, x=100, y=100):
+        self.costume_ids = []
         if isinstance(imgs, list):
             tag = unique_tagname()
         else:
@@ -475,12 +476,17 @@ class ImageSprite(Sprite):
             else:
                 self.photo_image = img
             spriteid = CANVAS.create_image(x,y, image=self.photo_image, tag=tag)
+            self.costume_ids.append(spriteid)
         
         super(ImageSprite, self).__init__(tag or spriteid)
         # Make sure the right image is on top
         if len(imgs) > 1: self.next_costume()
-        
 
+    def switch_costume(self, number):
+        # TODO: This could go in Sprite if we collected
+        # TODO: costume_ids there.
+        canvas().tag_raise(self.costume_ids[number-1])
+        
 
 class PolygonSprite(Sprite):
     """A multi-sided sprite that can be rotated and scaled."""
