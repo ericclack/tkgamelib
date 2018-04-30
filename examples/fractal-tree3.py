@@ -52,4 +52,7 @@ def draw_trees(event):
 draw_trees(None)
 
 when_key_pressed('<space>', draw_trees)
+
+banner("Press space to see more trees", 2000)
+
 mainloop()
