@@ -70,9 +70,9 @@ def bounce_ball():
         else:
             ball.bounce_down()
         brick.next_costume()
-        #time.sleep(.1)
-        #world.bricks.remove(brick)
-        #brick.delete()
+        if brick.which_costume() == 1:
+            world.bricks.remove(brick)
+            brick.delete()
 
 def next_level():
     banner("Next level!")

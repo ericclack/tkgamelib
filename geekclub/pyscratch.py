@@ -440,7 +440,7 @@ class Sprite:
         self.speed_y = abs(self.speed_y)
 
     def next_costume(self):
-        """If this sprite is composed of multiple elements, move next to front"""
+        """Show next costume if this sprite is composed of multiple ones"""
         spriteids = canvas().find_withtag(self.spriteid)
         if len(spriteids) == 1: return # Only one sprite
         canvas().tag_raise(spriteids[0])
@@ -479,13 +479,18 @@ class ImageSprite(Sprite):
             self.costume_ids.append(spriteid)
         
         super(ImageSprite, self).__init__(tag or spriteid)
-        # Make sure the right image is on top
-        if len(imgs) > 1: self.next_costume()
+        self.switch_costume(1)
 
     def switch_costume(self, number):
+        "Show costume by number, 1 is the first one"
         # TODO: This could go in Sprite if we collected
         # TODO: costume_ids there.
         canvas().tag_raise(self.costume_ids[number-1])
+
+    def which_costume(self):
+        "The costume number of the current costume, 1 is the first"
+        spriteids = canvas().find_withtag(self.spriteid)
+        return self.costume_ids.index(spriteids[-1]) + 1
         
 
 class PolygonSprite(Sprite):
