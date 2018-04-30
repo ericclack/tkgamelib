@@ -54,7 +54,7 @@ def bounce_ball():
         next_level()
         
     # Has the ball hit the bottom of the screen?
-    if ball.y > CANVAS_HEIGHT - 10:
+    if ball.y >= CANVAS_HEIGHT - ball.height:
         end_game()
 
     # Has the ball touched a brick?

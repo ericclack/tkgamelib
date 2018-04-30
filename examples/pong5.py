@@ -1,13 +1,7 @@
 # Copyright 2014, Eric Clack, eric@bn7.net
 # This program is distributed under the terms of the GNU General Public License
 
-"""A simple bat and ball game. 
-
-TODO:
-- Move bricks down as you play, if the bricks hit the bottom
-  you lose a life.
-- If you can get the ball to the top you go to the next level.
-"""
+"""A simple bat and ball game demonstrating the costume functions."""
 
 import random, time, sys
 sys.path.append('..')
@@ -59,7 +53,7 @@ def bounce_ball():
         next_level()
         
     # Has the ball hit the bottom of the screen?
-    if ball.y > CANVAS_HEIGHT - 10:
+    if ball.y >= CANVAS_HEIGHT - ball.height:
         end_game()
 
     # Has the ball touched a brick?
