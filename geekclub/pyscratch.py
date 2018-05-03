@@ -267,9 +267,6 @@ def end_game(message='Game Over', ms=2000):
 def _quit_game():
     canvas().quit()
 
-def unique_tagname():
-    return "tag" + str(time.time())
-
     
 class Sprite:
     """A sprite that can be moved around the screen."""
@@ -461,10 +458,18 @@ class ImageSprite(Sprite):
     > s = ImageSprite(image)
     """
 
+    next_tag_id = 1
+
+    @staticmethod
+    def unique_tagname():
+        id = ImageSprite.next_tag_id
+        ImageSprite.next_tag_id += 1
+        return "pyscratch-tag-%d" % id
+    
     def __init__(self, imgs, x=100, y=100):
         self.costume_ids = []
         if isinstance(imgs, list):
-            tag = unique_tagname()
+            tag = ImageSprite.unique_tagname()
         else:
             imgs = [imgs]
             tag = None # Use spriteid
