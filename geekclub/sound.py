@@ -13,7 +13,26 @@ Get free to use sounds here: https://freesound.org/
 Author: Eric Clack, eric@bn7.net
 """
 
-import simpleaudio as sa
+class DummySoundLib():
+    "No-op sound library if we can't load simpleaudio"
+    WaveObject = None
+
+    def __init__(self):
+        print("Can't play sound!")
+        print("You need to install simpleaudio with `pip install simpleaudio`")
+        DummySoundLib.WaveObject = self
+
+    def from_wave_file(self, file):
+        return self
+
+    def play(self):
+        pass
+
+try:
+    import simpleaudio as sa
+except ImportError:
+    sa = DummySoundLib()
+
 import time
 
 BPM = 1 * 60
