@@ -17,6 +17,7 @@ import simpleaudio as sa
 import time
 
 BPM = 1 * 60
+def bpm(): return BPM
 
 def load_sound(file):
     "Load a sound, tested with WAV files"
