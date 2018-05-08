@@ -16,10 +16,15 @@ sprite.centre()
 def load_sound(file):
     return sa.WaveObject.from_wave_file(file)
 
-beat = 300
+bpm = 3 * 60
+def bps(): return bpm / 60
+def beat_ms():
+    return int(1000 / bps())
+
+print(bpm, bps(), beat_ms())
 
 def rest(beats):
-    time.sleep(beat * beats / 1000)
+    time.sleep(beat_ms() * beats / 1000)
                
 laser = load_sound('sounds/laser.wav')
 drum = load_sound('sounds/bass-drum.wav')
@@ -33,7 +38,7 @@ def drums():
     rest(.5)
     hh.play()
 
-forever(lasers, beat * 3)
-forever(drums, beat)
+forever(lasers, beat_ms() * 3)
+forever(drums, beat_ms())
 
 mainloop()
