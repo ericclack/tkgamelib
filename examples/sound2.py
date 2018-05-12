@@ -9,7 +9,6 @@ create_canvas()
 sprite = ImageSprite('images/face.gif')
 sprite.centre()
    
-set_bpm(180)
 laser = load_sound('sounds/laser.wav')
 drum = load_sound('sounds/bass-drum.wav')
 hh = load_sound('sounds/hh-cymbal.wav')
@@ -17,12 +16,15 @@ hh = load_sound('sounds/hh-cymbal.wav')
 def lasers():
     laser.play()
 
-def drums():
+def on_beat():
     drum.play()
-    rest(.5)
+
+def off_beat():
     hh.play()
 
-forever(lasers, beat_ms() * 3)
-forever(drums, beat_ms())
+set_bpm(180)
+every_beat(on_beat)
+every_off_beat(off_beat)
+#every_n_beats(3, lasers)
 
 mainloop()

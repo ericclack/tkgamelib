@@ -13,6 +13,8 @@ Get free to use sounds here: https://freesound.org/
 Author: Eric Clack, eric@bn7.net
 """
 
+from geekclub.pyscratch import canvas, future_action, END_GAME
+
 class DummySoundLib():
     "No-op sound library if we can't load simpleaudio"
     WaveObject = None
@@ -38,10 +40,6 @@ import time
 BPM = 1 * 60
 def bpm(): return BPM
 
-def load_sound(file):
-    "Load a sound, tested with WAV files"
-    return sa.WaveObject.from_wave_file(file)
-
 def set_bpm(b):
     global BPM
     BPM = b
@@ -54,8 +52,21 @@ def beat_ms():
     "The length of a beat in miliseconds"
     return int(1000 / bps())
 
-def rest(beats):
-    "Rest for this many beats, e.g. 0.5"
-    time.sleep(beat_ms() * beats / 1000)
-    
+def load_sound(file):
+    "Load a sound, tested with WAV files"
+    return sa.WaveObject.from_wave_file(file)
 
+def every_beat(fn):
+    def wrapper():
+        fn()
+        if not END_GAME:
+            canvas().after(beat_ms(), wrapper)
+    canvas().after(beat_ms(), wrapper)
+            
+def every_off_beat(fn):
+    def wrapper():
+        fn()
+        if not END_GAME:
+            canvas().after(beat_ms(), wrapper)
+    canvas().after(int(beat_ms() * 1.5), wrapper)
+    
