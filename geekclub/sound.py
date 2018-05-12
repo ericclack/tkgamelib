@@ -15,6 +15,7 @@ Author: Eric Clack, eric@bn7.net
 
 from geekclub.pyscratch import canvas, future_action, END_GAME
 
+## Fallback sound ###################
 class DummySoundLib():
     "No-op sound library if we can't load simpleaudio"
     WaveObject = None
@@ -30,11 +31,42 @@ class DummySoundLib():
     def play(self):
         pass
 
+## winsound ########################
+# note: you don't need the winsound imported if this code is never used
+# that suprised me
+class WinSoundObj:
+    "Winsound sound object"
+    def __init__(self, file):
+        self.file = file
+
+    def play(self):
+        winsound.PlaySound(self.file, winsound.SND_FILENAME)
+
+class WinSoundLib():
+    "Winsound wrapper to look like simpleaudio"
+    WaveObject = None
+
+    def __init__(self):
+        print("simpleaudio not installed, fallback to winsound")
+        WinSoundLib.WaveObject = self
+
+    def from_wave_file(self, file):
+        return WinSoundObj(file)
+
+## import code ########
 try:
+    # attempt 1: simple audio
     import simpleaudio as sa
 except ImportError:
-    sa = DummySoundLib()
+    try:
+        # attempt 2: winsound
+        import winsound
+        sa = WinSoundLib()
+    except ImportError:
+        # attempt 3: dummy sound
+        sa = DummySoundLib()
 
+## rest of the code ############
 import time
 
 BPM = 1 * 60

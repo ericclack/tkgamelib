@@ -1,10 +1,7 @@
 import sys
 sys.path.append('..')
 from geekclub.pyscratch import *
-
-# Install simpleaudio with: pip3 install simpleaudio
-# You might need to upgrade pip3 first
-import simpleaudio as sa
+from geekclub.sound import *
 
 create_canvas()
 
@@ -12,7 +9,7 @@ create_canvas()
 sprite = ImageSprite('images/face.gif')
 sprite.centre()
 
-laser = sa.WaveObject.from_wave_file('sounds/laser.wav')
+laser = load_sound('sounds/laser.wav')
 
 def laser_sound():
     laser.play()
