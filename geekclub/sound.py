@@ -70,3 +70,10 @@ def every_off_beat(fn):
             canvas().after(beat_ms(), wrapper)
     canvas().after(int(beat_ms() * 1.5), wrapper)
     
+
+def every_n_beats(beats, fn):
+    def wrapper():
+        fn()
+        if not END_GAME:
+            canvas().after(beat_ms() * beats, wrapper)
+    canvas().after(beat_ms() * beats, wrapper)

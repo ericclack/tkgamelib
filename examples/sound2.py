@@ -22,9 +22,9 @@ def on_beat():
 def off_beat():
     hh.play()
 
-set_bpm(180)
+set_bpm(120)
 every_beat(on_beat)
 every_off_beat(off_beat)
-#every_n_beats(3, lasers)
+every_n_beats(3, lasers)
 
 mainloop()
