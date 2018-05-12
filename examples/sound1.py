@@ -3,6 +3,7 @@ sys.path.append('..')
 from geekclub.pyscratch import *
 
 # Install simpleaudio with: pip3 install simpleaudio
+# You might need to upgrade pip3 first
 import simpleaudio as sa
 
 create_canvas()

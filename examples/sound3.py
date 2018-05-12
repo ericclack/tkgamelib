@@ -29,7 +29,7 @@ def follow_mouse():
     print(bpm())
     
 forever(lasers, beat_ms() * 3)
-forever(drums, beat_ms())
+forever(drums, beat_ms()) # how can this work with varying BPM?
 forever(follow_mouse)
 
 mainloop()
