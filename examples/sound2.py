@@ -13,21 +13,22 @@ laser = load_sound('sounds/laser.wav')
 drum = load_sound('sounds/bass-drum.wav')
 hh = load_sound('sounds/hh-cymbal.wav')
 
-def lasers():
-    laser.play()
+# Beats
+world = Struct(bpm = 180, tick = 0)
 
-def on_beat():
-    drum.play()
+def beat():
+    # On even ticks play beat, on odd, off_beat
+    if world.tick % 2 == 0:
+        drum.play()
+    else:
+        hh.play()
 
-def off_beat():
-    hh.play()
+    # Every third beat (so every 6 ticks), play this
+    if world.tick % 6 == 0:
+        laser.play()
 
-set_bpm(120)
-every_beat(on_beat)
-every_off_beat(off_beat)
-every_n_beats(3, lasers)
+    world.tick += 1
+    
 
-forever(tick, 100)
-#canvas().after(int(beat_ms() / 2), tick)
-
+forever(beat, bpm_to_ms(world.bpm))
 mainloop()

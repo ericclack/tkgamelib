@@ -37,53 +37,9 @@ except ImportError:
 
 import time
 
-BPM = 1 * 60
-BEAT_FNs = []
-OFF_BEAT_FNs = []
-START_TIME = time.time()
-
-def bpm(): return BPM
-
-def set_bpm(b):
-    global BPM
-    BPM = b
-
-def bps():
-    "Beats per second"
-    return BPM / 60
-
-def beat_ms():
-    "The length of a beat in miliseconds"
-    return int(1000 / bps())
-
 def load_sound(file):
     "Load a sound, tested with WAV files"
     return sa.WaveObject.from_wave_file(file)
 
-def every_beat(fn):
-    BEAT_FNs.append(fn)
-                
-def every_off_beat(fn):
-    OFF_BEAT_FNs.append(fn)
-
-def every_n_beats(beats, fn):
-    pass
-
-def tick():
-    """Run every half beat???"""
-    
-    # Decide what to play
-    elapsed_s = time.time() - START_TIME
-    tick = int(10 * round((elapsed_s * 1000) / beat_ms(), 1))
-    print(elapsed_s, tick)
-        
-    if tick % 10 == 0:
-        print("beat") #[fn() for fn in BEAT_FNs]
-#   else:
-#   ...
-            
-#    if not END_GAME:
-#        canvas().after(int(beat_ms() / 2), tick)
-
-
-
+def bpm_to_ms(bpm):
+    return int((60 / bpm) * 1000)
