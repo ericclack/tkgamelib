@@ -27,4 +27,7 @@ every_beat(on_beat)
 every_off_beat(off_beat)
 every_n_beats(3, lasers)
 
+forever(tick, 100)
+#canvas().after(int(beat_ms() / 2), tick)
+
 mainloop()
