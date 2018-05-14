@@ -2,7 +2,7 @@
 # This program is distributed under the terms of the GNU General 
 # Public License
 
-"""Sounds for PyScratch using simpleaudio.
+"""Sounds for PyScratch using simpleaudio or winsound.
 
 See examples in the folder examples, or more info on github.com:
 https://github.com/ericclack/geekclub/sound1.py
@@ -10,12 +10,13 @@ https://github.com/ericclack/geekclub/sound1.py
 To install: pip3 install simpleaudio
 Get free to use sounds here: https://freesound.org/
 
-Author: Eric Clack, eric@bn7.net
+Authors: Eric Clack, eric@bn7.net
+         Mark Gossage
 """
 
-from geekclub.pyscratch import canvas, future_action, END_GAME
 
-## Fallback sound ###################
+## Fallback sound class ---------------------------------------
+
 class DummySoundLib():
     "No-op sound library if we can't load simpleaudio"
     WaveObject = None
@@ -31,9 +32,11 @@ class DummySoundLib():
     def play(self):
         pass
 
-## winsound ########################
-# note: you don't need the winsound imported if this code is never used
-# that suprised me
+
+## winsound ---------------------------------------------------
+## note: you don't need the winsound imported if this code
+## is never used - that suprised me
+
 class WinSoundObj:
     "Winsound sound object"
     def __init__(self, file):
@@ -53,7 +56,10 @@ class WinSoundLib():
     def from_wave_file(self, file):
         return WinSoundObj(file)
 
-## import code ########
+
+## import code ------------------------------------------------
+## Try simpleaudio, then winsound, then fallback
+
 try:
     # attempt 1: simple audio
     import simpleaudio as sa
@@ -66,7 +72,9 @@ except ImportError:
         # attempt 3: dummy sound
         sa = DummySoundLib()
 
-## rest of the code ############
+
+## rest of the code -------------------------------------------
+
 import time
 
 def load_sound(file):
