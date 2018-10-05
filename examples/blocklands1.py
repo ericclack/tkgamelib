@@ -40,6 +40,12 @@ class BlockSprite(ImageSprite):
     def is_a(self, what):
         return (self.what == what)
 
+    def show(self):
+        self.switch_costume(1)
+
+    def hide(self):
+        self.switch_costume(2)
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -63,7 +69,7 @@ def make_landscape():
             if what:
                 block = BlockSprite(what)
                 block.move_to(x*BLOCK_SIZE, y*BLOCK_SIZE)
-                block_hide(block)
+                block.hide()
             else:
                 block = None
             landscape[-1].append(block)
@@ -76,21 +82,12 @@ def clear_landscape():
             if i: i.delete()
     landscape = []
 
-def block_hide(block):
-    block.switch_costume(2)
-    
-def draw_visible_landscape():
-    """Draw landscape around fred, that which he can see"""
-    cx, cy = fred.pos()
-    
+def show_visible_landscape():
+    """Show landscape around fred, that which he can see"""
     for dx in [-1, 0, 1]:
         for dy in [-1, 0, 1]:
-            x = cx+dx; y = cy+dy
-            if not(block_visible[(x,y)].get()):
-                what = landscape[y][x]
-                block = BlockSprite(what)
-                block.move_to(*BLOCK_SIZE, y*BLOCK_SIZE)
-                block_visible[(x,y)] = True
+            block = what_is_next_to(fred, dx, dy)
+            if block: block.show()
     
 def coords(sprite):
     cx, cy = sprite.pos()
@@ -156,6 +153,7 @@ def move(dx, dy):
             set_landscape(coords(next_block), next_block)
             # Now we can move too
             fred.move(dx*BLOCK_SIZE, 0)
+    show_visible_landscape()
         
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # World set up
