@@ -89,10 +89,21 @@ def clear_landscape():
 
 def show_visible_landscape():
     """Show landscape around fred, that which he can see"""
+
+    # First show the blocks right next to him
     for dx in [-1, 0, 1]:
         for dy in [-1, 0, 1]:
             block = what_is_next_to(fred, dx, dy)
             if block: block.show()
+
+    # Now further out, provided nothing (except earth)
+    # is in the way
+    for dx in range(-3, 4):
+        for dy in range(-3, 4):
+            block = what_is_next_to(fred, dx, dy)
+            if block and fred_can_see(dx, dy):
+                block.show()
+    
     
 def coords(sprite):
     cx, cy = sprite.pos()
@@ -121,6 +132,24 @@ def what_is_next_to(sprite, dx, dy):
         return world.landscape[cy+dy][cx+dx]    
     except IndexError:
         return None
+
+def fred_can_see(dx, dy):
+    """No blocks between fred and relative (dx, dy)?"""
+    fx, fy = coords(fred)    
+    length = max(abs(dx), abs(dy))
+    #print("Checking from %s to %s, length %s" % ((fx, fy), (dx, dy), length))
+    
+    # increments to take us to dx, dy over `length` iterations
+    xi = dx / length
+    yi = dy / length
+    
+    for i in range(1, length):
+        x = int(xi*i); y = int(yi*i)
+        #print(x, y)
+        block = what_is_next_to(fred, x, y)
+        if block and block.what in ['boulder', 'wall', 'gem']:
+            return False
+    return True
 
 def can_move(dx, dy):
     sprite = what_is_next_to(fred, dx, dy)
@@ -217,6 +246,7 @@ def start_level(event):
     clear_landscape()
     move_fred_to_start()
     world.landscape = make_landscape()
+    show_visible_landscape()    
     world.gems_left = len(all_gems())
     world.status = 'play'
 
