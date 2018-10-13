@@ -436,12 +436,6 @@ class Sprite:
     def bounce_down(self):
         self.speed_y = abs(self.speed_y)
 
-    def next_costume(self):
-        """Show next costume if this sprite is composed of multiple ones"""
-        spriteids = canvas().find_withtag(self.spriteid)
-        if len(spriteids) == 1: return # Only one sprite
-        canvas().tag_raise(spriteids[0])
-
     def replace_canvas_object(self, newobjid):
         self.delete()
         self.spriteid = newobjid
@@ -488,10 +482,21 @@ class ImageSprite(Sprite):
         super(ImageSprite, self).__init__(tag or spriteid)
         self.switch_costume(1)
 
+    def next_costume(self, method="raise"):
+        """Show next costume if this sprite is composed of multiple ones"""
+        spriteids = canvas().find_withtag(self.spriteid)
+        if len(spriteids) == 1: return # Only one sprite
+        if method == "raise":
+            canvas().tag_raise(spriteids[0])
+        elif method == "lower":
+            # Lower all other sprites
+            for i in spriteids[1:]:
+                canvas().tag_lower(i)
+        else:
+            assert False, "method should be either 'raise' or 'lower'"
+
     def switch_costume(self, number):
         "Show costume by number, 1 is the first one"
-        # TODO: This could go in Sprite if we collected
-        # TODO: costume_ids there.
         canvas().tag_raise(self.costume_ids[number-1])
 
     def which_costume(self):
