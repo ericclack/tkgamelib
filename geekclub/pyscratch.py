@@ -468,6 +468,8 @@ class ImageSprite(Sprite):
     
     def __init__(self, imgs, x=100, y=100):
         self.costume_ids = []
+        self.photo_images = []
+        
         if isinstance(imgs, list):
             tag = ImageSprite.unique_tagname()
         else:
@@ -477,10 +479,10 @@ class ImageSprite(Sprite):
         for img in imgs:
             if isinstance(img, str):
                 assert img.lower().endswith(".gif"), "Sorry, ImageSprite only works with GIFs"
-                self.photo_image = PhotoImage(file=img)
+                self.photo_images.append( PhotoImage(file=img) )
             else:
-                self.photo_image = img
-            spriteid = CANVAS.create_image(x,y, image=self.photo_image, tag=tag)
+                self.photo_images.append( img )
+            spriteid = CANVAS.create_image(x,y, image=self.photo_images[-1], tag=tag)
             self.costume_ids.append(spriteid)
         
         super(ImageSprite, self).__init__(tag or spriteid)
