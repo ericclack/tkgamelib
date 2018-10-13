@@ -7,7 +7,7 @@ DONE:
 - Scrolling, with Fred always in the middle
 
 TODO:
-
+- Bigger landscape
 """
 
 import random, time, sys
@@ -15,7 +15,8 @@ sys.path.append('..')
 from geekclub.pyscratch import *
 
 BLOCK_SIZE=50
-SCREEN_SIZE=16
+SCREEN_SIZE=32
+FRED_START=8 #(16,16)
 
 create_canvas()
 
@@ -55,7 +56,7 @@ def make_landscape():
     for y in range(SCREEN_SIZE):
         landscape.append([])
         for x in range(SCREEN_SIZE):
-            if x == SCREEN_SIZE/2 and y == SCREEN_SIZE/2:
+            if x == FRED_START and y == FRED_START:
                 # This is where fred starts
                 what = None
             elif x in (0, (SCREEN_SIZE-1)) or y in (0, (SCREEN_SIZE-1)):
@@ -163,9 +164,8 @@ world.landscape = make_landscape()
 
 fred = ImageSprite(fred_img)
 # Fred is always in the centre
-centre = int(SCREEN_SIZE/2)
-fred.landscape_x = fred.landscape_y = centre
-fred.move_to(centre*BLOCK_SIZE, centre*BLOCK_SIZE)
+fred.landscape_x = fred.landscape_y = FRED_START
+fred.move_to(FRED_START*BLOCK_SIZE, FRED_START*BLOCK_SIZE)
 world.fred = fred
 
 world.gems_left = len(all_gems())
@@ -207,8 +207,9 @@ def start_level(event):
     world.status = 'building'
     clear_banner()
     clear_landscape()
+    fred.move_to(FRED_START*BLOCK_SIZE,FRED_START*BLOCK_SIZE)
+    fred.landscape_x = fred.landscape_y = FRED_START
     world.landscape = make_landscape() 
-    fred.move_to(2*BLOCK_SIZE,2*BLOCK_SIZE)
     world.gems_left = len(all_gems())
     world.status = 'play'
 
