@@ -17,7 +17,6 @@ def toggle():
     sprite.next_costume()
 
 def toggle_background():
-    # BUG: this costume is now above all others!
     background.next_costume(method="lower")
 
 def costume_1(): sprite.switch_costume(1)
