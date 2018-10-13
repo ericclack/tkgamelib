@@ -459,7 +459,19 @@ class ImageSprite(Sprite):
         id = ImageSprite.next_tag_id
         ImageSprite.next_tag_id += 1
         return "pyscratch-tag-%d" % id
-    
+
+    @staticmethod
+    def _show_costume(showid, ids, method="raise"):
+        if method == "raise":
+            canvas().tag_raise(showid)
+        elif method == "lower":
+            # Lower all other sprites
+            for i in ids:
+                if i != showid:
+                    canvas().tag_lower(i)
+        else:
+            assert False, "method should be either 'raise' or 'lower'"
+            
     def __init__(self, imgs, x=100, y=100):
         self.costume_ids = []
         self.photo_images = []
@@ -486,18 +498,13 @@ class ImageSprite(Sprite):
         """Show next costume if this sprite is composed of multiple ones"""
         spriteids = canvas().find_withtag(self.spriteid)
         if len(spriteids) == 1: return # Only one sprite
-        if method == "raise":
-            canvas().tag_raise(spriteids[0])
-        elif method == "lower":
-            # Lower all other sprites
-            for i in spriteids[1:]:
-                canvas().tag_lower(i)
-        else:
-            assert False, "method should be either 'raise' or 'lower'"
-
-    def switch_costume(self, number):
+        ImageSprite._show_costume(spriteids[0], spriteids, method)
+        
+    def switch_costume(self, number, method="raise"):
         "Show costume by number, 1 is the first one"
-        canvas().tag_raise(self.costume_ids[number-1])
+        ImageSprite._show_costume(self.costume_ids[number-1],
+                                  self.costume_ids, method)
+                
 
     def which_costume(self):
         "The costume number of the current costume, 1 is the first"
