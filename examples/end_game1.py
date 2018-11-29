@@ -33,19 +33,17 @@ def bat_follows_mouse():
     bat.move_to(mousex(), mousey())
 
 
-def restart_game():
-    banner("Restarting...")
-    print("Restarting")
-    #canvas().unbind('<space>')
-    global END_GAME
-    END_GAME = False
+def restart():
+    banner("Restarting...", 1000)
+    canvas().unbind('<space>')
+    restart_game()
     init()
     
     
 def game_over():
     #kill_events()
     banner("Press <space> to try again")
-    when_key_pressed('<space>', restart_game)
+    when_key_pressed('<space>', restart)
     
     
 def bounce_ball():

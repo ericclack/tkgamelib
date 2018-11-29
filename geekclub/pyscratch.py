@@ -266,6 +266,10 @@ def end_game(message='Game Over', fn=_quit_game, ms=2000):
     END_GAME = True
     banner(message)
     future_action(fn, ms)
+
+def restart_game():
+    global END_GAME
+    END_GAME = False    
     
     
 class Sprite:
