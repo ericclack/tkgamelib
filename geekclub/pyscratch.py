@@ -258,15 +258,15 @@ def future_action(fn, ms):
     """Do something in the future, in ms milliseconds"""
     CANVAS.after(ms, fn)
 
-def end_game(message='Game Over', ms=2000):
-    global END_GAME
-    END_GAME = True
-    banner(message)
-    future_action(_quit_game, ms)
-    
 def _quit_game():
     canvas().quit()
 
+def end_game(message='Game Over', fn=_quit_game, ms=2000):
+    global END_GAME
+    END_GAME = True
+    banner(message)
+    future_action(fn, ms)
+    
     
 class Sprite:
     """A sprite that can be moved around the screen."""
