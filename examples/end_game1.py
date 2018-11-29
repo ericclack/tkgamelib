@@ -38,12 +38,24 @@ def restart():
     canvas().unbind('<space>')
     restart_game()
     init()
+
+
+def really_end_game():
+    end_game("Goodbye")
     
     
 def game_over():
-    #kill_events()
-    banner("Press <space> to try again")
+    # Because this function was called by end_game
+    # all forever events are cleared. We can
+    # set them back up again by calling our
+    # init() function.
+
+    # TODO:
+    # clear_all_bindings()
+    
+    banner("Press <space> to try again or <q> to quit.")
     when_key_pressed('<space>', restart)
+    when_key_pressed('q', really_end_game)
     
     
 def bounce_ball():
@@ -55,6 +67,8 @@ def bounce_ball():
 
     # Has the ball hit the bottom of the screen?
     if ball.y >= CANVAS_HEIGHT - ball.height:
+        # End the game, but call our function next
+        # to give the option of restarting
         end_game(fn=game_over)
 
     # Has the ball touched a brick?
