@@ -1,15 +1,13 @@
 # Copyright 2018, Eric Clack, eric@bn7.net
-# This program is distributed under the terms of the GNU General
-# Public License
+# This program is distributed under the terms of the GNU General Public License
 
-"""Blocklands : hidden landscapes
+"""A Boulder Dash clone
 
 DONE:
-- Show blocks immediately around fred
+- Scrolling, with Fred always in the middle
 
 TODO:
-- Start in middle and show Fred
-- Line of sight
+- Bigger landscape
 """
 
 import random, time, sys
@@ -17,37 +15,31 @@ sys.path.append('..')
 from geekclub.pyscratch import *
 
 BLOCK_SIZE=50
-SCREEN_SIZE=16
+SCREEN_SIZE=32
+FRED_START=8 #(16,16)
 
 create_canvas()
 
 block_images = {
-    'mud': PhotoImage(file='images/earth.gif'),
-    'boulder': PhotoImage(file='images/ball.gif'),
-    'wall': PhotoImage(file='images/wall.gif'),
-    'gem': PhotoImage(file='images/gem.gif'),
-    'hidden': PhotoImage(file='images/black.gif'),
+    'mud': PhotoImage(file='../examples/images/earth.gif'),
+    'boulder': PhotoImage(file='../examples/images/ball.gif'),
+    'wall': PhotoImage(file='../examples/images/wall.gif'),
+    'gem': PhotoImage(file='../examples/images/gem.gif'),
 }
 
-fred_img = PhotoImage(file='images/smallface.gif')
+fred_img = PhotoImage(file='../examples/images/smallface.gif')
 
 class BlockSprite(ImageSprite):
     def __init__(self, what, x=0, y=0):
+        self.landscape_x = x; self.landscape_y = y
         self.what = what
         self.falling = False
-        self.visible = True
         image = block_images[what]
-        hidden = block_images['hidden']
-        super(BlockSprite, self).__init__([image, hidden], x, y)
+        super(BlockSprite, self).__init__(image)
+        self.move_to(x*BLOCK_SIZE, y*BLOCK_SIZE)
 
     def is_a(self, what):
         return (self.what == what)
-
-    def show(self):
-        self.switch_costume(1)
-
-    def hide(self):
-        self.switch_costume(2)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -64,21 +56,20 @@ def make_landscape():
     for y in range(SCREEN_SIZE):
         landscape.append([])
         for x in range(SCREEN_SIZE):
-            if (x, y) == coords(fred):
+            if x == FRED_START and y == FRED_START:
+                # This is where fred starts
                 what = None
             elif x in (0, (SCREEN_SIZE-1)) or y in (0, (SCREEN_SIZE-1)):
                 what = 'wall'
             else:
                 what = random.choice(block_choices())
-
+                
             if what:
-                block = BlockSprite(what)
-                block.move_to(x*BLOCK_SIZE, y*BLOCK_SIZE)
-                block.hide()
+                block = BlockSprite(what, x, y)
+                #block.move_to(x*BLOCK_SIZE, y*BLOCK_SIZE)
             else:
                 block = None
             landscape[-1].append(block)
-                
     return landscape
 
 def clear_landscape():
@@ -87,17 +78,8 @@ def clear_landscape():
             if i: i.delete()
     landscape = []
 
-def show_visible_landscape():
-    """Show landscape around fred, that which he can see"""
-    for dx in [-1, 0, 1]:
-        for dy in [-1, 0, 1]:
-            block = what_is_next_to(fred, dx, dy)
-            if block: block.show()
-    
 def coords(sprite):
-    cx, cy = sprite.pos()
-    cx = int(cx/BLOCK_SIZE); cy = int(cy/BLOCK_SIZE)
-    return (cx, cy)
+    return (sprite.landscape_x, sprite.landscape_y)
 
 def all_blocks_of(what):
     b = []
@@ -139,11 +121,20 @@ def clear_block():
         if block.is_a('gem'): world.gems_left -= 1
         block.delete()
 
+def move_landscape(dx, dy):
+    for rows in world.landscape:
+        for i in rows:
+            if i: i.move(dx*BLOCK_SIZE, dy*BLOCK_SIZE)
+
+def move_fred(dx, dy):
+    fred.landscape_x += dx; fred.landscape_y += dy
+    move_landscape(-dx, -dy)
+
 def move(dx, dy):
     if world.status != 'play': return
 
     if can_move(dx, dy):
-        fred.move(dx*BLOCK_SIZE, dy*BLOCK_SIZE)
+        move_fred(dx, dy)        
         clear_block()
         if world.gems_left <= 0:
             banner("Well done!")
@@ -155,10 +146,11 @@ def move(dx, dy):
             # We can move a boulder
             set_landscape(coords(next_block), None)
             next_block.move(dx*BLOCK_SIZE, 0)
+            next_block.landscape_x += dx
             set_landscape(coords(next_block), next_block)
             # Now we can move too
-            fred.move(dx*BLOCK_SIZE, 0)
-    show_visible_landscape()
+            fred.landscape_x += dx
+            move_landscape(-dx, 0)
         
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # World set up
@@ -167,17 +159,16 @@ def move(dx, dy):
 world = Struct( level=1, status='play', fred=None, 
                 landscape=None, gems_left=None )
 
-def move_fred_to_start():
-    fred.move_to(SCREEN_SIZE*BLOCK_SIZE/2,SCREEN_SIZE*BLOCK_SIZE/2)
-
 # These require previous world things to be defined
+world.landscape = make_landscape() 
+
 fred = ImageSprite(fred_img)
-move_fred_to_start()
+# Fred is always in the centre
+fred.landscape_x = fred.landscape_y = FRED_START
+fred.move_to(FRED_START*BLOCK_SIZE, FRED_START*BLOCK_SIZE)
 world.fred = fred
 
-world.landscape = make_landscape()
 world.gems_left = len(all_gems())
-show_visible_landscape()
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Events and actions
@@ -201,6 +192,7 @@ def boulders_fall():
         if what is None:
             set_landscape(coords(b), None)
             b.move(0, BLOCK_SIZE)
+            b.landscape_y += 1
             b.falling = True
             set_landscape(coords(b), b)
         else:
@@ -215,8 +207,9 @@ def start_level(event):
     world.status = 'building'
     clear_banner()
     clear_landscape()
-    move_fred_to_start()
-    world.landscape = make_landscape()
+    fred.move_to(FRED_START*BLOCK_SIZE,FRED_START*BLOCK_SIZE)
+    fred.landscape_x = fred.landscape_y = FRED_START
+    world.landscape = make_landscape() 
     world.gems_left = len(all_gems())
     world.status = 'play'
 

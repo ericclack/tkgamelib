@@ -5,9 +5,9 @@ from geekclub.pyscratch import *
 create_canvas()
 
 # Three image costumes for the face sprite
-img1 = PhotoImage(file="images/face.gif")
-img2 = PhotoImage(file="images/face2.gif")
-img3 = PhotoImage(file="images/face3.gif")
+img1 = PhotoImage(file="../examples/images/face.gif")
+img2 = PhotoImage(file="../examples/images/face2.gif")
+img3 = PhotoImage(file="../examples/images/face3.gif")
 
 sprite = ImageSprite([img1, img2, img3])
 

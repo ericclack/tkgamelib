@@ -20,13 +20,13 @@ SCREEN_SIZE=16
 create_canvas()
 
 block_images = {
-    'mud': PhotoImage(file='images/earth.gif'),
-    'boulder': PhotoImage(file='images/ball.gif'),
-    'wall': PhotoImage(file='images/wall.gif'),
-    'gem': PhotoImage(file='images/gem.gif'),
+    'mud': PhotoImage(file='../examples/images/earth.gif'),
+    'boulder': PhotoImage(file='../examples/images/ball.gif'),
+    'wall': PhotoImage(file='../examples/images/wall.gif'),
+    'gem': PhotoImage(file='../examples/images/gem.gif'),
 }
 
-fred_img = PhotoImage(file='images/smallface.gif')
+fred_img = PhotoImage(file='../examples/images/smallface.gif')
 
 class BlockSprite(ImageSprite):
     def __init__(self, what, x=0, y=0):
