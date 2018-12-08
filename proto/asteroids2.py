@@ -40,7 +40,16 @@ for i in range(NUM_ASTEROIDS):
     a.speed_y = random.randint(-3, 3)
     asteroids.append( a )
 
+b = canvas().create_oval(0,0, 5, 5, fill='white')
+bullet = Sprite(b)
+bullet.live = False
 
+def hide_bullet():
+    bullet.move_to(-5, -5)
+
+hide_bullet()
+
+    
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Events and actions
 #
@@ -64,12 +73,31 @@ def move_asteroids():
 def move_ship():
     ship.move_forward(ship.speed)
     ship.if_on_edge_wrap()
-    
+
+def shoot():
+    x, y = ship.pos()
+    bullet.move_to(x + ship.width/2, y + ship.height / 2)
+    bullet.turn_to(ship.direction)
+    bullet.move_forward(ship.width)
+    bullet.speed = ship.speed + 5
+    bullet.live = True
+
+def move_bullet():
+    if bullet.live:
+        bullet.move_forward(bullet.speed)
+        a = bullet.touching_any(asteroids)
+        if a:
+            asteroids.remove(a)
+            a.delete()
+            bullet.live = False
+            hide_bullet()
 
 when_key_pressed('<Right>', turn_right)
 when_key_pressed('<Left>', turn_left)
 when_key_pressed('<Up>', thrust)
+when_key_pressed('<space>', shoot)
 
 forever(move_asteroids, 50)
 forever(move_ship, 50)
+forever(move_bullet, 50)
 mainloop()
