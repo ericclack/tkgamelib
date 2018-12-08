@@ -143,7 +143,7 @@ def is_key_down(key):
     return key in KEYS_DOWN and KEYS_DOWN[key] > (time.time() - KEYDOWN_DELAY)
     
 
-def create_canvas(window_title="Pyscratch Game", canvas_width=CANVAS_WIDTH, canvas_height=CANVAS_HEIGHT):
+def create_canvas(window_title="Pyscratch Game", canvas_width=CANVAS_WIDTH, canvas_height=CANVAS_HEIGHT, **args):
     """Create the drawing / game area on the screen
 
     Ready for our sprites or drawing.
@@ -153,7 +153,7 @@ def create_canvas(window_title="Pyscratch Game", canvas_width=CANVAS_WIDTH, canv
     CANVAS_HEIGHT=canvas_height
     
     master = Tk()
-    CANVAS = Canvas(master, width=CANVAS_WIDTH, height=CANVAS_HEIGHT)
+    CANVAS = Canvas(master, width=CANVAS_WIDTH, height=CANVAS_HEIGHT, **args)
     CANVAS.pack()
     if window_title:
         master.wm_title(window_title)
@@ -434,6 +434,14 @@ class Sprite:
         if x + self.width > CANVAS_WIDTH: self.speed_x = -abs(self.speed_x)
         if y + self.height > CANVAS_HEIGHT: self.speed_y = -abs(self.speed_y)
 
+    def if_on_edge_wrap(self):
+        x, y = x2, y2 = self.pos()
+        if x + self.width < 0: x2 = CANVAS_WIDTH
+        if y + self.height < 0: y2 = CANVAS_HEIGHT
+        if x > CANVAS_WIDTH: x2 = 0
+        if y > CANVAS_HEIGHT: y2 = 0
+        self.move_to(x2, y2)
+        
     def bounce_up(self):
         self.speed_y = -abs(self.speed_y)
 
