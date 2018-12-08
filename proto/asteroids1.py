@@ -17,18 +17,31 @@ from geekclub.pyscratch import *
 
 create_canvas(background='black')
 
-ship_points = [(-20,20), (20,0), (-20,-20), (-5,0), (-20,20)]
-ship = PolygonSprite(ship_points, fill='yellow', outline='white')
-ship.centre()
-ship.speed = 0
+NUM_ASTEROIDS = 5
+ASTEROID_SIZE = 100
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # World set up
 #
 
-world = Struct( level=1, status='play', asteroids = [])
+ship_points = [(-20,20), (20,0), (-20,-20), (-5,0), (-20,20)]
+ship = PolygonSprite(ship_points, fill='yellow', outline='white')
+ship.centre()
+ship.speed = 0
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+asteroids = []
+for i in range(NUM_ASTEROIDS):
+    x, y = random.randint(0, CANVAS_WIDTH//3), random.randint(0, CANVAS_HEIGHT//3)
+    o = canvas().create_oval(x,y,
+                             x+ASTEROID_SIZE, y+ASTEROID_SIZE,
+                             fill='gray')
+    a = Sprite(o)
+    a.speed_x = random.randint(-3, 3)
+    a.speed_y = random.randint(-3, 3)
+    asteroids.append( a )
+
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Events and actions
 #
 
@@ -44,8 +57,10 @@ def thrust():
     ship.speed += 1
 
 def move_asteroids():
-    pass
-
+    for a in asteroids:
+        a.move_with_speed()
+        a.if_on_edge_wrap()
+        
 def move_ship():
     ship.move_forward(ship.speed)
     ship.if_on_edge_wrap()

@@ -24,7 +24,17 @@ Right now to the next level you only need to get the ball to the top of the scre
 that you need to get all the bricks before getting onto the next level. 
 
 
+----
 
+## Improve the Asteroids game...
+
+### 1. Slow down!
+
+Start with `asteroids1.py`:
+
+Right now you can speed up but not slow down, fix this.
+
+### 2. 
 
 ----
 
