@@ -43,6 +43,14 @@ def restart():
 def really_end_game():
     end_game("Goodbye")
     
+
+
+def end_game_bounce():
+    # Something interesting when we wait for the user
+    ball.move_with_speed()
+    ball.if_on_edge_bounce()
+    print("end_game_bounce")
+
     
 def game_over():
     # Because this function was called by end_game
@@ -56,6 +64,11 @@ def game_over():
     banner("Press <space> to try again or <q> to quit.")
     when_key_pressed('<space>', restart)
     when_key_pressed('q', really_end_game)
+
+    # Run a simple animation
+    restart_game()
+    forever(end_game_bounce)
+    # TODO: How to cancel this once we restart?
     
     
 def bounce_ball():
