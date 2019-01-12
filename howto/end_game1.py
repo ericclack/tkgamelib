@@ -1,7 +1,7 @@
 # Copyright 2014, Eric Clack, eric@bn7.net
 # This program is distributed under the terms of the GNU General Public License
 
-"""A simple bat and ball game. """
+"""A simple bat and ball game, that demonstrates an end-game sequence """
 
 import random, time, sys
 sys.path.append('..')
@@ -27,50 +27,14 @@ for y in range(0, 400, 28):
         brick = ImageSprite(brick_img)
         brick.move_to(x, y)
         bricks.append(brick)
-    
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Game logic
 
 def bat_follows_mouse():
     bat.move_to(mousex(), mousey())
 
 
-def restart():
-    banner("Restarting...", 1000)
-    canvas().unbind('<space>')
-    restart_game()
-    init()
-
-
-def really_end_game():
-    end_game("Goodbye")
-    
-
-
-def end_game_bounce():
-    # Something interesting when we wait for the user
-    ball.move_with_speed()
-    ball.if_on_edge_bounce()
-    print("end_game_bounce")
-
-    
-def game_over():
-    # Because this function was called by end_game
-    # all forever events are cleared. We can
-    # set them back up again by calling our
-    # init() function.
-
-    # TODO:
-    # clear_all_bindings()
-    
-    banner("Press <space> to try again or <q> to quit.")
-    when_key_pressed('<space>', restart)
-    when_key_pressed('q', really_end_game)
-
-    # Run a simple animation
-    restart_game()
-    forever(end_game_bounce)
-    # TODO: How to cancel this once we restart?
-    
-    
 def bounce_ball():
     ball.move_with_speed()
     ball.if_on_edge_bounce()
@@ -94,11 +58,47 @@ def bounce_ball():
         bricks.remove(brick)
         brick.delete()
 
+        
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# End game sequence
 
-def init():
-    forever(bat_follows_mouse, 20)
-    forever(bounce_ball, 20)
+def game_over():
+    # Because this function was called by end_game
+    # all forever events are paused. 
+    
+    banner("Press <space> to try again or <q> to quit.")
+    when_key_pressed('<space>', restart)
+    when_key_pressed('q', really_end_game)
+
+    # While we wait for their choice...
+    forever(stick_ball_to_bat, 20)
+    resume_forever(bat_follows_mouse)
+    # TODO: How to cancel this once we restart?
+    
+    
+def stick_ball_to_bat():
+    ball.move_to(bat.x + (bat.width / 2) - (ball.width / 2),
+                 bat.y - bat.height)
 
 
-init()
+def restart():
+    banner("Restarting...", 1000)
+    canvas().unbind('<space>')
+    kill_forever(stick_ball_to_bat)
+    restart_game()
+
+
+def really_end_game():
+    end_game("Goodbye")
+
+
+
+
+    
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Run the events
+
+forever(bat_follows_mouse, 20)
+forever(bounce_ball, 20)
+
 mainloop()

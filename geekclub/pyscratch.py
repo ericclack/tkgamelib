@@ -28,9 +28,13 @@ CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 800
 
 BANNER=None
-END_GAME=False
 VARIABLES={}
 VAR_FONT_SIZE=30
+
+# A dictionary of functions run with forever command
+# used to pause or restart, especially in end game
+# sequence
+FOREVER_FNS={}
 
 KEYS_DOWN = {}
 KEYDOWN_DELAY = .1
@@ -248,11 +252,22 @@ def mousey(): return CANVAS.winfo_pointery() - CANVAS.winfo_rooty()
 
 def forever(fn, ms=100):
     """Keep doing something forever, every ms milliseconds"""
+    FOREVER_FNS[fn] = True
     def wrapper():
-        fn()
-        if not END_GAME:
+        if FOREVER_FNS.get(fn, False):
+            fn()
+        if fn in FOREVER_FNS:
             CANVAS.after(ms, wrapper)
     CANVAS.after(ms, wrapper)
+
+def pause_forever(fn):
+    FOREVER_FNS[fn] = False
+
+def resume_forever(fn):
+    FOREVER_FNS[fn] = True
+
+def kill_forever(fn):
+    del FOREVER_FNS[fn]
 
 def future_action(fn, ms):
     """Do something in the future, in ms milliseconds"""
@@ -262,14 +277,14 @@ def _quit_game():
     canvas().quit()
 
 def end_game(message='Game Over', fn=_quit_game, ms=2000):
-    global END_GAME
-    END_GAME = True
+    for f in FOREVER_FNS:
+        pause_forever(f)
     banner(message)
     future_action(fn, ms)
 
 def restart_game():
-    global END_GAME
-    END_GAME = False    
+    for f in FOREVER_FNS:
+        resume_forever(f)
     
     
 class Sprite:
