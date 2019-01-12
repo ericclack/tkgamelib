@@ -73,7 +73,6 @@ def game_over():
     # While we wait for their choice...
     forever(stick_ball_to_bat, 20)
     resume_forever(bat_follows_mouse)
-    # TODO: How to cancel this once we restart?
     
     
 def stick_ball_to_bat():
@@ -90,9 +89,6 @@ def restart():
 
 def really_end_game():
     end_game("Goodbye")
-
-
-
 
     
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
