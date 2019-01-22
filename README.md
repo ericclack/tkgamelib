@@ -42,8 +42,7 @@ Examples
 Start up `idle3` and create a new file, save it to the directory `my_work`, then add the following code...
 
 ```
-import sys; sys.path.append('..')
-from geekclub.pyscratch import *
+from geekclub_packages import *
   
 create_canvas()
 sprite = ImageSprite('my_images/face.gif')
