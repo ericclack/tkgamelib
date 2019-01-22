@@ -3,9 +3,8 @@
 
 """A simple bat and ball game, that demonstrates an end-game sequence """
 
-import random, time, sys
-sys.path.append('..')
-from geekclub.pyscratch import *
+from geekclub_packages import *
+import random, time
 
 create_canvas()
 

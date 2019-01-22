@@ -3,10 +3,8 @@
 
 """A simple bat and ball game. """
 
-import random, time, sys
-sys.path.append('..')
-from geekclub.pyscratch import *
-from geekclub.sound import *
+from geekclub_packages import *
+import random, time
 
 create_canvas()
 
