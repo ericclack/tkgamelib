@@ -1,4 +1,4 @@
-# Copyright 2018, Eric Clack, eric@bn7.net
+# Copyright 2019, Eric Clack, eric@bn7.net
 # This program is distributed under the terms of the GNU General
 # Public License
 
@@ -12,9 +12,8 @@ TODO:
 - Line of sight
 """
 
-import random, time, sys
-sys.path.append('..')
-from geekclub.pyscratch import *
+import random, time
+from geekclub_packages import *
 
 BLOCK_SIZE=50
 SCREEN_SIZE=16
