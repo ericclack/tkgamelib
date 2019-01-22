@@ -1,9 +1,8 @@
 # Copyright 2016, Eric Clack, eric@bn7.net
 # This program is distributed under the terms of the GNU General Public License
 
-import random, sys
-sys.path.append('..')
-from geekclub.pyscratch import *
+import random
+from geekclub_packages import *
 
 # How much to change the length on each recursion
 LENGTH_DELTA=0.5

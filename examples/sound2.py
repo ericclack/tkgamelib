@@ -1,7 +1,5 @@
 import sys
-sys.path.append('..')
-from geekclub.pyscratch import *
-from geekclub.sound import *
+from geekclub_packages import *
 
 create_canvas()
 
