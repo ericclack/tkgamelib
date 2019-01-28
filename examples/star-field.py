@@ -3,9 +3,8 @@
 
 """Animate a star field"""
 
-import random, time, sys
-sys.path.append('..')
-from geekclub.pyscratch import *
+import random, time
+from geekclub_packages import *
 
 create_canvas()
 

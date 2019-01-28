@@ -9,9 +9,8 @@ TODO:
 - If you can get the ball to the top you go to the next level.
 """
 
-import random, time, sys
-sys.path.append('..')
-from geekclub.pyscratch import *
+import random, time
+from geekclub_packages import *
 
 create_canvas()
 
