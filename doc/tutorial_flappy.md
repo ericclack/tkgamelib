@@ -12,8 +12,7 @@ Flappy Bird is a relatively simple game.  Its a lot more complex than click the 
 Create a python file (flappy.py) in the my_work directory and add the following code:
 
 	# 1, Import the library
-	import sys; sys.path.append('..')
-	from geekclub.pyscratch import *
+	from geekclub_packages import *
 
 	# 3, canvas and the player
 	create_canvas()
