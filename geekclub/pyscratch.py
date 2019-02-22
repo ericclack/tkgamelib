@@ -28,9 +28,13 @@ CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 800
 
 BANNER=None
-END_GAME=False
 VARIABLES={}
 VAR_FONT_SIZE=30
+
+# A dictionary of functions run with forever command
+# used to pause or restart, especially in end game
+# sequence
+FOREVER_FNS={}
 
 KEYS_DOWN = {}
 KEYDOWN_DELAY = .1
@@ -143,7 +147,7 @@ def is_key_down(key):
     return key in KEYS_DOWN and KEYS_DOWN[key] > (time.time() - KEYDOWN_DELAY)
     
 
-def create_canvas(window_title="Pyscratch Game", canvas_width=CANVAS_WIDTH, canvas_height=CANVAS_HEIGHT):
+def create_canvas(window_title="Pyscratch Game", canvas_width=CANVAS_WIDTH, canvas_height=CANVAS_HEIGHT, **args):
     """Create the drawing / game area on the screen
 
     Ready for our sprites or drawing.
@@ -153,7 +157,7 @@ def create_canvas(window_title="Pyscratch Game", canvas_width=CANVAS_WIDTH, canv
     CANVAS_HEIGHT=canvas_height
     
     master = Tk()
-    CANVAS = Canvas(master, width=CANVAS_WIDTH, height=CANVAS_HEIGHT)
+    CANVAS = Canvas(master, width=CANVAS_WIDTH, height=CANVAS_HEIGHT, **args)
     CANVAS.pack()
     if window_title:
         master.wm_title(window_title)
@@ -248,25 +252,40 @@ def mousey(): return CANVAS.winfo_pointery() - CANVAS.winfo_rooty()
 
 def forever(fn, ms=100):
     """Keep doing something forever, every ms milliseconds"""
+    FOREVER_FNS[fn] = True
     def wrapper():
-        fn()
-        if not END_GAME:
+        if FOREVER_FNS.get(fn, False):
+            fn()
+        if fn in FOREVER_FNS:
             CANVAS.after(ms, wrapper)
     CANVAS.after(ms, wrapper)
+
+def pause_forever(fn):
+    FOREVER_FNS[fn] = False
+
+def resume_forever(fn):
+    FOREVER_FNS[fn] = True
+
+def kill_forever(fn):
+    del FOREVER_FNS[fn]
 
 def future_action(fn, ms):
     """Do something in the future, in ms milliseconds"""
     CANVAS.after(ms, fn)
 
-def end_game(message='Game Over', ms=2000):
-    global END_GAME
-    END_GAME = True
-    banner(message)
-    future_action(_quit_game, ms)
-    
 def _quit_game():
     canvas().quit()
 
+def end_game(message='Game Over', fn=_quit_game, ms=2000):
+    for f in FOREVER_FNS:
+        pause_forever(f)
+    banner(message)
+    future_action(fn, ms)
+
+def restart_game():
+    for f in FOREVER_FNS:
+        resume_forever(f)
+    
     
 class Sprite:
     """A sprite that can be moved around the screen."""
@@ -430,17 +449,19 @@ class Sprite:
         if x + self.width > CANVAS_WIDTH: self.speed_x = -abs(self.speed_x)
         if y + self.height > CANVAS_HEIGHT: self.speed_y = -abs(self.speed_y)
 
+    def if_on_edge_wrap(self):
+        x, y = x2, y2 = self.pos()
+        if x + self.width < 0: x2 = CANVAS_WIDTH
+        if y + self.height < 0: y2 = CANVAS_HEIGHT
+        if x > CANVAS_WIDTH: x2 = 0
+        if y > CANVAS_HEIGHT: y2 = 0
+        self.move_to(x2, y2)
+        
     def bounce_up(self):
         self.speed_y = -abs(self.speed_y)
 
     def bounce_down(self):
         self.speed_y = abs(self.speed_y)
-
-    def next_costume(self):
-        """Show next costume if this sprite is composed of multiple ones"""
-        spriteids = canvas().find_withtag(self.spriteid)
-        if len(spriteids) == 1: return # Only one sprite
-        canvas().tag_raise(spriteids[0])
 
     def replace_canvas_object(self, newobjid):
         self.delete()
@@ -465,9 +486,23 @@ class ImageSprite(Sprite):
         id = ImageSprite.next_tag_id
         ImageSprite.next_tag_id += 1
         return "pyscratch-tag-%d" % id
-    
+
+    @staticmethod
+    def _show_costume(showid, ids, method="raise"):
+        if method == "raise":
+            canvas().tag_raise(showid)
+        elif method == "lower":
+            # Lower all other sprites
+            for i in ids:
+                if i != showid:
+                    canvas().tag_lower(i)
+        else:
+            assert False, "method should be either 'raise' or 'lower'"
+            
     def __init__(self, imgs, x=100, y=100):
         self.costume_ids = []
+        self.photo_images = []
+        
         if isinstance(imgs, list):
             tag = ImageSprite.unique_tagname()
         else:
@@ -477,20 +512,26 @@ class ImageSprite(Sprite):
         for img in imgs:
             if isinstance(img, str):
                 assert img.lower().endswith(".gif"), "Sorry, ImageSprite only works with GIFs"
-                self.photo_image = PhotoImage(file=img)
+                self.photo_images.append( PhotoImage(file=img) )
             else:
-                self.photo_image = img
-            spriteid = CANVAS.create_image(x,y, image=self.photo_image, tag=tag)
+                self.photo_images.append( img )
+            spriteid = CANVAS.create_image(x,y, image=self.photo_images[-1], tag=tag)
             self.costume_ids.append(spriteid)
         
         super(ImageSprite, self).__init__(tag or spriteid)
         self.switch_costume(1)
 
-    def switch_costume(self, number):
+    def next_costume(self, method="raise"):
+        """Show next costume if this sprite is composed of multiple ones"""
+        spriteids = canvas().find_withtag(self.spriteid)
+        if len(spriteids) == 1: return # Only one sprite
+        ImageSprite._show_costume(spriteids[0], spriteids, method)
+        
+    def switch_costume(self, number, method="raise"):
         "Show costume by number, 1 is the first one"
-        # TODO: This could go in Sprite if we collected
-        # TODO: costume_ids there.
-        canvas().tag_raise(self.costume_ids[number-1])
+        ImageSprite._show_costume(self.costume_ids[number-1],
+                                  self.costume_ids, method)
+                
 
     def which_costume(self):
         "The costume number of the current costume, 1 is the first"

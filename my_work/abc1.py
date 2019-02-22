@@ -1,5 +1,4 @@
-import sys; sys.path.append('..')
-from geekclub.pyscratch import *
+from geekclub_packages import *
   
 create_canvas()
 bg = ImageSprite('my_images/space-bg.gif')

@@ -1,6 +1,5 @@
-import sys; sys.path.append('..')
-from geekclub.pyscratch import *
-  
+from geekclub_packages import *
+
 create_canvas()
 
 pen = Sprite(canvas().create_oval(0,0,3,3))
@@ -32,5 +31,8 @@ def clear(event):
 when_button1_dragged(draw)
 when_button1_released(stop_drawing)
 when_key_pressed('c', clear)
+
+banner('Draw with the mouse', 2000)
+future_action(lambda: banner('Press c to clear', 2000), 2000)
 
 mainloop()

@@ -3,16 +3,14 @@
 
 """A simple bat and ball game. """
 
-import random, time, sys
-sys.path.append('..')
-from geekclub.pyscratch import *
-from geekclub.sound import *
+from geekclub_packages import *
+import random, time
 
 create_canvas()
 
-bat_img = PhotoImage(file='images/bat.gif')
-ball_img = PhotoImage(file='images/ball.gif')
-brick_img = PhotoImage(file='images/small_brick.gif')
+bat_img = PhotoImage(file='../examples/images/bat.gif')
+ball_img = PhotoImage(file='../examples/images/ball.gif')
+brick_img = PhotoImage(file='../examples/images/small_brick.gif')
 
 bat = ImageSprite(bat_img)
 
@@ -29,8 +27,8 @@ for y in range(0, 400, 28):
         brick.move_to(x, y)
         bricks.append(brick)
 
-brick_hit_sound = load_sound('sounds/hh-cymbal.wav')
-bat_hit_sound = load_sound('sounds/bass-drum.wav')
+brick_hit_sound = load_sound('../examples/sounds/hh-cymbal.wav')
+bat_hit_sound = load_sound('../examples/sounds/bass-drum.wav')
 
 def bat_follows_mouse():
     bat.move_to(mousex(), mousey())

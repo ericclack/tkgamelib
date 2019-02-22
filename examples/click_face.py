@@ -1,6 +1,5 @@
 # 1, Import the library
-import sys; sys.path.append('..')
-from geekclub.pyscratch import *
+from geekclub_packages import *
 import random
 
 # 2, the canvas

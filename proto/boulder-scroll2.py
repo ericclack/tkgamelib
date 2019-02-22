@@ -1,45 +1,41 @@
-# Copyright 2014, Eric Clack, eric@bn7.net
+# Copyright 2018-19, Eric Clack, eric@bn7.net
 # This program is distributed under the terms of the GNU General Public License
 
 """A Boulder Dash clone
 
 DONE:
-- Push boulders left or right
-- Stop going off edge of screen
-- Gems to collect
-- r to restart
-- Die if a boulder falls on you
-- Some way to save and reload one level
-- Boulder on boulder falls into gap (either side)
+- Scrolling, with Fred always in the middle
 
 TODO:
-- Some way to load multiple levels
-- Aliens
+- Bigger landscape
 """
 
-import random, time
 from geekclub_packages import *
+import random, time
 
 BLOCK_SIZE=50
-SCREEN_SIZE=16
+SCREEN_SIZE=32
+FRED_START=8 #(16,16)
 
 create_canvas()
 
 block_images = {
-    'mud': PhotoImage(file='images/earth.gif'),
-    'boulder': PhotoImage(file='images/ball.gif'),
-    'wall': PhotoImage(file='images/wall.gif'),
-    'gem': PhotoImage(file='images/gem.gif'),
+    'mud': PhotoImage(file='../examples/images/earth.gif'),
+    'boulder': PhotoImage(file='../examples/images/ball.gif'),
+    'wall': PhotoImage(file='../examples/images/wall.gif'),
+    'gem': PhotoImage(file='../examples/images/gem.gif'),
 }
 
-fred_img = PhotoImage(file='images/smallface.gif')
+fred_img = PhotoImage(file='../examples/images/smallface.gif')
 
 class BlockSprite(ImageSprite):
     def __init__(self, what, x=0, y=0):
+        self.landscape_x = x; self.landscape_y = y
         self.what = what
         self.falling = False
         image = block_images[what]
-        super(BlockSprite, self).__init__(image, x, y)
+        super(BlockSprite, self).__init__(image)
+        self.move_to(x*BLOCK_SIZE, y*BLOCK_SIZE)
 
     def is_a(self, what):
         return (self.what == what)
@@ -54,40 +50,26 @@ def block_choices():
     c1.extend(c2)
     return c1
 
-def block_at_xy(x, y, landscape_data=None):
-    if landscape_data:
-        what = landscape_data[y][x]
-        return what if what != 'None' else None
-    if x == 2 and y == 2:
-        # This is where fred starts
-        what = None
-    elif x in (0, (SCREEN_SIZE-1)) or y in (0, (SCREEN_SIZE-1)):
-        what = 'wall'
-    else:
-        what = random.choice(block_choices())
-    return what
-
-def make_landscape(landscape_data=None):
-    """Generate or load a landscape"""
+def make_landscape():
     landscape = []
     for y in range(SCREEN_SIZE):
         landscape.append([])
         for x in range(SCREEN_SIZE):
-            what = block_at_xy(x, y, landscape_data)
+            if x == FRED_START and y == FRED_START:
+                # This is where fred starts
+                what = None
+            elif x in (0, (SCREEN_SIZE-1)) or y in (0, (SCREEN_SIZE-1)):
+                what = 'wall'
+            else:
+                what = random.choice(block_choices())
+                
             if what:
-                block = BlockSprite(what)
-                block.move_to(x*BLOCK_SIZE, y*BLOCK_SIZE)
+                block = BlockSprite(what, x, y)
+                #block.move_to(x*BLOCK_SIZE, y*BLOCK_SIZE)
             else:
                 block = None
             landscape[-1].append(block)
     return landscape
-
-def dump_landscape():
-    """Output landscape in a way that can be reloaded"""
-    print('level', world.level)
-    for row in world.landscape:
-        srow = [r.what if r else 'None' for r in row]
-        print(','.join(srow))
 
 def clear_landscape():
     for row in world.landscape:
@@ -96,9 +78,7 @@ def clear_landscape():
     landscape = []
 
 def coords(sprite):
-    cx, cy = sprite.pos()
-    cx = int(cx/BLOCK_SIZE); cy = int(cy/BLOCK_SIZE)
-    return (cx, cy)
+    return (sprite.landscape_x, sprite.landscape_y)
 
 def all_blocks_of(what):
     b = []
@@ -123,16 +103,6 @@ def what_is_next_to(sprite, dx, dy):
     except IndexError:
         return None
 
-def what_is_below(sprite): return what_is_next_to(sprite, 0, 1)
-def what_is_left_of(sprite): return what_is_next_to(sprite, -1, 0)
-def what_is_right_of(sprite): return what_is_next_to(sprite, 1, 0)
-def nothing_left_and_lbelow(sprite):
-    return (what_is_left_of(sprite) is None 
-            and what_is_next_to(sprite, -1, 1) is None)
-def nothing_right_and_rbelow(sprite):
-    return (what_is_right_of(sprite) is None 
-            and what_is_next_to(sprite, 1, 1) is None)
-
 def can_move(dx, dy):
     sprite = what_is_next_to(fred, dx, dy)
     return sprite is None or sprite.is_a('mud') or sprite.is_a('gem')
@@ -150,11 +120,20 @@ def clear_block():
         if block.is_a('gem'): world.gems_left -= 1
         block.delete()
 
+def move_landscape(dx, dy):
+    for rows in world.landscape:
+        for i in rows:
+            if i: i.move(dx*BLOCK_SIZE, dy*BLOCK_SIZE)
+
+def move_fred(dx, dy):
+    fred.landscape_x += dx; fred.landscape_y += dy
+    move_landscape(-dx, -dy)
+
 def move(dx, dy):
     if world.status != 'play': return
 
     if can_move(dx, dy):
-        fred.move(dx*BLOCK_SIZE, dy*BLOCK_SIZE)
+        move_fred(dx, dy)        
         clear_block()
         if world.gems_left <= 0:
             banner("Well done!")
@@ -166,9 +145,11 @@ def move(dx, dy):
             # We can move a boulder
             set_landscape(coords(next_block), None)
             next_block.move(dx*BLOCK_SIZE, 0)
+            next_block.landscape_x += dx
             set_landscape(coords(next_block), next_block)
             # Now we can move too
-            fred.move(dx*BLOCK_SIZE, 0)
+            fred.landscape_x += dx
+            move_landscape(-dx, 0)
         
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # World set up
@@ -179,10 +160,11 @@ world = Struct( level=1, status='play', fred=None,
 
 # These require previous world things to be defined
 world.landscape = make_landscape() 
-dump_landscape()
 
 fred = ImageSprite(fred_img)
-fred.move_to(2*BLOCK_SIZE,2*BLOCK_SIZE)
+# Fred is always in the centre
+fred.landscape_x = fred.landscape_y = FRED_START
+fred.move_to(FRED_START*BLOCK_SIZE, FRED_START*BLOCK_SIZE)
 world.fred = fred
 
 world.gems_left = len(all_gems())
@@ -203,56 +185,30 @@ def move_up(event):
 def move_down(event):
     move(0, 1)
 
-def boulder_fall_down(b, left_right=0):
-    set_landscape(coords(b), None)
-    b.move(left_right*BLOCK_SIZE, BLOCK_SIZE)
-    b.falling = True
-    set_landscape(coords(b), b)
-
 def boulders_fall():
-    if world.status != 'play': return
-
     for b in all_boulders():
-        below = what_is_below(b)
-        if below is None:
-            boulder_fall_down(b)
-        elif below == world.fred:
-            if b.falling:
+        what = what_is_next_to(b, 0, 1)
+        if what is None:
+            set_landscape(coords(b), None)
+            b.move(0, BLOCK_SIZE)
+            b.landscape_y += 1
+            b.falling = True
+            set_landscape(coords(b), b)
+        else:
+            if what is world.fred and b.falling:
                 banner("Ouch!")
                 world.status = 'end'
-        elif below.what in ('boulder', 'gem'):
-            if nothing_left_and_lbelow(b) and nothing_right_and_rbelow(b):
-                boulder_fall_down(b, left_right=random.choice([-1,1]))
-            elif nothing_left_and_lbelow(b):
-                boulder_fall_down(b, left_right=-1)
-            elif nothing_right_and_rbelow(b):
-                boulder_fall_down(b, left_right=1)
-        else:
-            b.falling = False
-        
+            else:
+                b.falling = False
+
 def start_level(event):
     """Start or restart a level"""
     world.status = 'building'
     clear_banner()
     clear_landscape()
+    fred.move_to(FRED_START*BLOCK_SIZE,FRED_START*BLOCK_SIZE)
+    fred.landscape_x = fred.landscape_y = FRED_START
     world.landscape = make_landscape() 
-    fred.move_to(2*BLOCK_SIZE,2*BLOCK_SIZE)
-    world.gems_left = len(all_gems())
-    world.status = 'play'
-    dump_landscape()
-
-def load_level(event):
-    level = askstring("What level to load?", "Level")
-
-    file = open("boulder-levels/level-%s.txt" % level)
-    landscape_data = [l.strip().split(',') for l in file.readlines()]
-    file.close()
-
-    world.status = 'loading'
-    clear_banner()
-    clear_landscape()
-    world.landscape = make_landscape(landscape_data)
-    fred.move_to(2*BLOCK_SIZE,2*BLOCK_SIZE)
     world.gems_left = len(all_gems())
     world.status = 'play'
 
@@ -269,7 +225,6 @@ when_key_pressed('<Right>', move_right)
 when_key_pressed('<Up>', move_up)
 when_key_pressed('<Down>', move_down)
 when_key_pressed('r', start_level)
-when_key_pressed('l', load_level)
 
 forever(boulders_fall, 200)
 forever(check_status, 1000)

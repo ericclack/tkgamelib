@@ -14,9 +14,8 @@ TODO:
 - Aliens
 """
 
-import random, time, sys
-sys.path.append('..')
-from geekclub.pyscratch import *
+import random, time
+from geekclub_packages import *
 
 BLOCK_SIZE=50
 SCREEN_SIZE=16

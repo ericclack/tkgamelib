@@ -3,9 +3,8 @@
 
 """An oval that follows the mouse."""
 
-import random, sys
-sys.path.append('..')
-from geekclub.pyscratch import *
+import random
+from geekclub_packages import *
 
 create_canvas()
 

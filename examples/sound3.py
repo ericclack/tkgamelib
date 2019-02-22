@@ -1,35 +1,48 @@
-import sys
-sys.path.append('..')
-from geekclub.pyscratch import *
-from geekclub.sound import *
+# Copyright 2019, Eric Clack, eric@bn7.net
+# This program is distributed under the terms of the GNU General Public License
+
+
+from geekclub_packages import *
 
 create_canvas()
 
-# Not really necessary for this example, but why not:
+# Move the sprite to change the BPMs
 sprite = ImageSprite('images/face.gif')
 sprite.centre()
    
-set_bpm(180)
 laser = load_sound('sounds/laser.wav')
 drum = load_sound('sounds/bass-drum.wav')
 hh = load_sound('sounds/hh-cymbal.wav')
 
-def lasers():
-    laser.play()
+world = Struct(bpm = 180, tick = 0)
 
-def drums():
-    drum.play()
-    rest(.5)
-    hh.play()
+def beat():
+    world.tick += 1
 
+    # On even ticks play beat, on odd, off_beat
+    if world.tick % 2 == 0:
+        drum.play()
+    else:
+        hh.play()
+
+    # Every third beat (so every 6 ticks), play this
+    if world.tick % 6 == 0:
+        laser.play()
+
+    # Next beat based on BPM
+    future_action(beat, bpm_to_ms(world.bpm))
+
+    
 def follow_mouse():
     "Vary BPM based on mouse position"
     sprite.move_to(sprite.x, mousey())
-    set_bpm(60 + sprite.y)
-    print(bpm())
+    new_bpm = 60 + sprite.y
+    if new_bpm != world.bpm:
+        print("New BPM: ", world.bpm)
+        world.bpm = new_bpm
+
     
-forever(lasers, beat_ms() * 3)
-forever(drums, beat_ms()) # how can this work with varying BPM?
 forever(follow_mouse)
+beat() # This fn takes care of repeating itself
 
 mainloop()
