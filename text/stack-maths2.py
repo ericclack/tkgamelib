@@ -5,7 +5,7 @@
 by turning them from the usual infix notation,
 e.g. ( 2 * 3 ) + 1, into postfix, e.g. 7 5 9 * +
 
-We useBODMAS for infix so that * happens before +
+We use BODMAS for infix so that * happens before +
 """
 
 def to_postfix(infix):
@@ -67,6 +67,7 @@ def pop(s):
 def peek(s):
     if s:
         return s[-1]
+
 
 print("Enter some maths separated by spaces, e.g. 1 + 2 * 3")
 

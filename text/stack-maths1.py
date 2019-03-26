@@ -4,11 +4,14 @@
 """Evaluate simple mathematical expressions using a stack,
 by turning them from the usual infix notation,
 e.g. ( 2 * 3 ) + 1, into postfix, e.g. 7 5 9 * +
+
+TODO:
+- Use BODMAS for infix so that * happens before +
 """
 
 def to_postfix(infix):
     output = []
-    stack = []
+    stack = [] # For operators
     
     for m in maths.split(" "):
         if m.isdigit():
@@ -54,6 +57,7 @@ def pop(s):
     e = s[-1]
     del(s[-1])
     return e
+
 
 print("Enter some maths separated by spaces, e.g. 1 + 2 * 3")
 
