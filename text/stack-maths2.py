@@ -12,7 +12,7 @@ def to_postfix(infix):
     output = []
     stack = [] # For operators
     
-    for m in maths.split(" "):
+    for m in infix.split(" "):
         if m.isdigit():
             output.append(m)
         elif m == '(':
