@@ -20,7 +20,6 @@ def to_postfix(infix):
             push(stack, m)
         elif m == ')':
             while True:
-                print(output, stack)
                 o = pop(stack)
                 if o == '(':
                     break
