@@ -13,10 +13,11 @@ def out_of_range(n):
 
 # These are the tests, fix the code above to make them work
 
-assert out_of_range(9), "Oops, the out_of_range function is wrong!"
-assert out_of_range(51), "Oops, the out_of_range function is wrong!"
-assert out_of_range(500), "Oops, the out_of_range function is wrong!"
-assert out_of_range(-5), "Oops, the out_of_range function is wrong!"
-assert not out_of_range(10), "Oops, the out_of_range function is wrong!"
-assert not out_of_range(50), "Oops, the out_of_range function is wrong!"
+error = "Oops, the out_of_range function is wrong!"
+assert out_of_range(9), error
+assert out_of_range(51), error
+assert out_of_range(500), error
+assert out_of_range(-5), error
+assert not out_of_range(10), error
+assert not out_of_range(50), error
 print("All tests passed, well done!")
