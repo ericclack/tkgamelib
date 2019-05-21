@@ -413,28 +413,35 @@ class Sprite:
 
     def above(self, sprite):
         """Is this sprite above another sprite"""
-        x,y = self.pos()
-        sx, sy = sprite.pos()
-        return (sy > y)
+        (x1,y1,   x2,y2) = CANVAS.bbox(self.spriteid)
+        (sx1,sy1, sx2,sy2) = CANVAS.bbox(sprite.spriteid)
+        
+        # Are we overlapped on x axis and above?
+        return (x1 < sx2 and x2 > sx1) and (y1 < sy1)
 
     def below(self, sprite):
         """Is this sprite below another sprite"""
-        x,y = self.pos()
-        sx, sy = sprite.pos()
-        return (sy < y)
+        (x1,y1,   x2,y2) = CANVAS.bbox(self.spriteid)
+        (sx1,sy1, sx2,sy2) = CANVAS.bbox(sprite.spriteid)
+        
+        # Are we overlapped on x axis and below?
+        return (x1 < sx2 and x2 > sx1) and (y2 > sy2)
 
     def left_of(self, sprite):
         """Is this sprite left of another sprite"""
-        x,y = self.pos()
-        sx, sy = sprite.pos()
-        return (sx > x)
-
+        (x1,y1,   x2,y2) = CANVAS.bbox(self.spriteid)
+        (sx1,sy1, sx2,sy2) = CANVAS.bbox(sprite.spriteid)
+        
+        # Are we overlapped on y axis and left?
+        return (y1 < sy2 and y2 > sy1) and (x1 < sx1)
+    
     def right_of(self, sprite):
-        """Is this sprite right of another sprite"""
-        x,y = self.pos()
-        sx, sy = sprite.pos()
-        return (sx < x)
-
+        (x1,y1,   x2,y2) = CANVAS.bbox(self.spriteid)
+        (sx1,sy1, sx2,sy2) = CANVAS.bbox(sprite.spriteid)
+        
+        # Are we overlapped on y axis and right?
+        return (y1 < sy2 and y2 > sy1) and (x2 > sx2)
+    
     def move_with_speed(self):
         self.move(self.speed_x, self.speed_y)
 
