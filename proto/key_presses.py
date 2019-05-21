@@ -25,8 +25,7 @@ platforms = [
 def follow_mouse():
     sprite.move_towards(mousex(), mousey(), 10)
 
-def move_sprite():
-    # Keys
+def key_control():
     old_speed_x = sprite.speed_x
     if is_key_down('z'):
         sprite.speed_x -= 1
@@ -34,9 +33,23 @@ def move_sprite():
         sprite.speed_x += 1
     if is_key_down(' '):
         sprite.speed_y -= 1
+        
     if old_speed_x == sprite.speed_x:
         sprite.speed_x *= 0.9
 
+def mouse_control():
+    old_speed_x = sprite.speed_x
+    if mousex() < sprite.x - sprite.width:
+        sprite.speed_x -= 1
+    if mousex() > sprite.x + 2 * sprite.width:
+        sprite.speed_x += 1
+    if mousey() < sprite.y:
+        sprite.speed_y -= 1
+
+    if old_speed_x == sprite.speed_x:
+        sprite.speed_x *= 0.9
+
+def move_sprite():
     # Gravity
     sprite.speed_y += 0.5
 
@@ -56,7 +69,8 @@ def move_sprite():
 # How will the user control the game? What will other
 # sprites do? Add your event handlers here.
 
-#forever(check_keys, 25)
+#forever(key_control, 25)
+forever(mouse_control, 25)
 forever(move_sprite, 25)
 
 
