@@ -56,6 +56,7 @@ def move_sprite():
 # How will the user control the game? What will other
 # sprites do? Add your event handlers here.
 
+#forever(check_keys, 25)
 forever(move_sprite, 25)
 
 

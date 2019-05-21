@@ -18,6 +18,7 @@ import math
 import colorsys
 import time
 import inspect
+import platform
 from tkinter import *
 from tkinter import simpledialog
  
@@ -39,6 +40,8 @@ FOREVER_FNS={}
 KEYS_DOWN = {}
 KEYDOWN_DELAY = .1
 
+def is_mac():
+    return platform.system() == 'Darwin'
 
 def hexs(v):
     """Return a number in range 0-255 as two hex digits 0-ff"""
@@ -132,19 +135,24 @@ def _key_pressed(event):
     KEYS_DOWN[event.char] = time.time()
 
 def _key_released(event):
-    """Because on Mac OS X, key_press and key_release
-    events alternate when a key is held down, we use the 
-    last time the key was pressed, and ignore the key down
-    event"""
-    del(KEYS_DOWN[event.char])
+    if is_mac():
+        # On Mac OS X, key_press and key_releas events alternate when
+        # a key is held down, we use the last time the key was pressed
+        # and ignore event
+        pass
+    else:
+        del(KEYS_DOWN[event.char])
 
 def is_key_down(key):
     """Experimental tracking of multiple key presses.
 
     Works well with ascii chars, including space, needs some
     work for arrow keys etc (with event.keysym prop?)."""
-    return key in KEYS_DOWN # and KEYS_DOWN[key] > (time.time() - KEYDOWN_DELAY)
-    
+    if is_mac():
+        return key in KEYS_DOWN and KEYS_DOWN[key] > (time.time() - KEYDOWN_DELAY)
+    else:
+        return key in KEYS_DOWN 
+        
 
 def create_canvas(window_title="Pyscratch Game", canvas_width=CANVAS_WIDTH, canvas_height=CANVAS_HEIGHT, **args):
     """Create the drawing / game area on the screen
