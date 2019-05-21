@@ -1,5 +1,19 @@
 from geekclub_packages import *
 
+"""Big Bang Fair demo - Thrust
+
+TO DO:
+- Place platforms in better places
+- Aliens kill you
+- Can fire at aliens
+- Aliens appear at RHS of screen too
+- Rocket takes off
+
+Then:
+- Introduce bugs or remove features
+
+"""
+
 create_canvas(background="black")
 
 # ---------------------------------------------------------
@@ -103,7 +117,7 @@ def ready_for_next_rocket_part():
                                  and rocket_parts[-1].in_place)
      
 def in_landing_zone(x):
-    return (LANDING_ZONE-25) < x < (LANDING_ZONE+25)
+    return (LANDING_ZONE-5) < x < (LANDING_ZONE+5)
 
 def move_rocket_parts():
     if ready_for_next_rocket_part() and random.random() < 0.01:
