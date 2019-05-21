@@ -42,20 +42,20 @@ for i in range(5):
 # -- these must be defined before the event handlers
 
 def gravity():
-    me.speed_y += .1
+    me.speed_y = min(me.speed_y + .5, 5)
     me.move_with_speed()
     if me.touching_any(platforms):
         me.move(0, -me.speed_y)
-        me.speed_y = 0
+        me.speed_y /= 2 
 
-def move_left():
-    me.move(-2,0)
-
-def move_right():
-    me.move(2,0)
-
-def thrust():
-    me.speed_y -= 0.3
+def check_keys():
+    if is_key_down('z'):
+        me.move(-4,0)
+    if is_key_down('c'):
+        me.move(4, 0)
+    if is_key_down(','):
+        me.speed_y -= 1.5
+    me.if_on_edge_wrap()
 
 # ---------------------------------------------------------
 # STEP 2    
@@ -63,9 +63,7 @@ def thrust():
 # sprites do? Add your event handlers here.
 
 forever(gravity, 50)
-when_key_pressed('z', move_left)
-when_key_pressed('x', move_right)
-when_key_pressed('<space>', thrust)
+forever(check_keys, 50)
 
 
 # ---------------------------------------------------------
