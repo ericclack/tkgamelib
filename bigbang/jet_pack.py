@@ -19,7 +19,9 @@ platforms = [
                                      CANVAS_WIDTH,CANVAS_HEIGHT, fill="white")),
     ]
 
-rocket = []
+rocket_parts = []
+MAX_ROCKET_PARTS = 5
+LANDING_ZONE = 650
 
 aliens = []
 MAX_ALIENS = 5
@@ -85,6 +87,44 @@ def move_aliens():
             aliens.remove(a)
         else:
             a.if_on_edge_wrap()
+
+def new_rocket_part():
+    r = Sprite(canvas().create_rectangle(0,0, 100,40, fill="gray"))
+    r.move_to(random.randint(0, CANVAS_WIDTH), 0)
+    r.speed_x = 0
+    r.speed_y = 1
+    r.in_place = False
+    r.landing = False
+    return r
+
+def ready_for_next_rocket_part():
+    """Either none yet, or most recent one is in place"""
+    return rocket_parts == [] or (len(rocket_parts) < MAX_ROCKET_PARTS
+                                 and rocket_parts[-1].in_place)
+     
+def in_landing_zone(x):
+    return (LANDING_ZONE-25) < x < (LANDING_ZONE+25)
+
+def move_rocket_parts():
+    if ready_for_next_rocket_part() and random.random() < 0.01:
+        rocket_parts.append(new_rocket_part())
+
+    if rocket_parts:
+        r = rocket_parts[-1]
+        if not r.in_place:
+            if r.touching(sprite) and not r.landing:
+                r.move_to(sprite.x, sprite.y)
+                if in_landing_zone(r.x):
+                    r.move_to(LANDING_ZONE, r.y)
+                    r.landing = True
+                    r.speed_y = 2
+            elif r.landing and (r.touching_any(platforms)
+                                or r.touching_any(rocket_parts[:-1])):
+                r.in_place = True
+                r.landing = False
+            elif not r.touching_any(platforms):
+                r.move_with_speed()
+
         
 # ---------------------------------------------------------
 # STEP 2    
@@ -93,8 +133,10 @@ def move_aliens():
 
 forever(key_control, 25)
 #forever(mouse_control, 25)
+
 forever(move_sprite, 25)
 forever(move_aliens, 25)
+forever(move_rocket_parts, 25)
 
 # ---------------------------------------------------------
 # FINALLY
