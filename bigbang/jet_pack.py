@@ -16,6 +16,8 @@ Then:
 
 create_canvas(background="black")
 
+MOUSE_CONTROL = True
+
 # ---------------------------------------------------------
 # STEP 1
 # Find or draw your sprites and save them as GIFs to my_work/my_images
@@ -24,7 +26,7 @@ create_canvas(background="black")
 # Create your sprite objects
 sprite = Sprite(canvas().create_oval(10,10, 50,50, fill="yellow"))
 sprite.centre()
-sprite.max_speed = 5
+sprite.max_speed = 7
 
 platforms = [
     Sprite(canvas().create_rectangle(50,100, 200,150, fill="white")),
@@ -82,6 +84,20 @@ def move_sprite():
     sprite._limit_speed()
     sprite.move_with_speed()
     sprite.if_on_edge_wrap()
+
+def fire():
+    direction = sign(sprite.speed_x) or 1
+    x = sprite.x + sprite.width / 2
+    y = sprite.y + sprite.height / 2
+    fsprite = Sprite(canvas().create_rectangle(
+        x, y, x + (direction*500), y+3,
+        fill="yellow", outline=None))
+    a = fsprite.touching_any(aliens)
+    while a:
+        a.delete()
+        aliens.remove(a)
+        a = fsprite.touching_any(aliens)
+    future_action(lambda: fsprite.delete(), 100)
 
 def new_alien():
     a = Sprite(canvas().create_oval(0,0, 50,50, fill="red"))
@@ -145,8 +161,13 @@ def move_rocket_parts():
 # How will the user control the game? What will other
 # sprites do? Add your event handlers here.
 
-forever(key_control, 25)
-#forever(mouse_control, 25)
+if MOUSE_CONTROL:
+    forever(mouse_control, 25)
+    when_button1_clicked(fire)
+    
+else:
+    forever(key_control, 25)
+    when_key_pressed('<Return>', fire)
 
 forever(move_sprite, 25)
 forever(move_aliens, 25)

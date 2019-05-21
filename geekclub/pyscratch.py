@@ -104,6 +104,32 @@ def point_inside_box(point, box):
     return (x2 >= x >= x1) and (y2 >= y >= y1)
 
 
+def overlapping_rect(rect1, rect2):
+    """Does rect1 overlap rect2, e.g. are they touching?
+    If so, return the overlapping rectangle, otherwise None.
+    
+    >>> overlapping_rect((0,0,10,10), (20,20,30,30))
+    >>> overlapping_rect((0,0,100,100), (20,20,30,30))
+    (20, 20, 30, 30)
+    >>> overlapping_rect((0,0,100,100), (60,60,130,130))
+    (60, 60, 100, 100)
+    >>> overlapping_rect((200,200,300,300), (20,20,210,210))
+    (200, 200, 210, 210)
+    >>> overlapping_rect((50,50,100,100), (0,75,400,75))
+    (50, 75, 100, 75)
+    """
+    (ax1, ay1, ax2, ay2) = rect1
+    (bx1, by1, bx2, by2) = rect2
+
+    ox1 = max(ax1, bx1)
+    oy1 = max(ay1,by1)
+    ox2 = min(ax2, bx2)
+    oy2 = min(ay2,by2)
+    
+    if ox1 <= ox2 and oy1 <= oy2:
+        return (ox1, oy1, ox2, oy2)
+
+
 def mouse_touching(sprite):
     return point_inside_box((mousex(), mousey()),
                             CANVAS.bbox(sprite.spriteid))
@@ -395,22 +421,8 @@ class Sprite:
         our_box = CANVAS.bbox(self.spriteid)
         their_box = CANVAS.bbox(sprite.spriteid)
 
-        # Check if any corner of our_box is inside the other_box
-        # then check the reverse
-        (c1x, c1y, c2x, c2y) = our_box
-        our_corners = [ (c1x,c1y), (c2x,c1y), (c1x,c2y), (c2x,c2y) ]
-        for cx, cy in our_corners:
-            if point_inside_box((cx,cy), their_box):
-                return True
-            
-        (c1x, c1y, c2x, c2y) = their_box
-        their_corners = [ (c1x,c1y), (c2x,c1y), (c1x,c2y), (c2x,c2y) ]
-        for cx, cy in their_corners:
-            if point_inside_box((cx,cy), our_box):
-                return True               
-
-        return False
-
+        return overlapping_rect(our_box, their_box) is not None
+    
     def touching_any(self, sprites):
         """Is this sprite touching any other sprite in the list?"""
         for s in sprites:
