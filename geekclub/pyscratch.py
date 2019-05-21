@@ -136,15 +136,14 @@ def _key_released(event):
     events alternate when a key is held down, we use the 
     last time the key was pressed, and ignore the key down
     event"""
-    pass
-    #del(KEYS_DOWN[event.char])
+    del(KEYS_DOWN[event.char])
 
 def is_key_down(key):
     """Experimental tracking of multiple key presses.
 
     Works well with ascii chars, including space, needs some
     work for arrow keys etc (with event.keysym prop?)."""
-    return key in KEYS_DOWN and KEYS_DOWN[key] > (time.time() - KEYDOWN_DELAY)
+    return key in KEYS_DOWN # and KEYS_DOWN[key] > (time.time() - KEYDOWN_DELAY)
     
 
 def create_canvas(window_title="Pyscratch Game", canvas_width=CANVAS_WIDTH, canvas_height=CANVAS_HEIGHT, **args):
@@ -412,11 +411,29 @@ class Sprite:
                 return s
         return False
 
+    def above(self, sprite):
+        """Is this sprite above another sprite"""
+        x,y = self.pos()
+        sx, sy = sprite.pos()
+        return (sy > y)
+
     def below(self, sprite):
         """Is this sprite below another sprite"""
         x,y = self.pos()
         sx, sy = sprite.pos()
         return (sy < y)
+
+    def left_of(self, sprite):
+        """Is this sprite left of another sprite"""
+        x,y = self.pos()
+        sx, sy = sprite.pos()
+        return (sx > x)
+
+    def right_of(self, sprite):
+        """Is this sprite right of another sprite"""
+        x,y = self.pos()
+        sx, sy = sprite.pos()
+        return (sx < x)
 
     def move_with_speed(self):
         self.move(self.speed_x, self.speed_y)
@@ -462,6 +479,16 @@ class Sprite:
 
     def bounce_down(self):
         self.speed_y = abs(self.speed_y)
+
+    def bounce_off(self, sprite, slowdown=1):
+        if self.below(sprite):
+            self.speed_y = abs(self.speed_y * slowdown)
+        if self.above(sprite):
+            self.speed_y = -abs(self.speed_y * slowdown)
+        if self.right_of(sprite):
+            self.speed_x = abs(self.speed_x * slowdown)
+        if self.left_of(sprite):
+            self.speed_x = -abs(self.speed_x * slowdown)
 
     def replace_canvas_object(self, newobjid):
         self.delete()

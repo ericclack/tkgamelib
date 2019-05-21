@@ -1,12 +1,6 @@
 from geekclub_packages import *
 
-create_canvas()
-
-# Create a game from this template in 3 steps:
-# 1. Create sprites
-# 2. Add game controls (at the end of this file)
-# 3. Write the control functions
-
+create_canvas(background="black")
 
 # ---------------------------------------------------------
 # STEP 1
@@ -16,9 +10,12 @@ create_canvas()
 # Create your sprite objects
 sprite = Sprite(canvas().create_oval(10,10, 50,50, fill="yellow"))
 sprite.centre()
-# Add any variables you like
-sprite.score = 0
+sprite.max_speed = 5
 
+platforms = [
+    Sprite(canvas().create_rectangle(50,100, 200,150, fill="white")),
+    Sprite(canvas().create_rectangle(0,500, 500,550, fill="white")),
+    ]
     
 # ---------------------------------------------------------
 # STEP 3
@@ -28,25 +25,45 @@ sprite.score = 0
 def follow_mouse():
     sprite.move_towards(mousex(), mousey(), 10)
 
-def move_left():
-    sprite.move(-2,0)
+def move_sprite():
+    # Keys
+    old_speed_x = sprite.speed_x
+    if is_key_down('z'):
+        sprite.speed_x -= 1
+    if is_key_down('x'):
+        sprite.speed_x += 1
+    if is_key_down(' '):
+        sprite.speed_y -= 1
+    if old_speed_x == sprite.speed_x:
+        sprite.speed_x *= 0.9
 
-def move_right():
-    sprite.move(2, 0)
+    # Gravity
+    sprite.speed_y += 0.5
 
-def thrust():
-    sprite.speed_y -= 2
+    # Platforms
+    p = sprite.touching_any(platforms)
+    if p:
+        if sprite.below(p):
+            sprite.speed_y = abs(sprite.speed_y * 0.5)
+        if sprite.above(p):
+            sprite.speed_y = -abs(sprite.speed_y * 0.5)
+        if sprite.right_of(p):
+            sprite.speed_x = abs(sprite.speed_x * 0.5)
+        if sprite.left_of(p):
+            sprite.speed_x = -abs(sprite.speed_x * 0.5)
+
+    # Move
+    sprite._limit_speed()
+    sprite.move_with_speed()
+    sprite.if_on_edge_wrap()
+        
         
 # ---------------------------------------------------------
 # STEP 2    
 # How will the user control the game? What will other
 # sprites do? Add your event handlers here.
 
-#forever(follow_mouse, 25)
-when_key_pressed('z', move_left)
-when_key_pressed('x', move_right)
-when_key_pressed('<Space>', thrust)
-
+forever(move_sprite, 25)
 
 
 # ---------------------------------------------------------
