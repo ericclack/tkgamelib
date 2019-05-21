@@ -43,14 +43,7 @@ def move_sprite():
     # Platforms
     p = sprite.touching_any(platforms)
     if p:
-        if sprite.below(p):
-            sprite.speed_y = abs(sprite.speed_y * 0.5)
-        if sprite.above(p):
-            sprite.speed_y = -abs(sprite.speed_y * 0.5)
-        if sprite.right_of(p):
-            sprite.speed_x = abs(sprite.speed_x * 0.5)
-        if sprite.left_of(p):
-            sprite.speed_x = -abs(sprite.speed_x * 0.5)
+        sprite.bounce_off(p)
 
     # Move
     sprite._limit_speed()
