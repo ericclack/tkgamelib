@@ -16,14 +16,12 @@ Then:
 
 create_canvas(background="black")
 
+# Mouse or keyboard
 MOUSE_CONTROL = True
 
 # ---------------------------------------------------------
-# STEP 1
-# Find or draw your sprites and save them as GIFs to my_work/my_images
-# Give them short names so that they are easy to enter here.
-
 # Create your sprite objects
+
 sprite = Sprite(canvas().create_oval(10,10, 50,50, fill="yellow"))
 sprite.centre()
 sprite.max_speed = 7
@@ -42,8 +40,10 @@ LANDING_ZONE = 650
 aliens = []
 MAX_ALIENS = 5
 
+world = Struct(lives=3, score=0)
+show_variables([["Lives", world.lives], ["Score", world.score]], fill="white")
+
 # ---------------------------------------------------------
-# STEP 3
 # Define your functions to control the game and its sprites
 # -- these must be defined before the event handlers
 
@@ -71,6 +71,13 @@ def mouse_control():
     if old_speed_x == sprite.speed_x:
         sprite.speed_x *= 0.9
 
+def restart_level():
+    for a in aliens:
+        a.delete()
+        aliens.remove(a)
+    sprite.centre()
+    time.sleep(0.5)
+
 def move_sprite():
     # Gravity
     sprite.speed_y += 0.5
@@ -84,6 +91,14 @@ def move_sprite():
     sprite._limit_speed()
     sprite.move_with_speed()
     sprite.if_on_edge_wrap()
+
+    # Hit an alien?
+    if sprite.touching_any(aliens):
+        banner("You hit an alien!", fill="white")
+        world.lives -= 1
+        if world.lives == 0:
+            end_game("Game over")
+        restart_level()
 
 def fire():
     direction = sign(sprite.speed_x) or 1
@@ -157,7 +172,6 @@ def move_rocket_parts():
 
         
 # ---------------------------------------------------------
-# STEP 2    
 # How will the user control the game? What will other
 # sprites do? Add your event handlers here.
 

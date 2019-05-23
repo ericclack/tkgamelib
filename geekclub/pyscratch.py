@@ -208,28 +208,28 @@ def clear_pen():
     """Clear pen drawings"""
     CANVAS.delete("pen")        
 
-def banner(message, ms=None):
+def banner(message, ms=None, **args):
     """Display a basic text banner in the middle of the screen.
 
     Clear it after a period if ms set"""
     global BANNER
     if BANNER: clear_banner()
     BANNER = CANVAS.create_text(CANVAS_WIDTH/2, CANVAS_HEIGHT/2,
-                             font=("default", 50), text=message)
+                                font=("default", 50), text=message, **args)
     if ms:
         future_action(clear_banner, ms)
 
-def show_variable(label, value, slot=0):
+def show_variable(label, value, slot=0, **args):
     if slot in VARIABLES:
         CANVAS.delete(VARIABLES[slot])
     VARIABLES[slot] = CANVAS.create_text(15, 15 + VAR_FONT_SIZE*slot,
                                          font=("default", VAR_FONT_SIZE),
                                          text="%s: %s" % (label, value),
-                                         anchor="nw")
+                                         anchor="nw", **args)
 
-def show_variables(vars):
+def show_variables(vars, **args):
     for i, (label, value) in enumerate(vars):
-        show_variable(label, value, i)
+        show_variable(label, value, i, **args)
     
 def askstring(title, prompt):
     return simpledialog.askstring(title, prompt, parent=CANVAS)
