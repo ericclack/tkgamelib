@@ -34,10 +34,13 @@ platforms = [
     ]
 
 rocket_parts = []
-MAX_ROCKET_PARTS = 2
+MAX_ROCKET_PARTS = 3
 LANDING_ZONE = 650
 fuel = []
 MAX_FUEL = 3
+DROP_SPEED = 5
+MAX_FLAMES = 5
+flames = []
 
 # How likely is next rocket part or fuel to appear each tick?
 PROB_NEXT_PART = 0.5 
@@ -98,7 +101,7 @@ def move_sprite():
 
     # Hit an alien?
     if sprite.touching_any(aliens):
-        banner("You hit an alien!", fill="white")
+        banner("You hit an alien!", 1000, fill="white")
         world.lives -= 1
         if world.lives == 0:
             end_game("Game over")
@@ -147,17 +150,17 @@ def new_rocket_part():
     r.landing = False
     return r
 
-def rocket_parts_in_place():
-    return all([r.in_place for r in rocket_parts])
+def parts_in_place(parts):
+    return all([r.in_place for r in parts])
 
-def rocket_parts_left():
-    return MAX_ROCKET_PARTS - len(rocket_parts)
+def parts_left(parts):
+    return MAX_ROCKET_PARTS - len(parts)
 
-def rocket_complete():
-    return rocket_parts_left == 0 and rocket_parts_in_place()
+def parts_complete(parts):
+    return parts_left(parts) == 0 and parts_in_place(parts)
 
 def ready_for_next_rocket_part():
-    return rocket_parts_left() and rocket_parts_in_place()
+    return parts_left(rocket_parts) and parts_in_place(rocket_parts)
      
 def in_landing_zone(x):
     return (LANDING_ZONE-5) < x < (LANDING_ZONE+5)
@@ -175,7 +178,7 @@ def move_rocket_parts():
                     world.score += 50
                     r.move_to(LANDING_ZONE, r.y)
                     r.landing = True
-                    r.speed_y = 2
+                    r.speed_y = DROP_SPEED
             elif r.landing and (r.touching_any(platforms)
                                 or r.touching_any(rocket_parts[:-1])):
                 r.in_place = True
@@ -192,13 +195,8 @@ def new_fuel():
     f.landing = False
     return f
 
-def fuel_complete():
-    return len(fuel) == MAX_FUEL and all([f.in_place for f in fuel])
-
 def ready_for_next_fuel():
-    """Either none yet, or most recent one is in place"""
-    return rocket_complete() and not(fuel_complete()) and \
-        fuel == [] or fuel[-1].in_place
+    return parts_complete(rocket_parts) and parts_left(fuel) and parts_in_place(fuel)
 
 def move_fuel():
     if ready_for_next_fuel() and random.random() < PROB_NEXT_PART:
@@ -213,7 +211,7 @@ def move_fuel():
                     world.score += 50
                     f.move_to(LANDING_ZONE, f.y)
                     f.landing = True
-                    f.speed_y = 2
+                    f.speed_y = DROP_SPEED
             elif f.landing and (f.touching_any(platforms)
                                 or f.touching_any(fuel[:-1])):
                 f.in_place = True
@@ -221,21 +219,38 @@ def move_fuel():
             elif not f.touching_any(platforms):
                 f.move_with_speed()
 
+def new_flame():
+    r = rocket_parts[0] # The base of the rocket
+    size = 30 - len(flames) * 2
+    x = LANDING_ZONE + r.width / 2 - size / 2
+    y = r.y + r.height + len(flames) * size * .9
+    return Sprite(canvas().create_oval(x,y, x+size,y+size,
+                                       fill="red"))    
+                
 def ready_for_takeoff():
-    return len(rocket_parts + fuel) == MAX_ROCKET_PARTS * 2 \
-        and all([x.in_place for x in rocket_parts + fuel])
+    return parts_complete(fuel) and parts_complete(rocket_parts)
                 
 def rocket_takeoff():
     if world.status not in ['readyfortakeoff', 'takeoff'] and ready_for_takeoff():
-        banner("Ready for take off!", fill="white")
-        world.status = 'readytakeoff'
-
-    if world.status == 'readyfortakeoff':
-        (rocket_parts + fuel).map(lambda x: x.move(random.randint(-1, 1), random.randint(-1,1)))
-
+        banner("Ready for take off!", 1000, fill="white")
+        world.status = 'readyfortakeoff'
+        world.score += 100
         
-    
+    if world.status == 'readyfortakeoff':
+        if len(flames) == MAX_FLAMES:
+            world.status = 'takeoff'
+            if sprite.touching_any(rocket_parts):
+                banner("Take off!", 1000, fill="white")
+            else:
+                banner("You missed the rocket!", 1000, fill="white")
+                world.lives -= 1
+        
+        elif random.random() < 0.02:
+            flames.append(new_flame())
 
+    if world.status == 'takeoff':
+        for p in rocket_parts + fuel + flames:
+            p.move(0, -5)
 
 def update_score():
     show_variables([["Lives", world.lives],
