@@ -4,13 +4,13 @@ from geekclub_packages import *
 
 TO DO:
 - Place platforms in better places
-- Aliens kill you
-- Can fire at aliens
 - Aliens appear at RHS of screen too
 - Rocket takes off
 
 Then:
 - Introduce bugs or remove features
+- Aliens kill you
+- Can fire at aliens
 
 """
 
@@ -34,14 +34,18 @@ platforms = [
     ]
 
 rocket_parts = []
-MAX_ROCKET_PARTS = 5
+MAX_ROCKET_PARTS = 3
 LANDING_ZONE = 650
+fuel = []
+MAX_FUEL = 3
+
+# How likely is next rocket part or fuel to appear each tick?
+PROB_NEXT_PART = 0.5 
 
 aliens = []
-MAX_ALIENS = 5
+MAX_ALIENS = 1
 
 world = Struct(lives=3, score=0)
-show_variables([["Lives", world.lives], ["Score", world.score]], fill="white")
 
 # ---------------------------------------------------------
 # Define your functions to control the game and its sprites
@@ -111,6 +115,7 @@ def fire():
     while a:
         a.delete()
         aliens.remove(a)
+        world.score += 10
         a = fsprite.touching_any(aliens)
     future_action(lambda: fsprite.delete(), 100)
 
@@ -151,7 +156,7 @@ def in_landing_zone(x):
     return (LANDING_ZONE-5) < x < (LANDING_ZONE+5)
 
 def move_rocket_parts():
-    if ready_for_next_rocket_part() and random.random() < 0.01:
+    if ready_for_next_rocket_part() and random.random() < PROB_NEXT_PART:
         rocket_parts.append(new_rocket_part())
 
     if rocket_parts:
@@ -160,6 +165,7 @@ def move_rocket_parts():
             if r.touching(sprite) and not r.landing:
                 r.move_to(sprite.x, sprite.y)
                 if in_landing_zone(r.x):
+                    world.score += 50
                     r.move_to(LANDING_ZONE, r.y)
                     r.landing = True
                     r.speed_y = 2
@@ -170,7 +176,48 @@ def move_rocket_parts():
             elif not r.touching_any(platforms):
                 r.move_with_speed()
 
-        
+def new_fuel():
+    f = Sprite(canvas().create_rectangle(0,0, 100,40, fill="purple"))
+    f.move_to(random.randint(0, CANVAS_WIDTH), 0)
+    f.speed_x = 0
+    f.speed_y = 1
+    f.in_place = False
+    f.landing = False
+    return f
+
+def ready_for_next_fuel():
+    """Either none yet, or most recent one is in place"""
+    return len(rocket_parts) == MAX_ROCKET_PARTS and rocket_parts[-1].in_place and (
+        fuel == [] or (len(fuel) < MAX_FUEL and fuel[-1].in_place))
+
+def move_fuel():
+    if ready_for_next_fuel() and random.random() < PROB_NEXT_PART:
+        fuel.append(new_fuel())
+
+    if fuel:
+        f = fuel[-1]
+        if not f.in_place:
+            if f.touching(sprite) and not f.landing:
+                f.move_to(sprite.x, sprite.y)
+                if in_landing_zone(f.x):
+                    world.score += 50
+                    f.move_to(LANDING_ZONE, f.y)
+                    f.landing = True
+                    f.speed_y = 2
+            elif f.landing and (f.touching_any(platforms)
+                                or f.touching_any(fuel[:-1])):
+                f.in_place = True
+                f.landing = False
+            elif not f.touching_any(platforms):
+                f.move_with_speed()                
+
+
+def update_score():
+    show_variables([["Lives", world.lives],
+                    ["Score", world.score]],
+                   fill="white")
+
+    
 # ---------------------------------------------------------
 # How will the user control the game? What will other
 # sprites do? Add your event handlers here.
@@ -186,6 +233,8 @@ else:
 forever(move_sprite, 25)
 forever(move_aliens, 25)
 forever(move_rocket_parts, 25)
+forever(move_fuel, 25)
+forever(update_score)
 
 # ---------------------------------------------------------
 # FINALLY
