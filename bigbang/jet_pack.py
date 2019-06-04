@@ -5,12 +5,14 @@ from geekclub_packages import *
 TO DO:
 - Place platforms in better places
 - Aliens appear at RHS of screen too
-- Rocket takes off
+- Take off w sprite = next level
+- Take off w sprite = repeat level
 
 Then:
 - Introduce bugs or remove features
 - Aliens kill you
 - Can fire at aliens
+- Rocket takes off
 
 """
 
@@ -25,6 +27,7 @@ MOUSE_CONTROL = True
 sprite = Sprite(canvas().create_oval(10,10, 50,50, fill="yellow"))
 sprite.centre()
 sprite.max_speed = 7
+sprite.in_rocket = False
 
 platforms = [
     Sprite(canvas().create_rectangle(50,150, 200,200, fill="white")),
@@ -34,7 +37,7 @@ platforms = [
     ]
 
 rocket_parts = []
-MAX_ROCKET_PARTS = 3
+MAX_ROCKET_PARTS = 5
 LANDING_ZONE = 650
 fuel = []
 MAX_FUEL = 3
@@ -46,7 +49,7 @@ flames = []
 PROB_NEXT_PART = 0.5 
 
 aliens = []
-MAX_ALIENS = 1
+MAX_ALIENS = 5
 
 world = Struct(lives=3, score=0, status='play')
 
@@ -143,7 +146,7 @@ def move_aliens():
 
 def new_rocket_part():
     r = Sprite(canvas().create_rectangle(0,0, 100,40, fill="gray"))
-    r.move_to(random.randint(0, CANVAS_WIDTH), 0)
+    r.move_to(random.randint(0, CANVAS_WIDTH-100), 0)
     r.speed_x = 0
     r.speed_y = 1
     r.in_place = False
@@ -237,9 +240,12 @@ def rocket_takeoff():
         world.score += 100
         
     if world.status == 'readyfortakeoff':
+        if sprite.touching_any(rocket_parts):
+            sprite.in_rocket = True
+            
         if len(flames) == MAX_FLAMES:
             world.status = 'takeoff'
-            if sprite.touching_any(rocket_parts):
+            if sprite.in_rocket:
                 banner("Take off!", 1000, fill="white")
             else:
                 banner("You missed the rocket!", 1000, fill="white")
@@ -251,6 +257,10 @@ def rocket_takeoff():
     if world.status == 'takeoff':
         for p in rocket_parts + fuel + flames:
             p.move(0, -5)
+
+    if sprite.in_rocket:
+        r = rocket_parts[0]
+        sprite.move_to(r.x + r.width, r.y)
 
 def update_score():
     show_variables([["Lives", world.lives],
