@@ -27,14 +27,14 @@ sprite.centre()
 sprite.max_speed = 7
 
 platforms = [
-    Sprite(canvas().create_rectangle(50,100, 200,150, fill="white")),
+    Sprite(canvas().create_rectangle(50,150, 200,200, fill="white")),
     Sprite(canvas().create_rectangle(0,500, 500,550, fill="white")),
     Sprite(canvas().create_rectangle(0,CANVAS_HEIGHT-50,
                                      CANVAS_WIDTH,CANVAS_HEIGHT, fill="white")),
     ]
 
 rocket_parts = []
-MAX_ROCKET_PARTS = 3
+MAX_ROCKET_PARTS = 2
 LANDING_ZONE = 650
 fuel = []
 MAX_FUEL = 3
@@ -45,7 +45,7 @@ PROB_NEXT_PART = 0.5
 aliens = []
 MAX_ALIENS = 1
 
-world = Struct(lives=3, score=0)
+world = Struct(lives=3, score=0, status='play')
 
 # ---------------------------------------------------------
 # Define your functions to control the game and its sprites
@@ -147,10 +147,17 @@ def new_rocket_part():
     r.landing = False
     return r
 
+def rocket_parts_in_place():
+    return all([r.in_place for r in rocket_parts])
+
+def rocket_parts_left():
+    return MAX_ROCKET_PARTS - len(rocket_parts)
+
+def rocket_complete():
+    return rocket_parts_left == 0 and rocket_parts_in_place()
+
 def ready_for_next_rocket_part():
-    """Either none yet, or most recent one is in place"""
-    return rocket_parts == [] or (len(rocket_parts) < MAX_ROCKET_PARTS
-                                 and rocket_parts[-1].in_place)
+    return rocket_parts_left() and rocket_parts_in_place()
      
 def in_landing_zone(x):
     return (LANDING_ZONE-5) < x < (LANDING_ZONE+5)
@@ -185,10 +192,13 @@ def new_fuel():
     f.landing = False
     return f
 
+def fuel_complete():
+    return len(fuel) == MAX_FUEL and all([f.in_place for f in fuel])
+
 def ready_for_next_fuel():
     """Either none yet, or most recent one is in place"""
-    return len(rocket_parts) == MAX_ROCKET_PARTS and rocket_parts[-1].in_place and (
-        fuel == [] or (len(fuel) < MAX_FUEL and fuel[-1].in_place))
+    return rocket_complete() and not(fuel_complete()) and \
+        fuel == [] or fuel[-1].in_place
 
 def move_fuel():
     if ready_for_next_fuel() and random.random() < PROB_NEXT_PART:
@@ -209,7 +219,22 @@ def move_fuel():
                 f.in_place = True
                 f.landing = False
             elif not f.touching_any(platforms):
-                f.move_with_speed()                
+                f.move_with_speed()
+
+def ready_for_takeoff():
+    return len(rocket_parts + fuel) == MAX_ROCKET_PARTS * 2 \
+        and all([x.in_place for x in rocket_parts + fuel])
+                
+def rocket_takeoff():
+    if world.status not in ['readyfortakeoff', 'takeoff'] and ready_for_takeoff():
+        banner("Ready for take off!", fill="white")
+        world.status = 'readytakeoff'
+
+    if world.status == 'readyfortakeoff':
+        (rocket_parts + fuel).map(lambda x: x.move(random.randint(-1, 1), random.randint(-1,1)))
+
+        
+    
 
 
 def update_score():
@@ -234,6 +259,7 @@ forever(move_sprite, 25)
 forever(move_aliens, 25)
 forever(move_rocket_parts, 25)
 forever(move_fuel, 25)
+forever(rocket_takeoff, 25)
 forever(update_score)
 
 # ---------------------------------------------------------
