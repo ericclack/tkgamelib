@@ -29,15 +29,16 @@ sprite.centre()
 sprite.max_speed = 7
 sprite.in_rocket = False
 
-platforms = [
-    Sprite(canvas().create_rectangle(50,150, 200,200, fill="white")),
-    Sprite(canvas().create_rectangle(0,500, 500,550, fill="white")),
-    Sprite(canvas().create_rectangle(0,CANVAS_HEIGHT-50,
-                                     CANVAS_WIDTH,CANVAS_HEIGHT, fill="white")),
-    ]
+platform_rectangles = [(50,150, 200,200),
+                       (400, 500, 550,550),
+                       (160,200, 700,250),
+                       (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT)]
+
+platforms = [Sprite(canvas().create_rectangle(x1,y1, x2,y2, fill="white"))
+                for x1, y1, x2, y2 in platform_rectangles]  
 
 rocket_parts = []
-MAX_ROCKET_PARTS = 5
+MAX_ROCKET_PARTS = 7
 LANDING_ZONE = 650
 fuel = []
 MAX_FUEL = 3
@@ -84,9 +85,8 @@ def mouse_control():
 def restart_level():
     for a in aliens:
         a.delete()
-        aliens.remove(a)
+    aliens.clear()
     sprite.centre()
-    time.sleep(0.5)
 
 def move_sprite():
     # Gravity
@@ -104,10 +104,10 @@ def move_sprite():
 
     # Hit an alien?
     if sprite.touching_any(aliens):
-        banner("You hit an alien!", 1000, fill="white")
+        banner("You hit an alien!", 2000, fill="white")
         world.lives -= 1
         if world.lives == 0:
-            end_game("Game over")
+            end_game("Game over!", fill="white")
         restart_level()
 
 def fire():
@@ -127,7 +127,11 @@ def fire():
 
 def new_alien():
     a = Sprite(canvas().create_oval(0,0, 50,50, fill="red"))
-    a.move_to(random.randint(0, CANVAS_WIDTH), 0)
+    if random.random() < 0.5:
+        a.move_to(random.randint(0, CANVAS_WIDTH * .9), 0)
+    else:
+        a.move_to(CANVAS_WIDTH, random.randint(0, CANVAS_HEIGHT *.6))
+        
     a.speed_x = -random.randint(1,3)
     a.speed_y = 2
     return a
@@ -145,7 +149,7 @@ def move_aliens():
             a.if_on_edge_wrap()
 
 def new_rocket_part():
-    r = Sprite(canvas().create_rectangle(0,0, 100,40, fill="gray"))
+    r = ImageSprite('images/rocket%s.gif' % (len(rocket_parts) + 1))
     r.move_to(random.randint(0, CANVAS_WIDTH-100), 0)
     r.speed_x = 0
     r.speed_y = 1
