@@ -309,10 +309,10 @@ def future_action(fn, ms):
 def _quit_game():
     canvas().quit()
 
-def end_game(message='Game Over', fn=_quit_game, ms=2000):
+def end_game(message='Game Over', fn=_quit_game, ms=5000, **args):
     for f in FOREVER_FNS:
         pause_forever(f)
-    banner(message)
+    banner(message, ms, **args)
     future_action(fn, ms)
 
 def restart_game():
