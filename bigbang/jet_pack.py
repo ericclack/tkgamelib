@@ -40,11 +40,10 @@ platform_rectangles = [(50,150, 200,200, "white"),
                        #(160,200, 700,250, "blue"),
                        (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT, "white")]
 
-platforms = make_platforms(platform_rectangles)
-
 # Our world
 world = Struct(lives=3, score=0, status='play',
                sprite = sprite,
+               platforms = make_platforms(platform_rectangles),
                rocket_parts = [],
                aliens = [],
                fuel = [],
@@ -52,12 +51,10 @@ world = Struct(lives=3, score=0, status='play',
                )
 
 # Variables and constants
-
-LANDING_ZONE = 550
 MAX_FUEL = 3
 DROP_SPEED = 5
 MAX_FLAMES = 5
-MAX_ALIENS = 50
+MAX_ALIENS = 5
 
 # How likely is next rocket part or fuel to appear each tick?
 PROB_NEXT_PART = 0.5 
@@ -95,7 +92,7 @@ def move_sprite():
     sprite.speed_y += 0.5
 
     # Platforms
-    p = sprite.touching_any(platforms)
+    p = sprite.touching_any(world.platforms)
     if p:
         sprite.bounce_off(p)
 
@@ -131,40 +128,20 @@ def fire():
     # Delete the lazer in 1/10th second
     future_action(lambda: fsprite.delete(), 100)
 
-def new_alien():
-    a = Sprite(canvas().create_oval(0,0, 50,50, fill="red"))
-    a.max_speed = 3
-    
-    if random.random() < 0.5:
-        a.move_to(random.randint(0, CANVAS_WIDTH * .9), 0)
-    else:
-        a.move_to(CANVAS_WIDTH, random.randint(0, CANVAS_HEIGHT *.6))
-        
-    a.speed_x = -random.randint(3,8)
-    a.speed_y = 2
-    return a
-
 def move_aliens():
     if len(world.aliens) < MAX_ALIENS and random.random() < 0.1:
-        world.aliens.append(new_alien())
+        world.aliens.append(new_alien(world))
         
     for a in world.aliens:
         #a.accelerate_towards(sprite.x, sprite.y, steps=0.2)
         
         a.move_with_speed()
-        if a.y > CANVAS_HEIGHT or a.touching_any(platforms):
+        if a.y > CANVAS_HEIGHT or a.touching_any(world.platforms):
             a.delete()
             world.aliens.remove(a)
         else:
             a.if_on_edge_wrap()
-
-
-
-
      
-def in_landing_zone(x):
-    return (LANDING_ZONE-5) < x < (LANDING_ZONE+5)
-
 def move_rocket_parts():
     if ready_for_next_rocket_part(world) and random.random() < PROB_NEXT_PART:
         world.rocket_parts.append(new_rocket_part(world))
@@ -179,28 +156,16 @@ def move_rocket_parts():
                     r.move_to(LANDING_ZONE, r.y)
                     r.landing = True
                     r.speed_y = DROP_SPEED
-            elif r.landing and (r.touching_any(platforms)
+            elif r.landing and (r.touching_any(world.platforms)
                                 or r.touching_any(world.rocket_parts[:-1])):
                 r.in_place = True
                 r.landing = False
-            elif not r.touching_any(platforms):
+            elif not r.touching_any(world.platforms):
                 r.move_with_speed()
 
-def new_fuel():
-    f = Sprite(canvas().create_rectangle(0,0, 100,40, fill="purple"))
-    f.move_to(random.randint(0, CANVAS_WIDTH), 0)
-    f.speed_x = 0
-    f.speed_y = 1
-    f.in_place = False
-    f.landing = False
-    return f
-
-def ready_for_next_fuel():
-    return parts_complete(world.rocket_parts) and parts_left(world.fuel) and parts_in_place(world.fuel)
-
 def move_fuel():
-    if ready_for_next_fuel() and random.random() < PROB_NEXT_PART:
-        world.fuel.append(new_fuel())
+    if ready_for_next_fuel(world) and random.random() < PROB_NEXT_PART:
+        world.fuel.append(new_fuel(world))
 
     if world.fuel:
         f = world.fuel[-1]
@@ -212,26 +177,15 @@ def move_fuel():
                     f.move_to(LANDING_ZONE, f.y)
                     f.landing = True
                     f.speed_y = DROP_SPEED
-            elif f.landing and (f.touching_any(platforms)
+            elif f.landing and (f.touching_any(world.platforms)
                                 or f.touching_any(world.fuel[:-1])):
                 f.in_place = True
                 f.landing = False
-            elif not f.touching_any(platforms):
+            elif not f.touching_any(world.platforms):
                 f.move_with_speed()
-
-def new_flame():
-    r = world.rocket_parts[0] # The base of the rocket
-    size = 30 - len(world.flames) * 2
-    x = LANDING_ZONE + r.width / 2 - size / 2
-    y = r.y + r.height + len(world.flames) * size * .9
-    return Sprite(canvas().create_oval(x,y, x+size,y+size,
-                                       fill="red"))    
-                
-def ready_for_takeoff():
-    return parts_complete(world.fuel) and parts_complete(world.rocket_parts)
                 
 def rocket_takeoff():
-    if world.status not in ['readyfortakeoff', 'takeoff'] and ready_for_takeoff():
+    if world.status not in ['readyfortakeoff', 'takeoff'] and ready_for_takeoff(world):
         banner("Ready for take off!", 1000, fill="white")
         world.status = 'readyfortakeoff'
         world.score += 100
@@ -249,7 +203,7 @@ def rocket_takeoff():
                 world.lives -= 1
         
         elif random.random() < 0.02:
-            world.flames.append(new_flame())
+            world.flames.append(new_flame(world))
 
     if world.status == 'takeoff':
         for p in world.rocket_parts + world.fuel + world.flames:
