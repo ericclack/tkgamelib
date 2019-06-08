@@ -10,10 +10,15 @@ TO DO:
 
 Then:
 - Introduce bugs or remove features
-- Aliens kill you
-- Can fire at aliens
-- Rocket takes off
+- Print score so can record on chart
+- Fuel looks better on rocket
+- Take off leads to next level (faster current level?)
+- 
 
+Bugs:
+- Platforms in the wrong place  (160,200, 700,250),
+- Reversed controls
+- Too many aliens
 """
 
 create_canvas(background="black")
@@ -29,17 +34,18 @@ sprite.centre()
 sprite.max_speed = 7
 sprite.in_rocket = False
 
-platform_rectangles = [(50,150, 200,200),
-                       (400, 500, 550,550),
-                       (160,200, 700,250),
-                       (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT)]
+platform_rectangles = [(50,150, 200,200, "white"),
+                       (380, 500, 530,550, "yellow"),
+                       (700,300, 800,350, "green"),
+                       #(160,200, 700,250, "blue"),
+                       (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT, "white")]
 
-platforms = [Sprite(canvas().create_rectangle(x1,y1, x2,y2, fill="white"))
-                for x1, y1, x2, y2 in platform_rectangles]  
+platforms = [Sprite(canvas().create_rectangle(x1,y1, x2,y2, fill=c))
+                for x1, y1, x2, y2, c in platform_rectangles]  
 
 rocket_parts = []
 MAX_ROCKET_PARTS = 7
-LANDING_ZONE = 650
+LANDING_ZONE = 550
 fuel = []
 MAX_FUEL = 3
 DROP_SPEED = 5
@@ -50,7 +56,7 @@ flames = []
 PROB_NEXT_PART = 0.5 
 
 aliens = []
-MAX_ALIENS = 5
+MAX_ALIENS = 50
 
 world = Struct(lives=3, score=0, status='play')
 
@@ -115,24 +121,30 @@ def fire():
     x = sprite.x + sprite.width / 2
     y = sprite.y + sprite.height / 2
     fsprite = Sprite(canvas().create_rectangle(
-        x, y, x + (direction*500), y+3,
-        fill="yellow", outline=None))
+                        x + (direction * 30), y, x + (direction*500), y+3,
+                        fill="yellow", outline=None))
+    # Has the lazer hit any aliens?
     a = fsprite.touching_any(aliens)
     while a:
         a.delete()
         aliens.remove(a)
         world.score += 10
+        # Has the lazer hit any other aliens?
         a = fsprite.touching_any(aliens)
+        
+    # Delete the lazer in 1/10th second
     future_action(lambda: fsprite.delete(), 100)
 
 def new_alien():
     a = Sprite(canvas().create_oval(0,0, 50,50, fill="red"))
+    a.max_speed = 3
+    
     if random.random() < 0.5:
         a.move_to(random.randint(0, CANVAS_WIDTH * .9), 0)
     else:
         a.move_to(CANVAS_WIDTH, random.randint(0, CANVAS_HEIGHT *.6))
         
-    a.speed_x = -random.randint(1,3)
+    a.speed_x = -random.randint(3,8)
     a.speed_y = 2
     return a
 
@@ -141,6 +153,8 @@ def move_aliens():
         aliens.append(new_alien())
         
     for a in aliens:
+        #a.accelerate_towards(sprite.x, sprite.y, steps=0.2)
+        
         a.move_with_speed()
         if a.y > CANVAS_HEIGHT or a.touching_any(platforms):
             a.delete()
