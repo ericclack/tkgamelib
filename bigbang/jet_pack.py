@@ -44,6 +44,7 @@ platforms = make_platforms(platform_rectangles)
 
 # Our world
 world = Struct(lives=3, score=0, status='play',
+               sprite = sprite,
                rocket_parts = [],
                aliens = [],
                fuel = [],
@@ -51,7 +52,7 @@ world = Struct(lives=3, score=0, status='play',
                )
 
 # Variables and constants
-MAX_ROCKET_PARTS = 7
+
 LANDING_ZONE = 550
 MAX_FUEL = 3
 DROP_SPEED = 5
@@ -89,12 +90,6 @@ def mouse_control():
     if old_speed_x == sprite.speed_x:
         sprite.speed_x *= 0.9
 
-def restart_level():
-    for a in world.aliens:
-        a.delete()
-    world.aliens.clear()
-    sprite.centre()
-
 def move_sprite():
     # Gravity
     sprite.speed_y += 0.5
@@ -115,7 +110,7 @@ def move_sprite():
         world.lives -= 1
         if world.lives == 0:
             end_game("Game over!", fill="white")
-        restart_level()
+        restart_level(world)
 
 def fire():
     direction = sign(sprite.speed_x) or 1
@@ -165,23 +160,13 @@ def move_aliens():
 
 
 
-def parts_in_place(parts):
-    return all([r.in_place for r in parts])
 
-def parts_left(parts):
-    return MAX_ROCKET_PARTS - len(parts)
-
-def parts_complete(parts):
-    return parts_left(parts) == 0 and parts_in_place(parts)
-
-def ready_for_next_rocket_part():
-    return parts_left(world.rocket_parts) and parts_in_place(world.rocket_parts)
      
 def in_landing_zone(x):
     return (LANDING_ZONE-5) < x < (LANDING_ZONE+5)
 
 def move_rocket_parts():
-    if ready_for_next_rocket_part() and random.random() < PROB_NEXT_PART:
+    if ready_for_next_rocket_part(world) and random.random() < PROB_NEXT_PART:
         world.rocket_parts.append(new_rocket_part(world))
 
     if world.rocket_parts:
