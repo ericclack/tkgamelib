@@ -44,7 +44,7 @@ platform_rectangles = [(50,150, 200,200, "white"),
                        (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT, "white")]
 
 # Our world
-world = Struct(lives=3, score=0, status='play',
+world = Struct(lives=5, score=0, status='play',
                sprite = sprite,
                platforms = make_platforms(platform_rectangles),
                rocket_parts = [],
@@ -184,6 +184,7 @@ def move_fuel():
                                 or f.touching_any(world.fuel[:-1])):
                 f.in_place = True
                 f.landing = False
+                world.rocket_parts[len(world.fuel)-1].next_costume()
             elif not f.touching_any(world.platforms):
                 f.move_with_speed()
 

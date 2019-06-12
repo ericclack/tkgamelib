@@ -13,7 +13,8 @@ def in_landing_zone(x):
 # ------------------------------------------------------------------
 
 def new_rocket_part(w):
-    r = ImageSprite('images/rocket%s.gif' % (len(w.rocket_parts) + 1))
+    i = (len(w.rocket_parts) + 1)
+    r = ImageSprite(['images/rocket%s.gif' % i, 'images/rocket%s_fuelled.gif' % i])
     r.move_to(random.randint(0, CANVAS_WIDTH-100), 0)
     r.speed_x = 0
     r.speed_y = 1
