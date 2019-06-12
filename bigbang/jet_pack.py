@@ -3,19 +3,22 @@ from jet_pack_lib import *
 """Big Bang Fair demo - Thrust
 
 TO DO:
+- Show all rocket parts and must collect them in right order?
+- Better sprites
 - Place platforms in better places
-- Aliens appear at RHS of screen too
 - Take off w sprite = next level
 - Take off w sprite = repeat level
 
 Then:
-- Introduce bugs or remove features
-- Print score so can record on chart
+- Print score to console so can record on chart
 - Fuel look better on rocket
 - Take off results in next level (faster current level?)
-- 
 
-Bugs:
+Done:
+- Aliens appear at RHS of screen too
+- Introduce bugs or remove features
+
+Bugs to fix at BigBang:
 - Platforms in the wrong place  (160,200, 700,250),
 - Reversed controls
 - Too many aliens
@@ -54,10 +57,10 @@ world = Struct(lives=3, score=0, status='play',
 MAX_FUEL = 3
 DROP_SPEED = 5
 MAX_FLAMES = 5
-MAX_ALIENS = 5
+MAX_ALIENS = 3
 
 # How likely is next rocket part or fuel to appear each tick?
-PROB_NEXT_PART = 0.5 
+PROB_NEXT_PART = 0.5
 
 # ---------------------------------------------------------
 # Define your functions to control the game and its sprites
@@ -71,7 +74,7 @@ def key_control():
         sprite.speed_x += 1
     if is_key_down(' '):
         sprite.speed_y -= 1
-        
+
     if old_speed_x == sprite.speed_x:
         sprite.speed_x *= 0.9
 
@@ -116,32 +119,32 @@ def fire():
     fsprite = Sprite(canvas().create_rectangle(
                         x + (direction * 30), y, x + (direction*500), y+3,
                         fill="yellow", outline=None))
-    # Has the lazer hit any aliens?
+    # Has the laser hit any aliens?
     a = fsprite.touching_any(world.aliens)
     while a:
         a.delete()
         world.aliens.remove(a)
         world.score += 10
-        # Has the lazer hit any other aliens?
+        # Has the laser hit any other aliens?
         a = fsprite.touching_any(world.aliens)
-        
-    # Delete the lazer in 1/10th second
+
+    # Delete the laser in 1/10th second
     future_action(lambda: fsprite.delete(), 100)
 
 def move_aliens():
-    if len(world.aliens) < MAX_ALIENS and random.random() < 0.1:
+    if len(world.aliens) < MAX_ALIENS and random.random() < 0.05:
         world.aliens.append(new_alien(world))
-        
+
     for a in world.aliens:
         #a.accelerate_towards(sprite.x, sprite.y, steps=0.2)
-        
+
         a.move_with_speed()
         if a.y > CANVAS_HEIGHT or a.touching_any(world.platforms):
             a.delete()
             world.aliens.remove(a)
         else:
             a.if_on_edge_wrap()
-     
+
 def move_rocket_parts():
     if ready_for_next_rocket_part(world) and random.random() < PROB_NEXT_PART:
         world.rocket_parts.append(new_rocket_part(world))
@@ -183,17 +186,17 @@ def move_fuel():
                 f.landing = False
             elif not f.touching_any(world.platforms):
                 f.move_with_speed()
-                
+
 def rocket_takeoff():
     if world.status not in ['readyfortakeoff', 'takeoff'] and ready_for_takeoff(world):
         banner("Ready for take off!", 1000, fill="white")
         world.status = 'readyfortakeoff'
         world.score += 100
-        
+
     if world.status == 'readyfortakeoff':
         if sprite.touching_any(world.rocket_parts):
             sprite.in_rocket = True
-            
+
         if len(world.flames) == MAX_FLAMES:
             world.status = 'takeoff'
             if sprite.in_rocket:
@@ -201,7 +204,7 @@ def rocket_takeoff():
             else:
                 banner("You missed the rocket!", 1000, fill="white")
                 world.lives -= 1
-        
+
         elif random.random() < 0.02:
             world.flames.append(new_flame(world))
 
@@ -218,7 +221,7 @@ def update_score():
                     ["Score", world.score]],
                    fill="white")
 
-    
+
 # ---------------------------------------------------------
 # How will the user control the game? What will other
 # sprites do? Add your event handlers here.
@@ -226,7 +229,6 @@ def update_score():
 if MOUSE_CONTROL:
     forever(mouse_control, 25)
     when_button1_clicked(fire)
-    
 else:
     forever(key_control, 25)
     when_key_pressed('<Return>', fire)
