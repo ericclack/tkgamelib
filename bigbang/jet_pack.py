@@ -29,7 +29,7 @@ MOUSE_CONTROL = True
 # ---------------------------------------------------------
 # Create your sprite objects
 
-sprite = Sprite(canvas().create_oval(10,10, 50,50, fill="yellow"))
+sprite = ImageSprite(['images/jet_pack_left.gif', 'images/jet_pack_right.gif'])
 sprite.centre()
 sprite.max_speed = 7
 sprite.in_rocket = False
@@ -63,6 +63,13 @@ PROB_NEXT_PART = 0.5
 # Define your functions to control the game and its sprites
 # -- these must be defined before the event handlers
 
+def set_sprite_costume():
+    # Left or right?
+    if sprite.speed_x < 0:
+        sprite.switch_costume(1)
+    else:
+        sprite.switch_costume(2)    
+
 def key_control():
     old_speed_x = sprite.speed_x
     if is_key_down('z'):
@@ -74,7 +81,9 @@ def key_control():
 
     if old_speed_x == sprite.speed_x:
         sprite.speed_x *= 0.9
-
+    else:
+        set_sprite_costume()
+        
 def mouse_control():
     old_speed_x = sprite.speed_x
     if mousex() < sprite.x - sprite.width:
@@ -86,6 +95,8 @@ def mouse_control():
 
     if old_speed_x == sprite.speed_x:
         sprite.speed_x *= 0.9
+    else:
+        set_sprite_costume()        
 
 def move_sprite():
     # Gravity
