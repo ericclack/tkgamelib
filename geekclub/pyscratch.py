@@ -198,7 +198,18 @@ def create_canvas(window_title="Pyscratch Game", canvas_width=CANVAS_WIDTH, canv
     CANVAS.focus_set()    
     CANVAS.bind('<KeyPress>', _key_pressed)
     CANVAS.bind('<KeyRelease>', _key_released)
-        
+
+def offscreen(x,y):
+    """Put x,y offscreen so that it can't be seen"""
+    if x < CANVAS_WIDTH*5:
+        x += CANVAS_WIDTH*5
+    return x,y
+
+def onscreen(x,y):
+    """Put x,y onscreen"""
+    if x > CANVAS_WIDTH*5:
+        x -= CANVAS_WIDTH*5
+    return x,y
 
 def clear_canvas():
     """Remove everything from the canvas"""
@@ -531,6 +542,13 @@ class ImageSprite(Sprite):
     Or:
     > image = PhotoImage(file='images/face.gif')
     > s = ImageSprite(image)
+
+    Or for multiple sprites:
+    > s = ImageSprite(['images/face1.gif', 'images/face2.gif'])
+
+    Multiple images share the same tag and the image IDs
+    are stored in the sprite object. All but the active image
+    are stored offscreen. 
     """
 
     next_tag_id = 1
@@ -542,16 +560,11 @@ class ImageSprite(Sprite):
         return "pyscratch-tag-%d" % id
 
     @staticmethod
-    def _show_costume(showid, ids, method="raise"):
-        if method == "raise":
-            canvas().tag_raise(showid)
-        elif method == "lower":
-            # Lower all other sprites
-            for i in ids:
-                if i != showid:
-                    canvas().tag_lower(i)
-        else:
-            assert False, "method should be either 'raise' or 'lower'"
+    def _show_costume(showid, ids):
+        for i in ids:
+            if i == showid:
+                
+                canvas().tag_lower(i)
             
     def __init__(self, imgs, x=100, y=100):
         self.costume_ids = []
@@ -561,7 +574,7 @@ class ImageSprite(Sprite):
             tag = ImageSprite.unique_tagname()
         else:
             imgs = [imgs]
-            tag = None # Use spriteid
+            tag = None # Just one sprite
         
         for img in imgs:
             if isinstance(img, str):
@@ -569,22 +582,36 @@ class ImageSprite(Sprite):
                 self.photo_images.append( PhotoImage(file=img) )
             else:
                 self.photo_images.append( img )
+
+            if self.costume_ids:
+                # Successive sprites are hidden offscreen
+                x, y = offscreen(x, y)
+                
             spriteid = CANVAS.create_image(x,y, image=self.photo_images[-1], tag=tag)
             self.costume_ids.append(spriteid)
         
-        super(ImageSprite, self).__init__(tag or spriteid)
+        super(ImageSprite, self).__init__(self.costume_ids[0])
         self.switch_costume(1)
 
-    def next_costume(self, method="raise"):
+    def next_costume(self):
         """Show next costume if this sprite is composed of multiple ones"""
         spriteids = canvas().find_withtag(self.spriteid)
         if len(spriteids) == 1: return # Only one sprite
         ImageSprite._show_costume(spriteids[0], spriteids, method)
         
-    def switch_costume(self, number, method="raise"):
+    def switch_costume(self, number):
         "Show costume by number, 1 is the first one"
-        ImageSprite._show_costume(self.costume_ids[number-1],
-                                  self.costume_ids, method)
+        switch_to_id = self.costume_ids[number-1]
+        if self.spriteid == switch_to_id:
+            return # nothing to do
+
+        # Move this costume offscreen
+        x, y = self.x, self.y
+        self.move_to(*offscreen(x, y))
+
+        # And then move the new costume back onscreen 
+        self.spriteid = switch_to_id
+        self.move_to(x, y)
                 
 
     def which_costume(self):
