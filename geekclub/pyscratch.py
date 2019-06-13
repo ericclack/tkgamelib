@@ -559,13 +559,6 @@ class ImageSprite(Sprite):
         ImageSprite.next_tag_id += 1
         return "pyscratch-tag-%d" % id
 
-    @staticmethod
-    def _show_costume(showid, ids):
-        for i in ids:
-            if i == showid:
-                
-                canvas().tag_lower(i)
-            
     def __init__(self, imgs, x=100, y=100):
         self.costume_ids = []
         self.photo_images = []
@@ -593,11 +586,29 @@ class ImageSprite(Sprite):
         super(ImageSprite, self).__init__(self.costume_ids[0])
         self.switch_costume(1)
 
+
+    def _switch_to_costume_id(self, newid):
+        """Put current costume offscreen and new one onscreen"""
+
+        # Move current costume offscreen
+        x, y = self.x, self.y
+        self.move_to(*offscreen(x, y))
+
+        # And then move the new costume back onscreen 
+        self.spriteid = newid
+        self.move_to(x, y)
+            
+
     def next_costume(self):
         """Show next costume if this sprite is composed of multiple ones"""
-        spriteids = canvas().find_withtag(self.spriteid)
-        if len(spriteids) == 1: return # Only one sprite
-        ImageSprite._show_costume(spriteids[0], spriteids, method)
+
+        costumes = len(self.costume_ids)
+        if costumes == 1: return # Only one sprite
+        
+        i = self.costume_ids.index(self.spriteid)
+        i = (i + 1) % costumes
+        self._switch_to_costume_id(self.costume_ids[i])        
+        
         
     def switch_costume(self, number):
         "Show costume by number, 1 is the first one"
@@ -605,13 +616,7 @@ class ImageSprite(Sprite):
         if self.spriteid == switch_to_id:
             return # nothing to do
 
-        # Move this costume offscreen
-        x, y = self.x, self.y
-        self.move_to(*offscreen(x, y))
-
-        # And then move the new costume back onscreen 
-        self.spriteid = switch_to_id
-        self.move_to(x, y)
+        self._switch_to_costume_id(switch_to_id)
                 
 
     def which_costume(self):
