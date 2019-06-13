@@ -1,3 +1,7 @@
+# Copyright 2019, Eric Clack, eric@bn7.net
+# This program is distributed under the terms of the GNU General
+# Public License
+
 from geekclub_packages import *
 
 MAX_ROCKET_PARTS = 4
@@ -52,12 +56,18 @@ def new_flame(w):
     return Sprite(canvas().create_oval(x,y, x+size,y+size,
                                        fill="red"))    
 
+def delete_all(spritelist):
+    while spritelist:
+        spritelist.pop().delete()
 
-def restart_level(w):
-    for a in w.aliens:
-        a.delete()
-    w.aliens.clear()
+def start_level(w, delete_rocket_parts=True, level_up=1):
+    delete_all(w.aliens)
+    if delete_rocket_parts:
+        delete_all(w.rocket_parts)
+        delete_all(w.fuel)
+    w.level += level_up
     w.sprite.centre()
+    w.status = 'play'
 
 # ------------------------------------------------------------------
 

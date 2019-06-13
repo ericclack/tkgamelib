@@ -1,32 +1,29 @@
+# Copyright 2019, Eric Clack, eric@bn7.net
+# This program is distributed under the terms of the GNU General
+# Public License
+
 from jet_pack_lib import *
 
-"""Big Bang Fair demo - Thrust
+"""Big Bang Fair demo - Jet Pack
 
-TO DO:
-- Show all rocket parts and must collect them in right order?
-- Better sprites
-- Place platforms in better places
-- Take off w sprite = next level
-- Take off w sprite = repeat level
+This code contains some bugs and bad design decisions that
+make the game almost unplayable. So:
 
-Then:
-- Print score to console so can record on chart
-- Fuel look better on rocket
-- Take off results in next level (faster current level?)
+- Test the game out and identify the bugs
+- Explore and fix each bug
+- See if you can get the highest score. 
 
-Done:
-- Aliens appear at RHS of screen too
-- Introduce bugs or remove features
+Hints: look in these areas:
 
-Bugs to fix at BigBang:
-- Platforms in the wrong place  (160,200, 700,250),
-- Reversed controls
-- Too many aliens
+1. Layout of the screen
+2. Controls
+3. Too many aliens
+
 """
 
 create_canvas(background="black")
 
-# Mouse or keyboard
+# Mouse or keyboard (keyboard doesn't work well on Mac)
 MOUSE_CONTROL = True
 
 # ---------------------------------------------------------
@@ -43,8 +40,8 @@ platform_rectangles = [(50,150, 200,200, "white"),
                        #(160,200, 700,250, "blue"),
                        (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT, "white")]
 
-# Our world
-world = Struct(lives=5, score=0, status='play',
+# Our world contains everything the game needs
+world = Struct(lives=5, score=0, level=1, status='play',
                sprite = sprite,
                platforms = make_platforms(platform_rectangles),
                rocket_parts = [],
@@ -57,7 +54,7 @@ world = Struct(lives=5, score=0, status='play',
 MAX_FUEL = 3
 DROP_SPEED = 5
 MAX_FLAMES = 5
-MAX_ALIENS = 3
+MAX_ALIENS = 1
 
 # How likely is next rocket part or fuel to appear each tick?
 PROB_NEXT_PART = 0.5
@@ -110,7 +107,7 @@ def move_sprite():
         world.lives -= 1
         if world.lives == 0:
             end_game("Game over!", fill="white")
-        restart_level(world)
+        start_level(world, delete_rocket_parts=False, level_up=0)
 
 def fire():
     direction = sign(sprite.speed_x) or 1
@@ -136,7 +133,7 @@ def move_aliens():
         world.aliens.append(new_alien(world))
 
     for a in world.aliens:
-        #a.accelerate_towards(sprite.x, sprite.y, steps=0.2)
+        a.accelerate_towards(sprite.x, sprite.y, steps=world.level**2/20)
 
         a.move_with_speed()
         if a.y > CANVAS_HEIGHT or a.touching_any(world.platforms):
@@ -185,6 +182,8 @@ def move_fuel():
                 f.in_place = True
                 f.landing = False
                 world.rocket_parts[len(world.fuel)-1].next_costume()
+                # Hide fuel
+                f.move_to(-100,-100)
             elif not f.touching_any(world.platforms):
                 f.move_with_speed()
 
@@ -205,6 +204,7 @@ def rocket_takeoff():
             else:
                 banner("You missed the rocket!", 1000, fill="white")
                 world.lives -= 1
+                start_level(world, level_up=0)
 
         elif random.random() < 0.02:
             world.flames.append(new_flame(world))
@@ -212,6 +212,8 @@ def rocket_takeoff():
     if world.status == 'takeoff':
         for p in world.rocket_parts + world.fuel + world.flames:
             p.move(0, -5)
+        if world.rocket_parts[0].y < 0:
+            start_level(world)
 
     if sprite.in_rocket:
         r = world.rocket_parts[0]
@@ -219,7 +221,8 @@ def rocket_takeoff():
 
 def update_score():
     show_variables([["Lives", world.lives],
-                    ["Score", world.score]],
+                    ["Score", world.score],
+                    ["Level", world.level]],
                    fill="white")
 
 
