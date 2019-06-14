@@ -621,8 +621,7 @@ class ImageSprite(Sprite):
 
     def which_costume(self):
         "The costume number of the current costume, 1 is the first"
-        spriteids = canvas().find_withtag(self.spriteid)
-        return self.costume_ids.index(spriteids[-1]) + 1
+        return self.costume_ids.index(self.spriteid) + 1
         
 
 class PolygonSprite(Sprite):

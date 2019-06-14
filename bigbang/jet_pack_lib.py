@@ -65,6 +65,7 @@ def start_level(w, delete_rocket_parts=True, level_up=1):
     if delete_rocket_parts:
         delete_all(w.rocket_parts)
         delete_all(w.fuel)
+        delete_all(w.flames)
     w.level += level_up
     w.sprite.centre()
     w.status = 'play'

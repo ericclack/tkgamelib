@@ -221,9 +221,9 @@ def rocket_takeoff():
             world.flames.append(new_flame(world))
 
     if world.status == 'takeoff':
-        for p in world.rocket_parts + world.fuel + world.flames:
+        for p in world.rocket_parts + world.flames:
             p.move(0, -5)
-        if world.rocket_parts[0].y < 0:
+        if world.rocket_parts[0].y < -world.rocket_parts[0].height:
             start_level(world)
 
     if sprite.in_rocket:
