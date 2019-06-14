@@ -18,7 +18,7 @@ def toggle():
     sprite.next_costume()
 
 def toggle_background():
-    background.next_costume(method="lower")
+    background.next_costume()
 
 def costume_1(): sprite.switch_costume(1)
 def costume_2(): sprite.switch_costume(2)
