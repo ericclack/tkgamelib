@@ -117,6 +117,7 @@ def move_sprite():
         banner("You hit an alien!", 2000, fill="white")
         world.lives -= 1
         if world.lives == 0:
+            print("Score", world.score, "Level", world.level)
             end_game("Game over!", fill="white")
         start_level(world, delete_rocket_parts=False, level_up=0)
 
