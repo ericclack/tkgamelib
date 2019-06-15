@@ -130,6 +130,20 @@ def overlapping_rect(rect1, rect2):
         return (ox1, oy1, ox2, oy2)
 
 
+def distance_between_points(x1,y1, x2,y2):
+    """
+    >>> distance_between_points(0,0, 100,0)
+    100.0
+    >>> distance_between_points(0,0, 0,50)
+    50.0
+    >>> distance_between_points(500,500, 200,100)
+    500.0
+    """
+    dx = abs(x1 - x2)
+    dy = abs(y1 - y2)
+    return math.sqrt(dx**2+dy**2)
+
+
 def mouse_touching(sprite):
     return point_inside_box((mousex(), mousey()),
                             CANVAS.bbox(sprite.spriteid))
@@ -356,6 +370,12 @@ class Sprite:
     def y(self): return self.pos()[1]
 
     @property
+    def centre_x(self): return self.x + self.width/2
+
+    @property
+    def centre_y(self): return self.y + self.height/2
+    
+    @property
     def width(self):
         """The width in px of this sprite"""
         box = CANVAS.bbox(self.spriteid)
@@ -366,6 +386,7 @@ class Sprite:
         """The height in px of this sprite"""
         box = CANVAS.bbox(self.spriteid)
         return box[3]-box[1]
+
 
     def move(self, x, y):
         """Move by x and y pixels"""
@@ -380,6 +401,11 @@ class Sprite:
     def delete(self):
         """Delete this sprite from the canvas"""
         CANVAS.delete(self.spriteid)
+
+    def distance_between(self, sprite):
+        """Distance between this sprite and another"""
+        return distance_between_points(self.centre_x, self.centre_y,
+                                       sprite.centre_x, sprite.centre_y)
 
     def move_towards(self, to_x, to_y, steps=1):
         """Move towards a point"""
@@ -480,11 +506,10 @@ class Sprite:
         self.move(self.speed_x, self.speed_y)
 
     def accelerate_towards(self, to_x, to_y, steps=1):
-        x, y = self.pos()
-        dx = sign(to_x - x)
-        dy = sign(to_y - y)
-        self.speed_x += dx*steps
-        self.speed_y += dy*steps
+        d = distance_between_points(self.x, self.y, to_x, to_y)
+        f = steps/d
+        self.speed_x += f*(to_x - self.x)
+        self.speed_y += f*(to_y - self.y)
         self._limit_speed()
 
     def accelerate(self, speed_up):
