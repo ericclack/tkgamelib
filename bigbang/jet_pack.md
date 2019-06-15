@@ -4,7 +4,6 @@ TO DO:
 - No aliens during take off
 - Better sprites, especially main character + aliens
 - Place platforms in better places
-- Print score to console so can record on chart
 - Fuel look better on rocket
 - Take off results in next level (faster current level?)
 
@@ -16,6 +15,7 @@ Test:
 Done:
 - Aliens appear at RHS of screen too
 - Introduce bugs or remove features
+- Print score to console so can record on chart
 
 Bugs to fix at BigBang:
 - Platforms in the wrong place  (160,200, 700,250),

@@ -399,6 +399,9 @@ class Sprite:
     def centre(self):
         self.move_to(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
 
+    def offscreen(self):
+        self.move_to(*offscreen(self.x, self.y))
+
     def turn(self, degrees):
         self.direction = (self.direction + degrees) % 360
 

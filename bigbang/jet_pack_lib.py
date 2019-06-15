@@ -14,6 +14,9 @@ def make_platforms(rectangles):
 def in_landing_zone(x):
     return (LANDING_ZONE-5) < x < (LANDING_ZONE+5)
 
+def say(s, *args, **kwargs):
+    banner(s, *args, fill="white", **kwargs)
+
 # ------------------------------------------------------------------
 
 def new_rocket_part(w):
@@ -67,6 +70,7 @@ def start_level(w, delete_rocket_parts=True, level_up=1):
         delete_all(w.fuel)
         delete_all(w.flames)
     w.level += level_up
+    w.sprite.in_rocket = False
     w.sprite.centre()
     w.status = 'play'
 

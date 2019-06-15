@@ -51,7 +51,6 @@ world = Struct(lives=5, score=0, level=1, status='play',
                )
 
 # Variables and constants
-MAX_FUEL = 3
 DROP_SPEED = 5
 MAX_FLAMES = 5
 MAX_ALIENS = 1
@@ -99,6 +98,8 @@ def mouse_control():
         set_sprite_costume()        
 
 def move_sprite():
+    if sprite.in_rocket: return
+    
     # Gravity
     sprite.speed_y += 0.5
 
@@ -114,7 +115,7 @@ def move_sprite():
 
     # Hit an alien?
     if sprite.touching_any(world.aliens):
-        banner("You hit an alien!", 2000, fill="white")
+        say("You hit an alien!", 2000)
         world.lives -= 1
         if world.lives == 0:
             print("Score", world.score, "Level", world.level)
@@ -201,35 +202,32 @@ def move_fuel():
 
 def rocket_takeoff():
     if world.status not in ['readyfortakeoff', 'takeoff'] and ready_for_takeoff(world):
-        banner("Ready for take off!", 1000, fill="white")
+        say("Ready for take off!", 1000)
         world.status = 'readyfortakeoff'
         world.score += 100
 
     if world.status == 'readyfortakeoff':
         if sprite.touching_any(world.rocket_parts):
             sprite.in_rocket = True
+            sprite.offscreen()
 
         if len(world.flames) == MAX_FLAMES:
             world.status = 'takeoff'
             if sprite.in_rocket:
-                banner("Take off!", 1000, fill="white")
+                say("Take off!", 1000)
             else:
-                banner("You missed the rocket!", 1000, fill="white")
+                say("You missed the rocket!", 1000)
                 world.lives -= 1
-                start_level(world, level_up=0)
-
         elif random.random() < 0.02:
+            say(str(MAX_FLAMES-len(world.flames)))
             world.flames.append(new_flame(world))
 
     if world.status == 'takeoff':
         for p in world.rocket_parts + world.flames:
             p.move(0, -5)
         if world.rocket_parts[0].y < -world.rocket_parts[0].height:
-            start_level(world)
+            start_level(world, level_up=1 if sprite.in_rocket else 0)
 
-    if sprite.in_rocket:
-        r = world.rocket_parts[0]
-        sprite.move_to(r.x + r.width, r.y)
 
 def update_score():
     show_variables([["Lives", world.lives],
