@@ -4,7 +4,7 @@
 
 from geekclub_packages import *
 
-MAX_ROCKET_PARTS = 2
+MAX_ROCKET_PARTS = 4
 LANDING_ZONE = 550
 
 def make_platforms(rectangles):
@@ -30,16 +30,18 @@ def new_rocket_part(w):
     return r
 
 def new_alien(w):
-    a = Sprite(canvas().create_oval(0,0, 30,30, fill="red"))
-    a.max_speed = 5
+    a = Sprite(canvas().create_oval(0,0, 35,35, fill="red"))
+    a.max_speed = 3
 
     if random.random() < 0.5:
+        # Along top
         a.move_to(random.randint(0, CANVAS_WIDTH * .9), 0)
     else:
+        # Along right hand side
         a.move_to(CANVAS_WIDTH, random.randint(0, CANVAS_HEIGHT *.6))
         
-    a.speed_x = -random.randint(2,5)
-    a.speed_y = 2
+    a.speed_x = -random.randint(1,3)
+    a.speed_y = 1.5
     return a
 
 def new_fuel(w):
@@ -54,7 +56,7 @@ def new_fuel(w):
 def new_flame(w):
     r = w.rocket_parts[0] # The base of the rocket
     flame = ImageSprite(['images/flame1.gif',
-                         'images/flame3.gif',
+                         'images/flame2.gif',
                          'images/flame3.gif'])
     x = (r.x + r.width / 2) - (flame.width / 2)
     y = r.y + r.height

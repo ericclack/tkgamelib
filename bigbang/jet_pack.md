@@ -1,18 +1,19 @@
 Big Bang Fair demo - Jet Pack
 
 TO DO:
-- No aliens during take off
+- x,y when create sprite doesn't match move_to(x,y)
 - Better sprites, especially main character + aliens
 - Place platforms in better places
-- Fuel look better on rocket
 - Take off results in next level (faster current level?)
 
 Test:
-- Miss rocket, delete flames
+- Aliens can't kill you during take off
 - Take off w sprite = next level
 - Take off w sprite = repeat level
 
 Done:
+- Fuel look better on rocket
+- Miss rocket, delete flames
 - Aliens appear at RHS of screen too
 - Introduce bugs or remove features
 - Print score to console so can record on chart

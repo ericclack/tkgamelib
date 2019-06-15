@@ -53,8 +53,7 @@ world = Struct(lives=5, score=0, level=1, status='play',
 
 # Variables and constants
 DROP_SPEED = 5
-MAX_FLAMES = 3
-MAX_ALIENS = 1
+MAX_ALIENS = 5
 
 # How likely is next rocket part or fuel to appear each tick?
 PROB_NEXT_PART = 0.5
@@ -149,7 +148,8 @@ def move_aliens():
         world.aliens.append(new_alien(world))
 
     for a in world.aliens:
-        a.accelerate_towards(sprite.x, sprite.y, steps=world.level**2/20)
+        if world.level > 1:
+            a.accelerate_towards(sprite.x, sprite.y, steps=world.level**2/40)
 
         a.move_with_speed()
         if a.y > CANVAS_HEIGHT or a.touching_any(world.platforms):
@@ -218,7 +218,7 @@ def rocket_takeoff():
         world.flames[0].next_costume()
         world.takeoff_countdown -= 1
         if world.takeoff_countdown < 300:
-            say(world.takeoff_countdown // 25)
+            say(world.takeoff_countdown // 40)
         
         if sprite.touching_any(world.rocket_parts):
             sprite.in_rocket = True
@@ -234,8 +234,10 @@ def rocket_takeoff():
                 
     if world.status == 'takeoff':
         for p in world.rocket_parts + world.flames:
+            world.flames[0].next_costume()
             p.move(0, -5)
-        if world.rocket_parts[0].y < -world.rocket_parts[0].height:
+            
+        if world.rocket_parts[0].y < -world.rocket_parts[0].height*2:
             start_level(world, level_up=1 if sprite.in_rocket else 0)
 
 
