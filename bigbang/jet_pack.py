@@ -47,12 +47,13 @@ world = Struct(lives=5, score=0, level=1, status='play',
                rocket_parts = [],
                aliens = [],
                fuel = [],
-               flames = []
+               flames = [],
+               takeoff_countdown = 0
                )
 
 # Variables and constants
 DROP_SPEED = 5
-MAX_FLAMES = 5
+MAX_FLAMES = 3
 MAX_ALIENS = 1
 
 # How likely is next rocket part or fuel to appear each tick?
@@ -122,6 +123,7 @@ def move_sprite():
             end_game("Game over!", fill="white")
         start_level(world, delete_rocket_parts=False, level_up=0)
 
+        
 def fire():
     direction = sign(sprite.speed_x) or 1
     x = sprite.x + sprite.width / 2
@@ -141,6 +143,7 @@ def fire():
     # Delete the laser in 1/10th second
     future_action(lambda: fsprite.delete(), 100)
 
+    
 def move_aliens():
     if len(world.aliens) < MAX_ALIENS and random.random() < 0.05:
         world.aliens.append(new_alien(world))
@@ -155,6 +158,7 @@ def move_aliens():
         else:
             a.if_on_edge_wrap()
 
+            
 def move_rocket_parts():
     if ready_for_next_rocket_part(world) and random.random() < PROB_NEXT_PART:
         world.rocket_parts.append(new_rocket_part(world))
@@ -176,6 +180,7 @@ def move_rocket_parts():
             elif not r.touching_any(world.platforms):
                 r.move_with_speed()
 
+                
 def move_fuel():
     if ready_for_next_fuel(world) and random.random() < PROB_NEXT_PART:
         world.fuel.append(new_fuel(world))
@@ -200,28 +205,33 @@ def move_fuel():
             elif not f.touching_any(world.platforms):
                 f.move_with_speed()
 
+                
 def rocket_takeoff():
-    if world.status not in ['readyfortakeoff', 'takeoff'] and ready_for_takeoff(world):
+    if world.status not in ['countdown', 'takeoff'] and ready_for_takeoff(world):
         say("Ready for take off!", 1000)
-        world.status = 'readyfortakeoff'
+        world.status = 'countdown'
         world.score += 100
+        world.takeoff_countdown = 400
+        world.flames.append( new_flame(world) )
 
-    if world.status == 'readyfortakeoff':
+    if world.status == 'countdown':
+        world.flames[0].next_costume()
+        world.takeoff_countdown -= 1
+        if world.takeoff_countdown < 300:
+            say(world.takeoff_countdown // 25)
+        
         if sprite.touching_any(world.rocket_parts):
             sprite.in_rocket = True
             sprite.offscreen()
 
-        if len(world.flames) == MAX_FLAMES:
+        if world.takeoff_countdown <= 0:
             world.status = 'takeoff'
             if sprite.in_rocket:
                 say("Take off!", 1000)
             else:
                 say("You missed the rocket!", 1000)
                 world.lives -= 1
-        elif random.random() < 0.02:
-            say(str(MAX_FLAMES-len(world.flames)))
-            world.flames.append(new_flame(world))
-
+                
     if world.status == 'takeoff':
         for p in world.rocket_parts + world.flames:
             p.move(0, -5)
@@ -234,7 +244,6 @@ def update_score():
                     ["Score", world.score],
                     ["Level", world.level]],
                    fill="white")
-
 
 # ---------------------------------------------------------
 # How will the user control the game? What will other
