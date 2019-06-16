@@ -10,16 +10,15 @@ from orbits_lib import *
 
 create_canvas("Orbits", 1000, 800, background="black")
 
+# Our own gravity constant
+G = 0.001
+
 # ---------------------------------------------------------
 # Create your sprite objects
 
 planets = [
-    Sprite(canvas().create_oval(0,0, 80,80, fill="gray")),
-    Sprite(canvas().create_oval(0,0, 300,300, fill="white")),
+    Sprite(canvas().create_oval(300,300, 500,500, fill="white")),
     ]
-
-planets[0].move_to(200, 200)
-planets[1].move_to(550, 300)
 
 ship = Sprite(canvas().create_oval(0,0, 25,25, fill="red"))
 ship.move_to(20, CANVAS_HEIGHT-40)
@@ -34,7 +33,7 @@ world = Struct(clicks=[])
 def gravity():
     for p in planets:
         d = max(p.width/3, ship.distance_between(p))
-        f = p.width**2/d**2.5
+        f = G*(4*(p.width/2)**3/d**2)
         ship.accelerate_towards(p.centre_x, p.centre_y, f)
 
 def move_ship():
@@ -45,7 +44,8 @@ def propel_ship(event):
     x, y = event.x, event.y
     world.clicks.append(
         Sprite(canvas().create_oval(x-15,y-15, x+15, y+15, fill=hsv_to_hex(0, 1, 0.5))))
-    ship.accelerate_towards(x,y, 3)
+    f = distance_between_points(ship.x, ship.y, x, y) / 30
+    ship.accelerate_towards(x,y, f)
 
 def restart():
     ship.move_to(20, CANVAS_HEIGHT-40)
