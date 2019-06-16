@@ -510,7 +510,7 @@ class Sprite:
         f = steps/d
         self.speed_x += f*(to_x - self.x)
         self.speed_y += f*(to_y - self.y)
-        self._limit_speed()
+        #self._limit_speed()
 
     def accelerate(self, speed_up):
         self.speed_x *= speed_up

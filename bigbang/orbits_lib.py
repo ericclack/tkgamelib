@@ -8,5 +8,9 @@ from geekclub_packages import *
 def say(s, *args, **kwargs):
     banner(s, *args, fill="white", **kwargs)
 
+def delete_all(spritelist):
+    while spritelist:
+        spritelist.pop().delete()
+
 # ------------------------------------------------------------------
 
