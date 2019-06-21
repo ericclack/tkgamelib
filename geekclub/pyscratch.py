@@ -155,12 +155,37 @@ def mouse_touching_any(sprites):
             return s
 
 
+def mag_angle_to_xy(mag, angle):
+    """Convert magnitude and angle to vector x, y
+    >>> mag_angle_to_xy(1, 0)
+    (1.0, 0.0)
+    >>> x, y = mag_angle_to_xy(1, 30)
+    >>> math.isclose(x, 0.866, abs_tol=0.001) and math.isclose(y, 0.5, abs_tol=0.001)
+    True
+    """
+    x = math.cos(math.radians(angle))*mag
+    y = math.sin(math.radians(angle))*mag
+    return (x, y)
+
+
 def translate_point(x, y, distance, angle):
     """Return a new point moving x,y by distance along angle"""
+    x2, y2 = mag_angle_to_xy(distance, angle)
+    return(x + x2, y + y2)
 
-    x2 = x + math.cos(math.radians(angle))*distance
-    y2 = y + math.sin(math.radians(angle))*distance
-    return(x2, y2)
+
+def xy_to_mag_angle(x, y):
+    """Convert vector x, y to magnitude and angle
+    >>> xy_to_mag_angle(3,4)[0]
+    5.0
+    >>> xy_to_mag_angle(1,1)[1]
+    45.0
+    >>> xy_to_mag_angle(-1,1)[1]
+    -45.0
+    """
+    mag = math.sqrt(x**2 + y**2)
+    angle = math.degrees(math.atan2(y, x))
+    return (mag, angle)
 
 
 def rotate_point(x, y, angle):
@@ -503,27 +528,28 @@ class Sprite:
         return (y1 < sy2 and y2 > sy1) and (x2 > sx2)
     
     def move_with_speed(self):
+        self._limit_speed()
         self.move(self.speed_x, self.speed_y)
 
+        
     def accelerate_towards(self, to_x, to_y, steps=1):
         d = distance_between_points(self.x, self.y, to_x, to_y)
-        f = steps/d
+        f = steps/(d+1)
         self.speed_x += f*(to_x - self.x)
         self.speed_y += f*(to_y - self.y)
-        #self._limit_speed()
+
 
     def accelerate(self, speed_up):
         self.speed_x *= speed_up
         self.speed_y *= speed_up
-        self._limit_speed()
             
+
     def _limit_speed(self):
         """Check and reduce speed so it never exceeds +/- max_speed"""
-        def _limit(s, max):
-            if abs(s) > max: return sign(s)*max
-            else: return s
-        self.speed_x = _limit(self.speed_x, self.max_speed)
-        self.speed_y = _limit(self.speed_y, self.max_speed)
+        m, a = xy_to_mag_angle(self.speed_x, self.speed_y)
+        if m > self.max_speed:
+            self.speed_x, self.speed_y = mag_angle_to_xy(self.max_speed, a)
+
 
     def if_on_edge_bounce(self):
         x, y = self.pos()

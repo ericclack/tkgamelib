@@ -15,15 +15,14 @@ G = 0.001
 
 # ---------------------------------------------------------
 # Create your sprite objects
-
-planets = [
+ 
+clicks=[]
+planets=[
     Sprite(canvas().create_oval(300,300, 500,500, fill="white")),
-    ]
-
+]
 ship = Sprite(canvas().create_oval(0,0, 25,25, fill="red"))
-ship.move_to(20, CANVAS_HEIGHT-40)
 
-world = Struct(clicks=[])
+ship.move_to(20, CANVAS_HEIGHT-40)
 
 
 # ---------------------------------------------------------
@@ -42,15 +41,23 @@ def move_ship():
 
 def propel_ship(event):
     x, y = event.x, event.y
-    world.clicks.append(
+    # Show where we clicked
+    clicks.append(
         Sprite(canvas().create_oval(x-15,y-15, x+15, y+15, fill=hsv_to_hex(0, 1, 0.5))))
-    f = distance_between_points(ship.x, ship.y, x, y) / 30
+    f = distance_between_points(ship.x, ship.y, x, y)**(1/3)
     ship.accelerate_towards(x,y, f)
+
+def new_planet(event):
+    x, y = event.x, event.y
+    p = Sprite(canvas().create_oval(x-50,y-50, x+50,y+50, fill="gray"))
+    canvas().tag_lower(p.spriteid)
+    planets.append(p)
+        
 
 def restart():
     ship.move_to(20, CANVAS_HEIGHT-40)
     ship.speed_x = ship.speed_y = 0
-    delete_all(world.clicks)
+    delete_all(clicks)
 
 # ---------------------------------------------------------
 # How will the user control the game? What will other
@@ -58,6 +65,7 @@ def restart():
 
 forever(move_ship, 25)
 when_button1_clicked(propel_ship)
+when_button2_clicked(new_planet)
 when_key_pressed('r', restart)
 
 
