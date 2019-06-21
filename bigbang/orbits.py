@@ -11,18 +11,17 @@ from orbits_lib import *
 create_canvas("Orbits", 1000, 800, background="black")
 
 # Our own gravity constant
-G = 0.001
+G = 0.0005
 
 # ---------------------------------------------------------
 # Create your sprite objects
  
 clicks=[]
 planets=[
-    Sprite(canvas().create_oval(300,300, 500,500, fill="white")),
+    Sprite(canvas().create_oval(300,250, 650,600, fill="white")),
 ]
 ship = Sprite(canvas().create_oval(0,0, 25,25, fill="red"))
-
-ship.move_to(20, CANVAS_HEIGHT-40)
+ship.max_speed = 100 # Fast!
 
 
 # ---------------------------------------------------------
@@ -31,7 +30,7 @@ ship.move_to(20, CANVAS_HEIGHT-40)
 
 def gravity():
     for p in planets:
-        d = max(p.width/3, ship.distance_between(p))
+        d = max(p.width/5, ship.distance_between(p))
         f = G*(4*(p.width/2)**3/d**2)
         ship.accelerate_towards(p.centre_x, p.centre_y, f)
 
@@ -55,13 +54,15 @@ def new_planet(event):
         
 
 def restart():
-    ship.move_to(20, CANVAS_HEIGHT-40)
+    ship.move_to(80, CANVAS_HEIGHT-100)
     ship.speed_x = ship.speed_y = 0
     delete_all(clicks)
 
 # ---------------------------------------------------------
 # How will the user control the game? What will other
 # sprites do? Add your event handlers here.
+
+restart()
 
 forever(move_ship, 25)
 when_button1_clicked(propel_ship)

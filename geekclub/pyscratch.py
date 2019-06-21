@@ -527,16 +527,17 @@ class Sprite:
         # Are we overlapped on y axis and right?
         return (y1 < sy2 and y2 > sy1) and (x2 > sx2)
     
+
     def move_with_speed(self):
         self._limit_speed()
         self.move(self.speed_x, self.speed_y)
 
         
-    def accelerate_towards(self, to_x, to_y, steps=1):
-        d = distance_between_points(self.x, self.y, to_x, to_y)
-        f = steps/(d+1)
-        self.speed_x += f*(to_x - self.x)
-        self.speed_y += f*(to_y - self.y)
+    def accelerate_towards(self, to_x, to_y, force=1):
+        mag, angle = xy_to_mag_angle(to_x-self.centre_x, to_y-self.centre_y)
+        dx, dy = mag_angle_to_xy(min(mag, force), angle)
+        self.speed_x += dx
+        self.speed_y += dy
 
 
     def accelerate(self, speed_up):
