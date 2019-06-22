@@ -89,133 +89,128 @@ def start_level(w, delete_rocket_parts=True, level_up=1):
 
 # ------------------------------------------------------------------
 
-def move_sprite(world):
-    sprite = world.sprite
-    if sprite.in_rocket: return
+def move_sprite(w):
+    if w.sprite.in_rocket: return
     
     # Gravity
-    sprite.speed_y += 0.5
+    w.sprite.speed_y += 0.5
 
     # Platforms
-    p = sprite.touching_any(world.platforms)
+    p = w.sprite.touching_any(w.platforms)
     if p:
-        sprite.bounce_off(p)
+        w.sprite.bounce_off(p)
 
     # Move
-    sprite.move_with_speed()
-    sprite.if_on_edge_wrap()
+    w.sprite.move_with_speed()
+    w.sprite.if_on_edge_wrap()
 
     # Hit an alien?
-    if sprite.touching_any(world.aliens):
+    if w.sprite.touching_any(w.aliens):
         say("You hit an alien!", 2000)
-        world.lives -= 1
-        if world.lives == 0:
-            print("Score", world.score, "Level", world.level)
+        w.lives -= 1
+        if w.lives == 0:
+            print("Score", w.score, "Level", w.level)
             end_game("Game over!", fill="white")
-        start_level(world, delete_rocket_parts=False, level_up=0)
+        start_level(w, delete_rocket_parts=False, level_up=0)
 
 
 
-def move_aliens(world):
-    sprite = world.sprite
-    
-    if len(world.aliens) < MAX_ALIENS and random.random() < 0.05:
-        world.aliens.append(new_alien(world))
+def move_aliens(w):
+    if len(w.aliens) < MAX_ALIENS and random.random() < 0.05:
+        w.aliens.append(new_alien(w))
 
-    for a in world.aliens:
-        if world.level > 0:
-            a.accelerate_towards(sprite.x, sprite.y, (world.level+1)**2/20)
+    for a in w.aliens:
+        if w.level > 0:
+            a.accelerate_towards(w.sprite.x, w.sprite.y, (w.level+1)**2/20)
 
         a.move_with_speed()
-        if a.y > CANVAS_HEIGHT or a.touching_any(world.platforms):
+        if a.y > CANVAS_HEIGHT or a.touching_any(w.platforms):
             a.delete()
-            world.aliens.remove(a)
+            w.aliens.remove(a)
         else:
             a.if_on_edge_wrap()
 
             
-def move_rocket_parts(world):
-    sprite = world.sprite
-    
-    if ready_for_next_rocket_part(world) and random.random() < PROB_NEXT_PART:
-        world.rocket_parts.append(new_rocket_part(world))
+def move_rocket_parts(w):
+    if ready_for_next_rocket_part(w) and random.random() < PROB_NEXT_PART:
+        w.rocket_parts.append(new_rocket_part(w))
 
-    if world.rocket_parts:
-        r = world.rocket_parts[-1]
+    if w.rocket_parts:
+        r = w.rocket_parts[-1]
         if not r.in_place:
-            if r.touching(sprite) and not r.landing:
-                r.move_to(sprite.x, sprite.y)
+            if r.touching(w.sprite) and not r.landing:
+                r.move_to(w.sprite.x, w.sprite.y)
                 if in_landing_zone(r.x):
-                    world.score += 50
+                    w.score += 50
                     r.move_to(LANDING_ZONE, r.y)
                     r.landing = True
                     r.speed_y = DROP_SPEED
-            elif r.landing and (r.touching_any(world.platforms)
-                                or r.touching_any(world.rocket_parts[:-1])):
+            elif r.landing and (r.touching_any(w.platforms)
+                                or r.touching_any(w.rocket_parts[:-1])):
                 r.in_place = True
                 r.landing = False
-            elif not r.touching_any(world.platforms):
+            elif not r.touching_any(w.platforms):
                 r.move_with_speed()
 
                 
-def move_fuel(world):
-    if ready_for_next_fuel(world) and random.random() < PROB_NEXT_PART:
-        world.fuel.append(new_fuel(world))
+def move_fuel(w):
+    if ready_for_next_fuel(w) and random.random() < PROB_NEXT_PART:
+        w.fuel.append(new_fuel(w))
 
-    if world.fuel:
-        f = world.fuel[-1]
+    if w.fuel:
+        f = w.fuel[-1]
         if not f.in_place:
-            if f.touching(sprite) and not f.landing:
-                f.move_to(sprite.x, sprite.y)
+            if f.touching(w.sprite) and not f.landing:
+                f.move_to(w.sprite.x, w.sprite.y)
                 if in_landing_zone(f.x):
-                    world.score += 50
+                    w.score += 50
                     f.move_to(LANDING_ZONE, f.y)
                     f.landing = True
                     f.speed_y = DROP_SPEED
-            elif f.landing and (f.touching_any(world.platforms)
-                                or f.touching_any(world.fuel[:-1])):
+            elif f.landing and (f.touching_any(w.platforms)
+                                or f.touching_any(w.fuel[:-1])):
                 f.in_place = True
                 f.landing = False
-                world.rocket_parts[len(world.fuel)-1].next_costume()
+                w.rocket_parts[len(w.fuel)-1].next_costume()
                 # Hide fuel
                 f.move_to(-100,-100)
-            elif not f.touching_any(world.platforms):
+            elif not f.touching_any(w.platforms):
                 f.move_with_speed()
 
                 
-def rocket_takeoff(world):
-    if world.status not in ['countdown', 'takeoff'] and ready_for_takeoff(world):
+def rocket_takeoff(w):
+    if w.status not in ['countdown', 'takeoff'] and ready_for_takeoff(w):
         say("Ready for take off!", 1000)
-        world.status = 'countdown'
-        world.score += 100
-        world.takeoff_countdown = 400
-        world.flames.append( new_flame(world) )
+        w.status = 'countdown'
+        w.score += 100
+        w.takeoff_countdown = 400
+        w.flames.append( new_flame(w) )
 
-    if world.status == 'countdown':
-        world.flames[0].next_costume()
-        world.takeoff_countdown -= 1
-        if world.takeoff_countdown < 300:
-            say(world.takeoff_countdown // 40)
+    if w.status == 'countdown':
+        w.flames[0].next_costume()
+        w.takeoff_countdown -= 1
+        if w.takeoff_countdown < 300:
+            say(w.takeoff_countdown // 40)
         
-        if sprite.touching_any(world.rocket_parts):
-            sprite.in_rocket = True
-            sprite.offscreen()
+        if w.sprite.touching_any(w.rocket_parts):
+            w.sprite.in_rocket = True
+            w.sprite.offscreen()
 
-        if world.takeoff_countdown <= 0:
-            world.status = 'takeoff'
-            if sprite.in_rocket:
+        if w.takeoff_countdown <= 0:
+            w.status = 'takeoff'
+            if w.sprite.in_rocket:
                 say("Take off!", 1000)
             else:
                 say("You missed the rocket!", 1000)
-                world.lives -= 1
+                w.lives -= 1
                 
-    if world.status == 'takeoff':
-        for p in world.rocket_parts + world.flames:
-            world.flames[0].next_costume()
+    if w.status == 'takeoff':
+        for p in w.rocket_parts + w.flames:
+            w.flames[0].next_costume()
             p.move(0, -5)
             
-        if world.rocket_parts[0].y < -world.rocket_parts[0].height*2:
-            start_level(world, level_up=1 if sprite.in_rocket else 0)        
+        if w.rocket_parts[0].y < -w.rocket_parts[0].height*2:
+            start_level(w, level_up=1 if w.sprite.in_rocket else 0)        
 
 # ------------------------------------------------------------------
 

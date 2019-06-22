@@ -17,7 +17,7 @@ Hints: look in these areas:
 
 1. Layout of the screen
 2. Controls
-3. Too many aliens
+3. Lazer is rubbish
 
 """
 
@@ -37,7 +37,7 @@ sprite.in_rocket = False
 platform_rectangles = [(50,150, 200,200, "white"),
                        (380, 500, 530,550, "yellow"),
                        (700,300, 800,350, "green"),
-                       #(160,200, 700,250, "blue"),
+                       (160,200, 700,250, "blue"),
                        (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT, "white")]
 
 # Our world contains everything the game needs
@@ -100,7 +100,7 @@ def fire():
     x = sprite.x + sprite.width / 2
     y = sprite.y + sprite.height / 2
     fsprite = Sprite(canvas().create_rectangle(
-                        x + (direction * 30), y, x + (direction*500), y+3,
+                        x + (direction * 30), y, x + (direction*500), y+30,
                         fill="yellow", outline=None))
     # Has the laser hit any aliens?
     a = fsprite.touching_any(world.aliens)
