@@ -162,12 +162,13 @@ def _key_pressed(event):
 
 def _key_released(event):
     if is_mac():
-        # On Mac OS X, key_press and key_releas events alternate when
+        # On Mac OS X, key_press and key_release events alternate when
         # a key is held down, we use the last time the key was pressed
         # and ignore event
         pass
     else:
-        del(KEYS_DOWN[event.char])
+        if events.char in KEYS_DOWN:
+            del(KEYS_DOWN[event.char])
 
 def is_key_down(key):
     """Experimental tracking of multiple key presses.
