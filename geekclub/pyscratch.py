@@ -167,7 +167,7 @@ def _key_released(event):
         # and ignore event
         pass
     else:
-        if events.char in KEYS_DOWN:
+        if event.char in KEYS_DOWN:
             del(KEYS_DOWN[event.char])
 
 def is_key_down(key):
