@@ -238,6 +238,11 @@ def create_canvas(window_title="Pyscratch Game", canvas_width=CANVAS_WIDTH, canv
     CANVAS.bind('<KeyPress>', _key_pressed)
     CANVAS.bind('<KeyRelease>', _key_released)
 
+
+def canvas_width(): return CANVAS_WIDTH
+def canvas_height(): return CANVAS_HEIGHT
+
+
 def offscreen(x,y):
     """Put x,y offscreen so that it can't be seen"""
     if x < CANVAS_WIDTH*5:
