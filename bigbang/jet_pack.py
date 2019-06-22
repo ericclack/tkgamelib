@@ -148,7 +148,7 @@ def move_aliens():
 
     for a in world.aliens:
         if world.level > 0:
-            a.accelerate_towards(sprite.x, sprite.y, steps=(world.level+1)**2/20)
+            a.accelerate_towards(sprite.x, sprite.y, (world.level+1)**2/20)
 
         a.move_with_speed()
         if a.y > CANVAS_HEIGHT or a.touching_any(world.platforms):
