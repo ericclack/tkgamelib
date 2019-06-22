@@ -97,7 +97,9 @@ def mouse_control():
     else:
         set_sprite_costume()        
 
-def move_sprite():
+        
+def move_sprite(world):
+    sprite = world.sprite
     if sprite.in_rocket: return
     
     # Gravity
@@ -142,7 +144,7 @@ def fire():
     future_action(lambda: fsprite.delete(), 100)
 
     
-def move_aliens():
+def move_aliens(world):
     if len(world.aliens) < MAX_ALIENS and random.random() < 0.05:
         world.aliens.append(new_alien(world))
 
@@ -158,7 +160,7 @@ def move_aliens():
             a.if_on_edge_wrap()
 
             
-def move_rocket_parts():
+def move_rocket_parts(world):
     if ready_for_next_rocket_part(world) and random.random() < PROB_NEXT_PART:
         world.rocket_parts.append(new_rocket_part(world))
 
@@ -180,7 +182,7 @@ def move_rocket_parts():
                 r.move_with_speed()
 
                 
-def move_fuel():
+def move_fuel(world):
     if ready_for_next_fuel(world) and random.random() < PROB_NEXT_PART:
         world.fuel.append(new_fuel(world))
 
@@ -205,7 +207,7 @@ def move_fuel():
                 f.move_with_speed()
 
                 
-def rocket_takeoff():
+def rocket_takeoff(world):
     if world.status not in ['countdown', 'takeoff'] and ready_for_takeoff(world):
         say("Ready for take off!", 1000)
         world.status = 'countdown'
@@ -246,6 +248,14 @@ def update_score():
                     ["Level", world.level]],
                    fill="white")
 
+def move():
+    move_sprite(world)
+    move_aliens(world)
+    move_rocket_parts(world)
+    move_fuel(world)
+    # Ready for take-off?
+    rocket_takeoff(world)
+    
 # ---------------------------------------------------------
 # How will the user control the game? What will other
 # sprites do? Add your event handlers here.
@@ -257,11 +267,7 @@ else:
     forever(key_control, 25)
     when_key_pressed('<Return>', fire)
 
-forever(move_sprite, 25)
-forever(move_aliens, 25)
-forever(move_rocket_parts, 25)
-forever(move_fuel, 25)
-forever(rocket_takeoff, 25)
+forever(move, 25)
 forever(update_score)
 
 # ---------------------------------------------------------
