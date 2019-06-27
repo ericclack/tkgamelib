@@ -6,7 +6,7 @@ from geekclub_packages import *
 
 MAX_ROCKET_PARTS = 4
 LANDING_ZONE = 550
-MAX_ALIENS = 1
+MAX_ALIENS = 5
 
 # How likely is next rocket part or fuel to appear each tick?
 PROB_NEXT_PART = 0.5
@@ -120,7 +120,7 @@ def move_aliens(w):
         w.aliens.append(new_alien(w))
 
     for a in w.aliens:
-        if w.level > 0:
+        if w.level > 2:
             a.accelerate_towards(w.sprite.x, w.sprite.y, (w.level+1)**2/20)
 
         a.move_with_speed()

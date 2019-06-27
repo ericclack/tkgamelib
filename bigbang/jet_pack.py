@@ -34,11 +34,19 @@ sprite.centre()
 sprite.max_speed = 7
 sprite.in_rocket = False
 
+#platform_rectangles = [(50,150, 200,200, "white"),
+#                       (380, 500, 530,550, "yellow"),
+#                       (700,300, 800,350, "green"),
+#                       (160,200, 700,250, "blue"),
+#                       (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT, "white")]
+
 platform_rectangles = [(50,150, 200,200, "white"),
                        (380, 500, 530,550, "yellow"),
                        (700,300, 800,350, "green"),
-                       (160,200, 700,250, "blue"),
+                       #(160,200, 700,250, "blue"),
                        (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT, "white")]
+
+ 
 
 # Our world contains everything the game needs
 world = Struct(lives=5, score=0, level=1, status='play',
@@ -82,9 +90,9 @@ def key_control():
         
 def mouse_control():
     old_speed_x = sprite.speed_x
-    if mousex() < sprite.x - sprite.width:
+    if mousex() < sprite.centre_x - sprite.width:
         sprite.speed_x -= 1
-    if mousex() > sprite.x + 2 * sprite.width:
+    if mousex() > sprite.centre_x + sprite.width:
         sprite.speed_x += 1
     if mousey() < sprite.y:
         sprite.speed_y -= 1
@@ -99,8 +107,9 @@ def fire():
     direction = sign(sprite.speed_x) or 1
     x = sprite.x + sprite.width / 2
     y = sprite.y + sprite.height / 2
+    length = 50
     fsprite = Sprite(canvas().create_rectangle(
-                        x + (direction * 30), y, x + (direction*500), y+30,
+                        x + (direction * 30), y, x + (direction*length*10), y+3,
                         fill="yellow", outline=None))
     # Has the laser hit any aliens?
     a = fsprite.touching_any(world.aliens)
