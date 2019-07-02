@@ -18,6 +18,7 @@ import math
 import colorsys
 import time
 import inspect
+import platform
 from tkinter import *
 from tkinter import simpledialog
  
@@ -39,6 +40,8 @@ FOREVER_FNS={}
 KEYS_DOWN = {}
 KEYDOWN_DELAY = .1
 
+def is_mac():
+    return platform.system() == 'Darwin'
 
 def hexs(v):
     """Return a number in range 0-255 as two hex digits 0-ff"""
@@ -101,6 +104,32 @@ def point_inside_box(point, box):
     return (x2 >= x >= x1) and (y2 >= y >= y1)
 
 
+def overlapping_rect(rect1, rect2):
+    """Does rect1 overlap rect2, e.g. are they touching?
+    If so, return the overlapping rectangle, otherwise None.
+    
+    >>> overlapping_rect((0,0,10,10), (20,20,30,30))
+    >>> overlapping_rect((0,0,100,100), (20,20,30,30))
+    (20, 20, 30, 30)
+    >>> overlapping_rect((0,0,100,100), (60,60,130,130))
+    (60, 60, 100, 100)
+    >>> overlapping_rect((200,200,300,300), (20,20,210,210))
+    (200, 200, 210, 210)
+    >>> overlapping_rect((50,50,100,100), (0,75,400,75))
+    (50, 75, 100, 75)
+    """
+    (ax1, ay1, ax2, ay2) = rect1
+    (bx1, by1, bx2, by2) = rect2
+
+    ox1 = max(ax1, bx1)
+    oy1 = max(ay1,by1)
+    ox2 = min(ax2, bx2)
+    oy2 = min(ay2,by2)
+    
+    if ox1 <= ox2 and oy1 <= oy2:
+        return (ox1, oy1, ox2, oy2)
+
+
 def mouse_touching(sprite):
     return point_inside_box((mousex(), mousey()),
                             CANVAS.bbox(sprite.spriteid))
@@ -132,20 +161,25 @@ def _key_pressed(event):
     KEYS_DOWN[event.char] = time.time()
 
 def _key_released(event):
-    """Because on Mac OS X, key_press and key_release
-    events alternate when a key is held down, we use the 
-    last time the key was pressed, and ignore the key down
-    event"""
-    pass
-    #del(KEYS_DOWN[event.char])
+    if is_mac():
+        # On Mac OS X, key_press and key_release events alternate when
+        # a key is held down, we use the last time the key was pressed
+        # and ignore event
+        pass
+    else:
+        if event.char in KEYS_DOWN:
+            del(KEYS_DOWN[event.char])
 
 def is_key_down(key):
     """Experimental tracking of multiple key presses.
 
     Works well with ascii chars, including space, needs some
     work for arrow keys etc (with event.keysym prop?)."""
-    return key in KEYS_DOWN and KEYS_DOWN[key] > (time.time() - KEYDOWN_DELAY)
-    
+    if is_mac():
+        return key in KEYS_DOWN and KEYS_DOWN[key] > (time.time() - KEYDOWN_DELAY)
+    else:
+        return key in KEYS_DOWN 
+        
 
 def create_canvas(window_title="Pyscratch Game", canvas_width=CANVAS_WIDTH, canvas_height=CANVAS_HEIGHT, **args):
     """Create the drawing / game area on the screen
@@ -165,7 +199,18 @@ def create_canvas(window_title="Pyscratch Game", canvas_width=CANVAS_WIDTH, canv
     CANVAS.focus_set()    
     CANVAS.bind('<KeyPress>', _key_pressed)
     CANVAS.bind('<KeyRelease>', _key_released)
-        
+
+def offscreen(x,y):
+    """Put x,y offscreen so that it can't be seen"""
+    if x < CANVAS_WIDTH*5:
+        x += CANVAS_WIDTH*5
+    return x,y
+
+def onscreen(x,y):
+    """Put x,y onscreen"""
+    if x > CANVAS_WIDTH*5:
+        x -= CANVAS_WIDTH*5
+    return x,y
 
 def clear_canvas():
     """Remove everything from the canvas"""
@@ -175,28 +220,28 @@ def clear_pen():
     """Clear pen drawings"""
     CANVAS.delete("pen")        
 
-def banner(message, ms=None):
+def banner(message, ms=None, **args):
     """Display a basic text banner in the middle of the screen.
 
     Clear it after a period if ms set"""
     global BANNER
     if BANNER: clear_banner()
     BANNER = CANVAS.create_text(CANVAS_WIDTH/2, CANVAS_HEIGHT/2,
-                             font=("default", 50), text=message)
+                                font=("default", 50), text=message, **args)
     if ms:
         future_action(clear_banner, ms)
 
-def show_variable(label, value, slot=0):
+def show_variable(label, value, slot=0, **args):
     if slot in VARIABLES:
         CANVAS.delete(VARIABLES[slot])
     VARIABLES[slot] = CANVAS.create_text(15, 15 + VAR_FONT_SIZE*slot,
                                          font=("default", VAR_FONT_SIZE),
                                          text="%s: %s" % (label, value),
-                                         anchor="nw")
+                                         anchor="nw", **args)
 
-def show_variables(vars):
+def show_variables(vars, **args):
     for i, (label, value) in enumerate(vars):
-        show_variable(label, value, i)
+        show_variable(label, value, i, **args)
     
 def askstring(title, prompt):
     return simpledialog.askstring(title, prompt, parent=CANVAS)
@@ -276,10 +321,10 @@ def future_action(fn, ms):
 def _quit_game():
     canvas().quit()
 
-def end_game(message='Game Over', fn=_quit_game, ms=2000):
+def end_game(message='Game Over', fn=_quit_game, ms=5000, **args):
     for f in FOREVER_FNS:
         pause_forever(f)
-    banner(message)
+    banner(message, ms, **args)
     future_action(fn, ms)
 
 def restart_game():
@@ -355,6 +400,9 @@ class Sprite:
     def centre(self):
         self.move_to(CANVAS_WIDTH/2, CANVAS_HEIGHT/2)
 
+    def offscreen(self):
+        self.move_to(*offscreen(self.x, self.y))
+
     def turn(self, degrees):
         self.direction = (self.direction + degrees) % 360
 
@@ -388,22 +436,8 @@ class Sprite:
         our_box = CANVAS.bbox(self.spriteid)
         their_box = CANVAS.bbox(sprite.spriteid)
 
-        # Check if any corner of our_box is inside the other_box
-        # then check the reverse
-        (c1x, c1y, c2x, c2y) = our_box
-        our_corners = [ (c1x,c1y), (c2x,c1y), (c1x,c2y), (c2x,c2y) ]
-        for cx, cy in our_corners:
-            if point_inside_box((cx,cy), their_box):
-                return True
-            
-        (c1x, c1y, c2x, c2y) = their_box
-        their_corners = [ (c1x,c1y), (c2x,c1y), (c1x,c2y), (c2x,c2y) ]
-        for cx, cy in their_corners:
-            if point_inside_box((cx,cy), our_box):
-                return True               
-
-        return False
-
+        return overlapping_rect(our_box, their_box) is not None
+    
     def touching_any(self, sprites):
         """Is this sprite touching any other sprite in the list?"""
         for s in sprites:
@@ -412,12 +446,37 @@ class Sprite:
                 return s
         return False
 
+    def above(self, sprite):
+        """Is this sprite above another sprite"""
+        (x1,y1,   x2,y2) = CANVAS.bbox(self.spriteid)
+        (sx1,sy1, sx2,sy2) = CANVAS.bbox(sprite.spriteid)
+        
+        # Are we overlapped on x axis and above?
+        return (x1 < sx2 and x2 > sx1) and (y1 < sy1)
+
     def below(self, sprite):
         """Is this sprite below another sprite"""
-        x,y = self.pos()
-        sx, sy = sprite.pos()
-        return (sy < y)
+        (x1,y1,   x2,y2) = CANVAS.bbox(self.spriteid)
+        (sx1,sy1, sx2,sy2) = CANVAS.bbox(sprite.spriteid)
+        
+        # Are we overlapped on x axis and below?
+        return (x1 < sx2 and x2 > sx1) and (y2 > sy2)
 
+    def left_of(self, sprite):
+        """Is this sprite left of another sprite"""
+        (x1,y1,   x2,y2) = CANVAS.bbox(self.spriteid)
+        (sx1,sy1, sx2,sy2) = CANVAS.bbox(sprite.spriteid)
+        
+        # Are we overlapped on y axis and left?
+        return (y1 < sy2 and y2 > sy1) and (x1 < sx1)
+    
+    def right_of(self, sprite):
+        (x1,y1,   x2,y2) = CANVAS.bbox(self.spriteid)
+        (sx1,sy1, sx2,sy2) = CANVAS.bbox(sprite.spriteid)
+        
+        # Are we overlapped on y axis and right?
+        return (y1 < sy2 and y2 > sy1) and (x2 > sx2)
+    
     def move_with_speed(self):
         self.move(self.speed_x, self.speed_y)
 
@@ -463,6 +522,16 @@ class Sprite:
     def bounce_down(self):
         self.speed_y = abs(self.speed_y)
 
+    def bounce_off(self, sprite, slowdown=1):
+        if self.below(sprite):
+            self.speed_y = abs(self.speed_y * slowdown)
+        if self.above(sprite):
+            self.speed_y = -abs(self.speed_y * slowdown)
+        if self.right_of(sprite):
+            self.speed_x = abs(self.speed_x * slowdown)
+        if self.left_of(sprite):
+            self.speed_x = -abs(self.speed_x * slowdown)
+
     def replace_canvas_object(self, newobjid):
         self.delete()
         self.spriteid = newobjid
@@ -477,6 +546,13 @@ class ImageSprite(Sprite):
     Or:
     > image = PhotoImage(file='images/face.gif')
     > s = ImageSprite(image)
+
+    Or for multiple sprites:
+    > s = ImageSprite(['images/face1.gif', 'images/face2.gif'])
+
+    Multiple images share the same tag and the image IDs
+    are stored in the sprite object. All but the active image
+    are stored offscreen. 
     """
 
     next_tag_id = 1
@@ -487,18 +563,6 @@ class ImageSprite(Sprite):
         ImageSprite.next_tag_id += 1
         return "pyscratch-tag-%d" % id
 
-    @staticmethod
-    def _show_costume(showid, ids, method="raise"):
-        if method == "raise":
-            canvas().tag_raise(showid)
-        elif method == "lower":
-            # Lower all other sprites
-            for i in ids:
-                if i != showid:
-                    canvas().tag_lower(i)
-        else:
-            assert False, "method should be either 'raise' or 'lower'"
-            
     def __init__(self, imgs, x=100, y=100):
         self.costume_ids = []
         self.photo_images = []
@@ -507,7 +571,7 @@ class ImageSprite(Sprite):
             tag = ImageSprite.unique_tagname()
         else:
             imgs = [imgs]
-            tag = None # Use spriteid
+            tag = None # Just one sprite
         
         for img in imgs:
             if isinstance(img, str):
@@ -515,28 +579,53 @@ class ImageSprite(Sprite):
                 self.photo_images.append( PhotoImage(file=img) )
             else:
                 self.photo_images.append( img )
+
+            if self.costume_ids:
+                # Successive sprites are hidden offscreen
+                x, y = offscreen(x, y)
+                
             spriteid = CANVAS.create_image(x,y, image=self.photo_images[-1], tag=tag)
             self.costume_ids.append(spriteid)
         
-        super(ImageSprite, self).__init__(tag or spriteid)
+        super(ImageSprite, self).__init__(self.costume_ids[0])
         self.switch_costume(1)
 
-    def next_costume(self, method="raise"):
+
+    def _switch_to_costume_id(self, newid):
+        """Put current costume offscreen and new one onscreen"""
+
+        # Move current costume offscreen
+        x, y = self.x, self.y
+        self.move_to(*offscreen(x, y))
+
+        # And then move the new costume back onscreen 
+        self.spriteid = newid
+        self.move_to(x, y)
+            
+
+    def next_costume(self):
         """Show next costume if this sprite is composed of multiple ones"""
-        spriteids = canvas().find_withtag(self.spriteid)
-        if len(spriteids) == 1: return # Only one sprite
-        ImageSprite._show_costume(spriteids[0], spriteids, method)
+
+        costumes = len(self.costume_ids)
+        if costumes == 1: return # Only one sprite
         
-    def switch_costume(self, number, method="raise"):
+        i = self.costume_ids.index(self.spriteid)
+        i = (i + 1) % costumes
+        self._switch_to_costume_id(self.costume_ids[i])        
+        
+        
+    def switch_costume(self, number):
         "Show costume by number, 1 is the first one"
-        ImageSprite._show_costume(self.costume_ids[number-1],
-                                  self.costume_ids, method)
+        switch_to_id = self.costume_ids[number-1]
+        if self.spriteid == switch_to_id:
+            return # nothing to do
+
+        self._switch_to_costume_id(switch_to_id)
                 
 
     def which_costume(self):
         "The costume number of the current costume, 1 is the first"
-        spriteids = canvas().find_withtag(self.spriteid)
-        return self.costume_ids.index(spriteids[-1]) + 1
+        return self.costume_ids.index(self.spriteid) + 1
         
 
 class PolygonSprite(Sprite):
