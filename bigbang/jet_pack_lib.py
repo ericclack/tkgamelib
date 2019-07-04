@@ -4,6 +4,8 @@
 
 from geekclub_packages import *
 
+create_canvas(background="black")
+
 MAX_ROCKET_PARTS = 4
 LANDING_ZONE = 550
 MAX_ALIENS = 5
@@ -16,15 +18,56 @@ DROP_SPEED = 5
 
 
 
+# ---------------------------------------------------------
+# Create sprite objects
+
+sprite = ImageSprite(['images/jet_pack_left.gif', 'images/jet_pack_right.gif'])
+sprite.centre()
+sprite.max_speed = 7
+sprite.in_rocket = False
+
+platform_rectangles = [(50,150, 200,200, "white"),
+                       (380, 500, 530,550, "yellow"),
+                       (700,300, 800,350, "green"),
+                       #(160,200, 700,250, "blue"),
+                       (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT, "white")]
+
 def make_platforms(rectangles):
     return [Sprite(canvas().create_rectangle(x1,y1, x2,y2, fill=c))
                 for x1, y1, x2, y2, c in rectangles]  
+
+# Our world contains everything the game needs
+world = Struct(lives=5, score=0, level=1, status='play',
+               sprite = sprite,
+               platforms = make_platforms(platform_rectangles),
+               rocket_parts = [],
+               aliens = [],
+               fuel = [],
+               flames = [],
+               takeoff_countdown = 0
+               )
+
+# Variables and constants
+DROP_SPEED = 5
+MAX_ALIENS = 5
+
+# How likely is next rocket part or fuel to appear each tick?
+PROB_NEXT_PART = 0.5
+
+# ------------------------------------------------------------------
 
 def in_landing_zone(x):
     return (LANDING_ZONE-5) < x < (LANDING_ZONE+5)
 
 def say(s, *args, **kwargs):
     banner(s, *args, fill="white", **kwargs)
+
+def set_sprite_costume():
+    # Left or right?
+    if sprite.speed_x < 0:
+        sprite.switch_costume(1)
+    else:
+        sprite.switch_costume(2)    
 
 # ------------------------------------------------------------------
 

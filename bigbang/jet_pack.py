@@ -21,58 +21,13 @@ Hints: look in these areas:
 
 """
 
-create_canvas(background="black")
-
 # Mouse or keyboard (keyboard doesn't work well on Mac)
 MOUSE_CONTROL = True
 
 # ---------------------------------------------------------
-# Create your sprite objects
-
-sprite = ImageSprite(['images/jet_pack_left.gif', 'images/jet_pack_right.gif'])
-sprite.centre()
-sprite.max_speed = 7
-sprite.in_rocket = False
-
-#platform_rectangles = [(50,150, 200,200, "white"),
-#                       (380, 500, 530,550, "yellow"),
-#                       (700,300, 800,350, "green"),
-#                       (160,200, 700,250, "blue"),
-#                       (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT, "white")]
-
-platform_rectangles = [(50,150, 200,200, "white"),
-                       (380, 500, 530,550, "yellow"),
-                       (700,300, 800,350, "green"),
-                       #(160,200, 700,250, "blue"),
-                       (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT, "white")]
-
- 
-
-# Our world contains everything the game needs
-world = Struct(lives=5, score=0, level=1, status='play',
-               sprite = sprite,
-               platforms = make_platforms(platform_rectangles),
-               rocket_parts = [],
-               aliens = [],
-               fuel = [],
-               flames = [],
-               takeoff_countdown = 0
-               )
+# Functions to control the game and its sprites
 
 
-# ---------------------------------------------------------
-# Define your functions to control the game and its sprites
-# -- these must be defined before the event handlers
-
-
-def set_sprite_costume():
-    # Left or right?
-    if sprite.speed_x < 0:
-        sprite.switch_costume(1)
-    else:
-        sprite.switch_costume(2)    
-
-        
 def key_control():
     old_speed_x = sprite.speed_x
     if is_key_down('z'):
