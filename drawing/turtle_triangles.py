@@ -8,7 +8,7 @@ def mid(a,b):
     return ((a[0]+b[0])/2,(a[1]+b[1])/2)
 
 def triangles(a,b,c):
-    if abs(b[0]-c[0])+abs(b[1]-c[1])<50: return
+    if abs(b[0]-c[0])+abs(b[1]-c[1])<10: return
     pencolor(random(),random(),random())
     penup()
     goto(c[0],c[1])

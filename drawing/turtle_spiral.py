@@ -8,6 +8,7 @@ while True:
     speed('fastest')
     goto(0,0)
     clear()
+    width(randint(1,10))
     steps = 0
     increase = randint(1,10)
     degrees = randint(1,180)
