@@ -2,6 +2,13 @@
 # This program is distributed under the terms of the GNU General
 # Public License
 
+"""Big Bang Fair demo - Jet Pack
+
+This lib file contains most of the game logic, 
+the logic that we don't need to show the students
+so that their debugging is a bit easier
+"""
+
 from geekclub_packages import *
 
 create_canvas(background="black")
@@ -17,7 +24,6 @@ PROB_NEXT_PART = 0.5
 DROP_SPEED = 5
 
 
-
 # ---------------------------------------------------------
 # Create sprite objects
 
@@ -26,26 +32,21 @@ sprite.centre()
 sprite.max_speed = 7
 sprite.in_rocket = False
 
-platform_rectangles = [(50,150, 200,200, "white"),
-                       (380, 500, 530,550, "yellow"),
-                       (700,300, 800,350, "green"),
-                       #(160,200, 700,250, "blue"),
-                       (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT, "white")]
-
-def make_platforms(rectangles):
-    return [Sprite(canvas().create_rectangle(x1,y1, x2,y2, fill=c))
-                for x1, y1, x2, y2, c in rectangles]  
-
 # Our world contains everything the game needs
 world = Struct(lives=5, score=0, level=1, status='play',
                sprite = sprite,
-               platforms = make_platforms(platform_rectangles),
+               platforms = [],
                rocket_parts = [],
                aliens = [],
                fuel = [],
                flames = [],
                takeoff_countdown = 0
                )
+
+def make_platforms(rectangles):
+    world.platforms = [
+        Sprite(canvas().create_rectangle(x1,y1, x2,y2, fill=c))
+        for x1, y1, x2, y2, c in rectangles ]  
 
 # Variables and constants
 DROP_SPEED = 5
@@ -78,8 +79,10 @@ def new_rocket_part(w):
     r.speed_x = 0
     r.speed_y = 1
     r.in_place = False
+    r.carried = False
     r.landing = False
     return r
+
 
 def new_alien(w):
     a = Sprite(canvas().create_oval(0,0, 35,35, fill="red"))
@@ -96,14 +99,17 @@ def new_alien(w):
     a.speed_y = 1.5
     return a
 
+
 def new_fuel(w):
     f = ImageSprite('images/fuel.gif')
     f.move_to(random.randint(0, CANVAS_WIDTH), 0)
     f.speed_x = 0
     f.speed_y = 1
     f.in_place = False
+    f.carried = False
     f.landing = False
     return f
+
 
 def new_flame(w):
     r = w.rocket_parts[0] # The base of the rocket
@@ -115,10 +121,12 @@ def new_flame(w):
     flame.move_to(x, y)
     return flame
 
+
 def delete_all(spritelist):
     while spritelist:
         spritelist.pop().delete()
 
+        
 def start_level(w, delete_rocket_parts=True, level_up=1):
     delete_all(w.aliens)
     if delete_rocket_parts:
@@ -157,7 +165,6 @@ def move_sprite(w):
         start_level(w, delete_rocket_parts=False, level_up=0)
 
 
-
 def move_aliens(w):
     if len(w.aliens) < MAX_ALIENS and random.random() < 0.05:
         w.aliens.append(new_alien(w))
@@ -182,11 +189,15 @@ def move_rocket_parts(w):
         r = w.rocket_parts[-1]
         if not r.in_place:
             if r.touching(w.sprite) and not r.landing:
+                r.carried = True
+
+            if r.carried:
                 r.move_to(w.sprite.x, w.sprite.y)
                 if in_landing_zone(r.x):
                     w.score += 50
                     r.move_to(LANDING_ZONE, r.y)
                     r.landing = True
+                    r.carried = False
                     r.speed_y = DROP_SPEED
             elif r.landing and (r.touching_any(w.platforms)
                                 or r.touching_any(w.rocket_parts[:-1])):
@@ -204,11 +215,15 @@ def move_fuel(w):
         f = w.fuel[-1]
         if not f.in_place:
             if f.touching(w.sprite) and not f.landing:
+                f.carried = True
+
+            if f.carried:
                 f.move_to(w.sprite.x, w.sprite.y)
                 if in_landing_zone(f.x):
                     w.score += 50
                     f.move_to(LANDING_ZONE, f.y)
                     f.landing = True
+                    f.carried = False
                     f.speed_y = DROP_SPEED
             elif f.landing and (f.touching_any(w.platforms)
                                 or f.touching_any(w.fuel[:-1])):
@@ -265,6 +280,12 @@ def parts_left(parts):
 
 def parts_complete(parts):
     return parts_left(parts) == 0 and parts_in_place(parts)
+
+def update_score():
+    show_variables([["Lives", world.lives],
+                    ["Score", world.score],
+                    ["Level", world.level]],
+                   fill="white")
 
 # ------------------------------------------------------------------
 

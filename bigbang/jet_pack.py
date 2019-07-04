@@ -21,12 +21,22 @@ Hints: look in these areas:
 
 """
 
-# Mouse or keyboard (keyboard doesn't work well on Mac)
+# Mouse or keyboard? (keyboard doesn't work well on Mac)
 MOUSE_CONTROL = True
+
+# ------------------------------------------------------------------
+# Level layout
+
+make_platforms([
+    (50,150,  200,200, "white"),
+    (380,500, 530,550, "yellow"),
+    (700,300, 800,350, "green"),
+    #(160,200, 700,250, "blue"),
+    (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT, "white")
+])
 
 # ---------------------------------------------------------
 # Functions to control the game and its sprites
-
 
 def key_control():
     old_speed_x = sprite.speed_x
@@ -78,12 +88,6 @@ def fire():
     # Delete the laser in 1/10th second
     future_action(lambda: fsprite.delete(), 100)
 
-
-def update_score():
-    show_variables([["Lives", world.lives],
-                    ["Score", world.score],
-                    ["Level", world.level]],
-                   fill="white")
 
 def move():
     move_sprite(world)
