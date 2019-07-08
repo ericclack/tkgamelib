@@ -17,7 +17,7 @@ Hints: look in these areas:
 
 1. Layout of the screen
 2. Controls
-3. Lazer is rubbish
+3. Laser
 
 """
 
@@ -31,9 +31,10 @@ make_platforms([
     (50,150,  200,200, "white"),
     (380,500, 530,550, "yellow"),
     (700,300, 800,350, "green"),
-    #(160,200, 700,250, "blue"),
+    (160,200, 700,250, "blue"),
     (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT, "white")
 ])
+
 
 # ---------------------------------------------------------
 # Functions to control the game and its sprites
@@ -55,9 +56,9 @@ def key_control():
         
 def mouse_control():
     old_speed_x = sprite.speed_x
-    if mousex() < sprite.centre_x - sprite.width:
+    if mousex() > sprite.centre_x - sprite.width:
         sprite.speed_x -= 1
-    if mousex() > sprite.centre_x + sprite.width:
+    if mousex() < sprite.centre_x + sprite.width:
         sprite.speed_x += 1
     if mousey() < sprite.y:
         sprite.speed_y -= 1
@@ -74,8 +75,10 @@ def fire():
     y = sprite.y + sprite.height / 2
     length = 50
     fsprite = Sprite(canvas().create_rectangle(
-                        x + (direction * 30), y, x + (direction*length*10), y+3,
-                        fill="yellow", outline=None))
+        x + (direction * 30), y,
+        x + (direction * length), y+3,
+        fill="yellow", outline=None))
+    
     # Has the laser hit any aliens?
     a = fsprite.touching_any(world.aliens)
     while a:
@@ -96,10 +99,10 @@ def move():
     move_fuel(world)
     # Ready for take-off?
     rocket_takeoff(world)
+
     
 # ---------------------------------------------------------
-# How will the user control the game? What will other
-# sprites do? Add your event handlers here.
+# Game controls
 
 if MOUSE_CONTROL:
     forever(mouse_control, 25)
@@ -111,8 +114,8 @@ else:
 forever(move, 25)
 forever(update_score)
 
+
 # ---------------------------------------------------------
-# FINALLY
-# Always call mainloop:
+# FINALLY - Always call mainloop:
 
 mainloop()
