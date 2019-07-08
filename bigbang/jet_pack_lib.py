@@ -133,6 +133,11 @@ def start_level(w, delete_rocket_parts=True, level_up=1):
         delete_all(w.rocket_parts)
         delete_all(w.fuel)
         delete_all(w.flames)
+    else:
+        # Drop anything we're carrying
+        for p in w.rocket_parts + w.fuel:
+            if p.carried: p.carried = False
+            
     w.level += level_up
     w.sprite.in_rocket = False
     w.sprite.centre()

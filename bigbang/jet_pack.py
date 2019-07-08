@@ -22,7 +22,7 @@ Hints: look in these areas:
 """
 
 # Mouse or keyboard? (keyboard doesn't work well on Mac)
-MOUSE_CONTROL = True
+MOUSE_CONTROL = False
 
 # ------------------------------------------------------------------
 # Level layout
@@ -31,7 +31,6 @@ make_platforms([
     (50,150,  200,200, "white"),
     (380,500, 530,550, "yellow"),
     (700,300, 800,350, "green"),
-    (160,200, 700,250, "blue"),
     (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT, "white")
 ])
 
@@ -56,9 +55,9 @@ def key_control():
         
 def mouse_control():
     old_speed_x = sprite.speed_x
-    if mousex() > sprite.centre_x - sprite.width:
+    if mousex() < sprite.centre_x - sprite.width:
         sprite.speed_x -= 1
-    if mousex() < sprite.centre_x + sprite.width:
+    if mousex() > sprite.centre_x + sprite.width:
         sprite.speed_x += 1
     if mousey() < sprite.y:
         sprite.speed_y -= 1
@@ -70,10 +69,13 @@ def mouse_control():
         
         
 def fire():
-    direction = sign(sprite.speed_x) or 1
-    x = sprite.x + sprite.width / 2
-    y = sprite.y + sprite.height / 2
-    length = 50
+    # Convert costume 1 or 2 into -1 or 1
+    direction = sprite.which_costume()*2 - 3
+
+    # Make a laser sprite
+    x = sprite.centre_x
+    y = sprite.centre_y
+    length = 500
     fsprite = Sprite(canvas().create_rectangle(
         x + (direction * 30), y,
         x + (direction * length), y+3,
