@@ -175,8 +175,9 @@ def move_aliens(w):
         w.aliens.append(new_alien(w))
 
     for a in w.aliens:
-        if w.level > 2:
-            a.accelerate_towards(w.sprite.x, w.sprite.y, (w.level+1)**2/20)
+        if w.level > 1:
+            a.accelerate_towards(w.sprite.x, w.sprite.y,
+                                 ((w.level+1)**2)/200)
 
         a.move_with_speed()
         if a.y > CANVAS_HEIGHT or a.touching_any(w.platforms):
