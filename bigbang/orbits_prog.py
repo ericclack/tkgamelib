@@ -22,8 +22,8 @@ COLLISIONS = True
 #   seconds: (x, y) vector
 
 FORCES = {
-    0: (-5,-30),
-#    2: (0,50),
+    0: (-.5,-10),
+    4: (-4,-6),
     }
 
 # ---------------------------------------------------------
@@ -88,6 +88,13 @@ def new_planet(event):
     canvas().tag_lower(p.spriteid)
     planets.append(p)
 
+    
+def delete_planet(event):
+    # Check all but the first planet
+    for i, p in enumerate(planets[1:]):
+        if mouse_touching(p):
+            planets.pop(i+1).delete()
+    
 
 def vector_action_fn(vx, vy):
     def _vector_action():
@@ -124,6 +131,8 @@ restart()
 
 forever(move_ship, 25)
 forever(update_timer, 100)
+when_button1_clicked(new_planet)
+when_button2_clicked(delete_planet)
 
 # ---------------------------------------------------------
 # FINALLY
