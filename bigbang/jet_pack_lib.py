@@ -85,7 +85,7 @@ def new_rocket_part(w):
 
 
 def new_alien(w):
-    a = Sprite(canvas().create_oval(0,0, 35,35, fill="red"))
+    a = ImageSprite('images/alien1.gif')
     a.max_speed = 3
 
     if random.random() < 0.5:
