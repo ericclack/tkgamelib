@@ -22,8 +22,8 @@ COLLISIONS = True
 #   seconds: (x, y) vector
 
 FORCES = {
-    0: (-5,0),
-    2: (0,+50),
+    0: (-5,-30),
+#    2: (0,50),
     }
 
 # ---------------------------------------------------------
@@ -39,6 +39,11 @@ planets=[
 ship = Sprite(canvas().create_oval(0,0, 25,25, fill="red"))
 ship.max_speed = 100 # Fast!
 
+ship.start_time = time.time()
+
+timer = Sprite(canvas().create_text(15, 15*3, font=("default", 30),
+                                    text="0 sec", fill="white",
+                                    anchor="nw"))
 
 # ---------------------------------------------------------
 # Define your functions to control the game and its sprites
@@ -57,7 +62,7 @@ def move_ship():
     gravity()
     ship.move_with_speed()
     if COLLISIONS and not (0 < ship.x < canvas_width()) or not (0 < ship.y < canvas_height()):
-            end_game("You left the solar system!", fn=restart, ms=2000, fill="red")
+        end_game("You left the solar system!", fn=restart, ms=2000, fill="red")
 
             
 def propel_ship(event):
@@ -99,11 +104,18 @@ def make_vector_actions():
 def restart():
     ship.move_to(80, CANVAS_HEIGHT-100)
     ship.speed_x = ship.speed_y = 0
+    ship.start_time = time.time()
     delete_all(clicks)
     make_vector_actions()
     restart_game()
 
 
+def update_timer():
+    t = time.time() - ship.start_time 
+    canvas().dchars(timer.spriteid, 0, 100)
+    canvas().insert(timer.spriteid, 0, "%s sec" % round(t, 1))
+
+    
 # ---------------------------------------------------------
 # How will the user control the game? What will other
 # sprites do? Add your event handlers here.
@@ -111,6 +123,7 @@ def restart():
 restart()
 
 forever(move_ship, 25)
+forever(update_timer, 100)
 
 # ---------------------------------------------------------
 # FINALLY
