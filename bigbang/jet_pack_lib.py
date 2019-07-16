@@ -154,7 +154,7 @@ def move_sprite(w):
     # Platforms
     p = w.sprite.touching_any(w.platforms)
     if p:
-        w.sprite.bounce_off(p)
+        w.sprite.bounce_off(p, 0.5)
 
     # Move
     w.sprite.move_with_speed()
