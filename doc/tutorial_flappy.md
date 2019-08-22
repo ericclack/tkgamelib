@@ -1,7 +1,7 @@
 # CoderDojo Tutorial: Flappy
 
 ## Introduction
-Flappy Bird is a relatively simple game.  Its a lot more complex than click the face, but its nowhere near as complex as many other games.  This version is as simple as we can make it while still having the main features of the game. Graphically it looks *super ugly* but thats ok, because you can easily replace the graphics with some nicer pictures.
+Flappy Bird is a relatively simple game.  It's a lot more complex than click the face, but it's nowhere near as complex as many other games.  This version is as simple as we can make it while still having the main features of the game. Graphically it looks *super ugly* but thats ok, because you can easily replace the graphics with some nicer pictures.
 
 ![finished](images/flappy.jpg)
 
