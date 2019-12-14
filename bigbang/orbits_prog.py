@@ -7,6 +7,7 @@ from functools import partial
 
 """Big Bang Fair demo - Orbits
 
+Program a list of force vectors to get the ship in orbit. 
 """
 
 create_canvas("Orbits", 1000, 900, background="black")
@@ -17,14 +18,15 @@ G = 0.0005
 # Does the game end if we hit a planet?
 COLLISIONS = True
 
-# Timed directional forces applied to the ship
-# Format:
-#   seconds: (x, y) vector
+# Timed directional forces applied to the ship. Format:
+# seconds: (x, y) vector
 
 FORCES = {
-    0: (-.5,-10),
-    4: (-4,-6),
+    0: (50,20),
+    2: (-300,50),
+    4: (0,50),
     }
+
 
 # ---------------------------------------------------------
 # Create your sprite objects
@@ -45,9 +47,9 @@ timer = Sprite(canvas().create_text(15, 15*3, font=("default", 30),
                                     text="0 sec", fill="white",
                                     anchor="nw"))
 
+
 # ---------------------------------------------------------
-# Define your functions to control the game and its sprites
-# -- these must be defined before the event handlers
+# Functions to control the game and its sprites
 
 def gravity():
     for p in planets:
@@ -65,20 +67,12 @@ def move_ship():
         end_game("You left the solar system!", fn=restart, ms=2000, fill="red")
 
             
-def propel_ship(event):
-    x, y = event.x, event.y
-    # Show where we clicked
-    clicks.append(
-        Sprite(canvas().create_oval(x-15,y-15, x+15, y+15, fill=hsv_to_hex(0, 1, 0.5))))
-    f = distance_between_points(ship.x, ship.y, x, y)**(1/3)
-    ship.accelerate_towards(x,y, f)
-
-    
 def apply_vector(x, y):
     print("Ship at", (ship.x, ship.y),
           "Applying vector", (x, y),
           "Accellerating towards", ship.x+x, ship.y+y)
-    f = distance_between_points(0, 0, x, y)**(1/3)    
+    f = distance_between_points(0, 0, x, y)**(1/2)
+    print(f)
     ship.accelerate_towards(ship.x+x, ship.y+y, f)    
 
     
@@ -124,8 +118,7 @@ def update_timer():
 
     
 # ---------------------------------------------------------
-# How will the user control the game? What will other
-# sprites do? Add your event handlers here.
+# Event handlers here.
 
 restart()
 
@@ -133,6 +126,7 @@ forever(move_ship, 25)
 forever(update_timer, 100)
 when_button1_clicked(new_planet)
 when_button2_clicked(delete_planet)
+
 
 # ---------------------------------------------------------
 # FINALLY
