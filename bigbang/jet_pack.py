@@ -31,7 +31,6 @@ make_platforms([
     (50,150,  200,200, "white"),
     (380,500, 530,550, "yellow"),
     (700,300, 800,350, "green"),
-    (160,200, 700,250, "blue"),
     (0,CANVAS_HEIGHT-50, CANVAS_WIDTH,CANVAS_HEIGHT, "white")
 ])
 
@@ -42,9 +41,9 @@ make_platforms([
 def key_control():
     old_speed_x = sprite.speed_x
     if is_key_down('z'):
-        sprite.speed_x += 1
-    if is_key_down('x'):
         sprite.speed_x -= 1
+    if is_key_down('x'):
+        sprite.speed_x += 1
     if is_key_down(' '):
         sprite.speed_y -= 1
 
@@ -56,9 +55,9 @@ def key_control():
         
 def mouse_control():
     old_speed_x = sprite.speed_x
-    if mousex() > sprite.centre_x - sprite.width:
+    if mousex() < sprite.centre_x - sprite.width:
         sprite.speed_x -= 1
-    if mousex() < sprite.centre_x + sprite.width:
+    if mousex() > sprite.centre_x + sprite.width:
         sprite.speed_x += 1
     if mousey() < sprite.y:
         sprite.speed_y -= 1
@@ -76,7 +75,7 @@ def fire():
     # Make a laser sprite
     x = sprite.centre_x
     y = sprite.centre_y
-    length = 50
+    length = 500
     fsprite = Sprite(canvas().create_rectangle(
         x + (direction * 30), y,
         x + (direction * length), y+3,
