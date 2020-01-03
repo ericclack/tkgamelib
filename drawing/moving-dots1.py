@@ -1,4 +1,4 @@
-from geekclub_packages import *
+from packages import *
 
 create_canvas()
 
@@ -25,7 +25,7 @@ def move_circles():
     for c in circles:
         c.move_with_speed()
     
-forever(check_move_circle)
-forever(move_circles)
+forever(check_move_circle, 25)
+forever(move_circles, 25)
 
 mainloop()

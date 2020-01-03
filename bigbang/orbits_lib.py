@@ -2,7 +2,7 @@
 # This program is distributed under the terms of the GNU General
 # Public License
 
-from geekclub_packages import *
+from packages import *
 
 
 def say(s, *args, **kwargs):

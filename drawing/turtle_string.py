@@ -1,5 +1,5 @@
 # turtle_string.py : Draws strings wound between pins on a circle
-# https://github.com/ericclack/geekclub
+# https://github.com/ericclack/tkgamelib
 
 from turtle import *
 from random import *

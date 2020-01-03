@@ -9,7 +9,7 @@ the logic that we don't need to show the students
 so that their debugging is a bit easier
 """
 
-from geekclub_packages import *
+from packages import *
 
 create_canvas(background="black")
 

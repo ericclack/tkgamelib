@@ -4,5 +4,5 @@
 import sys
 sys.path.append('..')
 
-from geekclub.pyscratch import *
-from geekclub.sound import *
+from tkgamelib import *
+from tkgamelib.sound import *

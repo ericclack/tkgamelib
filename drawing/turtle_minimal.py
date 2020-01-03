@@ -1,5 +1,5 @@
 # turtle_minimal.py : Minimal turtle example from python manual
-# https://github.com/ericclack/geekclub
+# https://github.com/ericclack/tkgamelib
 
 from turtle import *
 color('red', 'yellow')

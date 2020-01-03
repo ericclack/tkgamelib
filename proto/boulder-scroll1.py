@@ -10,7 +10,7 @@ TODO:
 
 """
 
-from geekclub_packages import *
+from packages import *
 import random, time
 
 BLOCK_SIZE=50

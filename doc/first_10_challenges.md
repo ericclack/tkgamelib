@@ -1,4 +1,4 @@
-# GeekClub First 10 Challenges
+# TKGameLib First 10 Challenges
 
 ## Make the Pong game better...
 

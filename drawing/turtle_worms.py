@@ -1,5 +1,5 @@
 # turtle_worms.py : Draws a worm moving from the centre of the screen
-# https://github.com/ericclack/geekclub
+# https://github.com/ericclack/tkgamelib
 
 from turtle import *
 from random import *

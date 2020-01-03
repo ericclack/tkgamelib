@@ -1,5 +1,5 @@
 # turtle_mystify.py : Simulation of the win95 mystify screensaver
-# https://github.com/ericclack/geekclub
+# https://github.com/ericclack/tkgamelib
 
 from turtle import *
 from random import *

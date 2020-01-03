@@ -1,5 +1,5 @@
 # turtle_web.py : Draws a pseudo spiders web
-# https://github.com/ericclack/geekclub
+# https://github.com/ericclack/tkgamelib
 
 from turtle import *
 from random import *

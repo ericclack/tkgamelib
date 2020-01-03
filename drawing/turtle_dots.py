@@ -1,5 +1,5 @@
 # turtle_dots.py : A seemingly random set of dots which form a pattern
-# https://github.com/ericclack/geekclub
+# https://github.com/ericclack/tkgamelib
 
 from turtle import *
 from random import *

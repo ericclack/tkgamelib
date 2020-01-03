@@ -1,5 +1,5 @@
 # turtle_spiral.py : Draws a random coloured spiral
-# https://github.com/ericclack/geekclub
+# https://github.com/ericclack/tkgamelib
 
 from turtle import *
 from random import *

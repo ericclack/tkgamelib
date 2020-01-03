@@ -1,5 +1,5 @@
 # turtle_triangles.py : Draws recursive subdivision of triangles
-# https://github.com/ericclack/geekclub
+# https://github.com/ericclack/tkgamelib
 
 from turtle import *
 from random import *

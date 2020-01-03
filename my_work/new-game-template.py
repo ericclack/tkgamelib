@@ -1,4 +1,4 @@
-from geekclub_packages import *
+from packages import *
 
 create_canvas()
 
@@ -36,7 +36,7 @@ for i in range(30): # Make 30
 # -- these must be defined before the event handlers
 
 def follow_mouse():
-    sprite.move_towards(mousex(), mousey(), 10)
+    sprite.move_towards(mousex(), mousey(), 5)
     show_variables([
         ("Score", sprite.score),
         ("Gems left", len(gems))
@@ -65,7 +65,7 @@ def collect_gems():
     
 
 def move_alien():
-    alien.move_towards(sprite.x, sprite.y, 5)
+    alien.move_towards(sprite.x, sprite.y, 2)
 
 
 # ---------------------------------------------------------

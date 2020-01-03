@@ -339,7 +339,7 @@ def mousex(): return CANVAS.winfo_pointerx() - CANVAS.winfo_rootx()
 def mousey(): return CANVAS.winfo_pointery() - CANVAS.winfo_rooty()
 
 
-def forever(fn, ms=100):
+def forever(fn, ms=25):
     """Keep doing something forever, every ms milliseconds"""
     FOREVER_FNS[fn] = True
     def wrapper():

@@ -1,5 +1,5 @@
 # turtle_stars.py : Draws random stats on the screen
-# https://github.com/ericclack/geekclub
+# https://github.com/ericclack/tkgamelib
 
 from turtle import *
 from random import *

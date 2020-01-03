@@ -1,5 +1,5 @@
 # turtle_balls.py : Draws trajectory of balls with gravity and bouncing
-# https://github.com/ericclack/geekclub
+# https://github.com/ericclack/tkgamelib
 
 from turtle import *
 from random import *

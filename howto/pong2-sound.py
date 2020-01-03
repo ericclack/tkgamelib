@@ -3,7 +3,7 @@
 
 """A simple bat and ball game. """
 
-from geekclub_packages import *
+from packages import *
 import random, time
 
 create_canvas()

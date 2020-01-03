@@ -1,5 +1,5 @@
 # turtle_lines.py : Draws a spiral of lines
-# https://github.com/ericclack/geekclub
+# https://github.com/ericclack/tkgamelib
 
 from turtle import *
 from random import *

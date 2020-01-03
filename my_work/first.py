@@ -1,5 +1,5 @@
 # 1, Import the library
-from geekclub_packages import *
+from packages import *
 
 # 2, Create the canvas  
 create_canvas()

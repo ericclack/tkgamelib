@@ -13,7 +13,7 @@ TODO:
 """
 
 import random, time
-from geekclub_packages import *
+from packages import *
 
 BLOCK_SIZE=50
 SCREEN_SIZE=16
