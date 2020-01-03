@@ -1,10 +1,11 @@
-geekclub: Scratch style programming in Python
-=============================================
+TKGamesLib: Step up from Scratch to Python
+==========================================
 
-An attempt to make Scratch style programming in Python possible -- in
-response to the question: "What shall I try after Scratch". Inspired by MIT Scratch: http://scratch.mit.edu/
+Inspired by MIT Scratch and PygameZero, answers the question "what should I try after Scratch?"
 
-I'm aiming for a suite of libraries that:
+PygameZero is really cool, but it requires extra libraries to be installed so isn't an option in some organisations such as schools. TKGamesLib works on the default Python, it uses TKinter for graphics, sprites etc, and is designed to encourage exploration of everything. 
+
+Project aims:
 
 * Makes it easy to get visual or audio effects
 * Gives immediate results (like Scratch does), type some commands, press run, see results
@@ -31,9 +32,9 @@ Prerequesites
 Get the code
 ------------
 
-You can use `git` or download a [zip file of the code](https://github.com/ericclack/geekclub/archive/master.zip):
+You can use `git` or download a [zip file of the code](https://github.com/ericclack/tkgameslib/archive/master.zip):
 
-    git clone https://github.com/ericclack/geekclub.git
+    git clone https://github.com/ericclack/tkgameslib.git
 
 
 Examples
