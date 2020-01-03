@@ -43,7 +43,7 @@ Examples
 Start up `idle3` and create a new file, save it to the directory `my_work`, then add the following code...
 
 ```
-from geekclub_packages import *
+from packages import *
   
 create_canvas()
 sprite = ImageSprite('my_images/face.gif')
@@ -62,5 +62,5 @@ Documentation
 Check out the examples directory. You should be able to run the code straight
 from that directory.
 
-Have a look at the [wiki](https://github.com/ericclack/tkgamelib/wiki) to get started. Or you can [view the source code](https://github.com/ericclack/geekclub/blob/master/tkgamelib/) of the library.
+Have a look at the [wiki](https://github.com/ericclack/tkgamelib/wiki) to get started. Or you can [view the source code](https://github.com/ericclack/tkgamelib/blob/master/tkgamelib/) of the library.
 

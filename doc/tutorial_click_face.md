@@ -10,7 +10,7 @@ In this game is a single moving object (a face), which bounces around the screen
 Create a python file in the my_work directory and add the following code:
 
 	# 1, Import the library
-	from geekclub_packages import *
+	from packages import *
 
 	# 2, the canvas
 	create_canvas('click the face')
@@ -37,7 +37,7 @@ To get movement we will need to do two things:
 To do this we will need to make a few changes to the code
 
 	# 1, Import the library
-	from geekclub_packages import *
+	from packages import *
 	import random
 
 	# 3, the face
