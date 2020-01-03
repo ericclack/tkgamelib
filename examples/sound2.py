@@ -1,7 +1,6 @@
 # Copyright 2019, Eric Clack, eric@bn7.net
 # This program is distributed under the terms of the GNU General Public License
 
-import sys
 from packages import *
 
 create_canvas()
@@ -9,7 +8,7 @@ create_canvas()
 # Not really necessary for this example, but why not:
 sprite = ImageSprite('images/face.gif')
 sprite.centre()
-   
+
 laser = load_sound('sounds/laser.wav')
 drum = load_sound('sounds/bass-drum.wav')
 hh = load_sound('sounds/hh-cymbal.wav')
@@ -29,7 +28,7 @@ def beat():
         laser.play()
 
     world.tick += 1
-    
+
 
 forever(beat, bpm_to_ms(world.bpm))
 mainloop()
