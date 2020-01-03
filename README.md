@@ -1,9 +1,9 @@
-TKGamesLib: Step up from Scratch to Python
+TKGameLib: Step up from Scratch to Python
 ==========================================
 
 Inspired by MIT Scratch and PygameZero, answers the question "what should I try after Scratch?"
 
-PygameZero is really cool, but it requires extra libraries to be installed so isn't an option in some organisations such as schools. TKGamesLib works on the default Python, it uses TKinter for graphics, sprites etc, and is designed to encourage exploration of everything. 
+PygameZero is really cool, but it requires extra libraries to be installed so isn't an option in some organisations such as schools. TKGameLib works on the default Python, it uses TKinter for graphics, sprites etc, and is designed to encourage exploration of everything. 
 
 Project aims:
 
@@ -32,9 +32,9 @@ Prerequesites
 Get the code
 ------------
 
-You can use `git` or download a [zip file of the code](https://github.com/ericclack/tkgameslib/archive/master.zip):
+You can use `git` or download a [zip file of the code](https://github.com/ericclack/tkgamelib/archive/master.zip):
 
-    git clone https://github.com/ericclack/tkgameslib.git
+    git clone https://github.com/ericclack/tkgamelib.git
 
 
 Examples
@@ -62,5 +62,5 @@ Documentation
 Check out the examples directory. You should be able to run the code straight
 from that directory.
 
-Have a look at the [wiki](https://github.com/ericclack/geekclub/wiki) to get started. There's some basic [documentation for the geekclub module](http://htmlpreview.github.io/?https://github.com/ericclack/geekclub/blob/master/geekclub/pyscratch.html) or you can [view the source code](https://github.com/ericclack/geekclub/blob/master/geekclub/pyscratch.py).
+Have a look at the [wiki](https://github.com/ericclack/tkgamelib/wiki) to get started. Or you can [view the source code](https://github.com/ericclack/geekclub/blob/master/tkgamelib/) of the library.
 
