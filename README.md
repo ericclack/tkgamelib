@@ -40,7 +40,7 @@ You can use `git` or download a [zip file of the code](https://github.com/ericcl
 Examples
 --------
 
-Start up `idle3` and create a new file, save it to the directory `my_work`, then add the following code...
+Start up IDLE3 and create a new file, save it to the directory `my_work`, then add the following code...
 
 ```
 from packages import *
@@ -59,7 +59,7 @@ mainloop()
 Documentation
 -------------
 
-Check out the examples directory. You should be able to run the code straight
+Check out the [examples](https://github.com/ericclack/tkgamelib/blob/master/examples/) directory. You should be able to run the code straight
 from that directory.
 
 Have a look at the [wiki](https://github.com/ericclack/tkgamelib/wiki) to get started. Or you can [view the source code](https://github.com/ericclack/tkgamelib/blob/master/tkgamelib/) of the library.
