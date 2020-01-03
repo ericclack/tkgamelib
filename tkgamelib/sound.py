@@ -2,10 +2,10 @@
 # This program is distributed under the terms of the GNU General 
 # Public License
 
-"""Sounds for PyScratch using simpleaudio or winsound.
+"""Sounds for TKGameLib using simpleaudio or winsound.
 
 See examples in the folder examples, or more info on github.com:
-https://github.com/ericclack/geekclub/sound1.py
+https://github.com/ericclack/tkgamelib/sound1.py
 
 To install: pip3 install simpleaudio
 Get free to use sounds here: https://freesound.org/
