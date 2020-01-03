@@ -1,4 +1,4 @@
-# TKGameLib First 10 Challenges
+# First 10 Challenges
 
 ## Make the Pong game better...
 
