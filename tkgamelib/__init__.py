@@ -24,6 +24,7 @@ pydoc3 -w pyscratch
 
 """
 
+import os
 import random
 import math
 import colorsys
@@ -249,6 +250,14 @@ def create_canvas(window_title="Pyscratch Game", canvas_width=CANVAS_WIDTH, canv
     CANVAS.focus_set()    
     CANVAS.bind('<KeyPress>', _key_pressed)
     CANVAS.bind('<KeyRelease>', _key_released)
+
+    # Fix CWD for Mu editor so that relative links work
+    caller_info = inspect.stack()[1]
+    caller_path = os.path.split(caller_info[1])[0]
+    if caller_path.startswith('/'): 
+        if caller_path != os.getcwd():
+            print("Fixed current working directory for Mu")
+            os.chdir(caller_path)
 
 
 def canvas_width(): return CANVAS_WIDTH

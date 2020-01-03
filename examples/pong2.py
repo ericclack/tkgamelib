@@ -26,7 +26,7 @@ for y in range(0, 400, 28):
         brick = ImageSprite(brick_img)
         brick.move_to(x, y)
         bricks.append(brick)
-    
+
 
 def bat_follows_mouse():
     bat.move_to(mousex(), mousey())
@@ -52,7 +52,7 @@ def bounce_ball():
         bricks.remove(brick)
         brick.delete()
 
-    
+
 forever(bat_follows_mouse, 20)
 forever(bounce_ball, 20)
 mainloop()
