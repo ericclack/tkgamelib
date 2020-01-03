@@ -4,7 +4,7 @@
 """Animate a star field"""
 
 import random, time
-from geekclub_packages import *
+from packages import *
 
 create_canvas()
 

@@ -4,7 +4,7 @@
 """A list of 10 sprites that follow each other, and the mouse."""
 
 import random
-from geekclub_packages import *
+from packages import *
 
 create_canvas()
 

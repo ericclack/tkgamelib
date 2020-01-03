@@ -4,7 +4,7 @@
 """A set of 5 sprites that follow each other with acceleration and pens"""
 
 import random
-from geekclub_packages import *
+from packages import *
 
 create_canvas()
 

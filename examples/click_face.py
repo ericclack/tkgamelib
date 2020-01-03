@@ -1,5 +1,5 @@
 # 1, Import the library
-from geekclub_packages import *
+from packages import *
 import random
 
 # 2, the canvas

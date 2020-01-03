@@ -4,7 +4,7 @@
 """An oval that follows the mouse, but only when you move it."""
 
 import random
-from geekclub_packages import *
+from packages import *
 
 create_canvas()
 

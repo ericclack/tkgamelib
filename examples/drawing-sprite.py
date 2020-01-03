@@ -4,7 +4,7 @@
 """A drawing sprite, click to toggle the pen."""
 
 import random
-from geekclub_packages import *
+from packages import *
 
 create_canvas()
 

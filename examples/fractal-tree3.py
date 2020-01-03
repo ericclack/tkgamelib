@@ -2,7 +2,7 @@
 # This program is distributed under the terms of the GNU General Public License
 
 import random
-from geekclub_packages import *
+from packages import *
 
 # How much to change the length on each recursion
 LENGTH_DELTA=0.5

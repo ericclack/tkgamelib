@@ -4,7 +4,7 @@
 """A simple bat and ball game demonstrating the costume functions."""
 
 import random, time
-from geekclub_packages import *
+from packages import *
 
 create_canvas()
 

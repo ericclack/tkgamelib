@@ -1,4 +1,4 @@
-from geekclub_packages import *
+from packages import *
   
 create_canvas()
 sprite = ImageSprite('images/face.gif')

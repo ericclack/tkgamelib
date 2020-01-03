@@ -4,7 +4,7 @@
 """Click to draw, with timed deletion of lines."""
 
 import random
-from geekclub_packages import *
+from packages import *
 
 create_canvas()
 

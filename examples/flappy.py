@@ -1,5 +1,5 @@
 # 1, Import the library
-from geekclub_packages import *
+from packages import *
 
 # 2, numbers for the game
 GRAVITY=1
@@ -103,6 +103,6 @@ def update():
 show_variable('Score',world.score)
 
 when_key_pressed('<space>', flap)
-forever(update)
+forever(update, 25)
 
 mainloop()

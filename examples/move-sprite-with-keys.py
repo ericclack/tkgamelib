@@ -4,7 +4,7 @@
 """A small sprite and a big one, that follows"""
 
 import random
-from geekclub_packages import *
+from packages import *
 
 create_canvas()
 
