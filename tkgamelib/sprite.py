@@ -2,22 +2,12 @@
 # This program is distributed under the terms of the GNU General 
 # Public License
 
-"""Sprites for TKGameLib.
+"""Sprites for TKGameLib: moveable objects on the canvas.
 
 Dependent on canvas module.
 
 Author: Eric Clack, eric@bn7.net
 """
-
-#import os
-#import random
-#import math
-#import colorsys
-#import time
-#import inspect
-#import platform
-#from tkinter import *
-#from tkinter import simpledialog
 
 from tkgamelib.canvas import *
 from tkgamelib.util import *
@@ -86,7 +76,7 @@ class Sprite:
                                        sprite.centre_x, sprite.centre_y)
 
     def move_towards(self, to_x, to_y, steps=1):
-        """Move towards a point"""
+        """Move towards a point by steps, an approimation of pixels."""
         x, y = self.pos()
         dx = to_x - x
         dy = to_y - y
@@ -113,6 +103,7 @@ class Sprite:
         self.direction = degrees
         
     def move_forward(self, steps):
+        """Move some steps in direction set by turn or turn_to."""
         x2, y2 = translate_point(self.x, self.y, steps, self.direction)
         self.move_to(x2, y2)
         
@@ -150,7 +141,7 @@ class Sprite:
         return False
 
     def above(self, sprite):
-        """Is this sprite above another sprite"""
+        """Is this sprite above another sprite (further up the screen)?"""
         (x1,y1,   x2,y2) = canvas().bbox(self.spriteid)
         (sx1,sy1, sx2,sy2) = canvas().bbox(sprite.spriteid)
         
@@ -158,7 +149,7 @@ class Sprite:
         return (x1 < sx2 and x2 > sx1) and (y1 < sy1)
 
     def below(self, sprite):
-        """Is this sprite below another sprite"""
+        """Is this sprite below another sprite (further down the screen)"""
         (x1,y1,   x2,y2) = canvas().bbox(self.spriteid)
         (sx1,sy1, sx2,sy2) = canvas().bbox(sprite.spriteid)
         
@@ -213,6 +204,7 @@ class Sprite:
         if y + self.height > CANVAS_HEIGHT: self.speed_y = -abs(self.speed_y)
 
     def if_on_edge_wrap(self):
+        """E.g. go off the right and reappear on the left"""
         x, y = x2, y2 = self.pos()
         if x + self.width < 0: x2 = CANVAS_WIDTH
         if y + self.height < 0: y2 = CANVAS_HEIGHT

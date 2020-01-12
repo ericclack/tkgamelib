@@ -2,7 +2,7 @@
 # This program is distributed under the terms of the GNU General 
 # Public License
 
-"""Sounds for TKGameLib using simpleaudio or winsound.
+"""Sounds for TKGameLib using simpleaudio (Mac, Linux) or winsound.
 
 See examples in the folder examples, or more info on github.com:
 https://github.com/ericclack/tkgamelib/sound1.py
@@ -34,8 +34,7 @@ class DummySoundLib():
 
 
 ## winsound ---------------------------------------------------
-## note: you don't need the winsound imported if this code
-## is never used - that suprised me
+## Sound on Windows
 
 class WinSoundObj:
     "Winsound sound object"
@@ -73,7 +72,7 @@ except ImportError:
         sa = DummySoundLib()
 
 
-## rest of the code -------------------------------------------
+## Our API ----------------------------------------------------
 
 import time
 

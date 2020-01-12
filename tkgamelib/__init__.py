@@ -24,5 +24,7 @@ pydoc3 -w tkgamelib
 
 """
 
+from tkgamelib.util import *
+from tkgamelib.canvas import *
 from tkgamelib.sprite import *
 from tkgamelib.sound import *
