@@ -13,8 +13,8 @@ sprite = Sprite(oval)
 sprite.pen_down()
 
 def move_towards_mouse():
-    dx = (mousex() - sprite.x)
-    dy = (mousey() - sprite.y)
+    dx = (mouse_x() - sprite.x)
+    dy = (mouse_y() - sprite.y)
     scale = 1+ abs(dx + dy)
     sprite.move(2 * dx / scale, 2 * dy / scale)
 

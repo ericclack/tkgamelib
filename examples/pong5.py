@@ -35,7 +35,7 @@ def make_bricks_for_level(level):
     return bricks
 
 def bat_follows_mouse():
-    bat.move_to(mousex(), mousey())
+    bat.move_to(mouse_x(), mouse_y())
 
 def bounce_ball():
     if world.status != 'play': return

@@ -16,13 +16,12 @@ bigsprite = ImageSprite(bigspriteimg, 100, 100)
 
 
 def move_towards_mouse():
-    smallsprite.move_towards(mousex(), mousey(), 5)
+    smallsprite.move_towards(mouse_pos(), 5)
     if smallsprite.touching(bigsprite):
         smallsprite.move_to_random_pos()
 
 def move_bigsprite():
-    spritex, spritey = smallsprite.pos()
-    bigsprite.move_towards(spritex, spritey)
+    bigsprite.move_towards(smallsprite)
     
 
 forever(move_towards_mouse, 25)

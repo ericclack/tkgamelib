@@ -31,7 +31,7 @@ for y in range(0, 400, 28):
 # Game logic
 
 def bat_follows_mouse():
-    bat.move_to(mousex(), mousey())
+    bat.move_to(mouse_x(), mouse_y())
 
 
 def bounce_ball():
@@ -65,7 +65,7 @@ def game_over():
     # Because this function was called by end_game
     # all forever events are paused. 
     
-    banner("Press <space> to try again or <q> to quit.")
+    banner("Press <space> to try again\nor <q> to quit.")
     when_key_pressed('<space>', restart)
     when_key_pressed('q', really_end_game)
 

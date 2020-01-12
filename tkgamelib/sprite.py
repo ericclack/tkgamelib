@@ -75,9 +75,11 @@ class Sprite:
         return distance_between_points(self.centre_x, self.centre_y,
                                        sprite.centre_x, sprite.centre_y)
 
-    def move_towards(self, to_x, to_y, steps=1):
-        """Move towards a point by steps, an approimation of pixels."""
+    def move_towards(self, thing, steps=1):
+        """Move towards a sprite or point by steps, 
+        an approimation of pixels."""
         x, y = self.pos()
+        to_x, to_y = Sprite._xy(thing)
         dx = to_x - x
         dy = to_y - y
         distance = math.sqrt(dx**2+dy**2)
@@ -177,7 +179,9 @@ class Sprite:
         self.move(self.speed_x, self.speed_y)
 
         
-    def accelerate_towards(self, to_x, to_y, force=1):
+    def accelerate_towards(self, thing, force=1):
+        "Accelerate towards a sprite or point"""
+        to_x, to_y = Sprite._xy(thing)
         mag, angle = xy_to_mag_angle(to_x-self.centre_x, to_y-self.centre_y)
         dx, dy = mag_angle_to_xy(min(mag, force), angle)
         self.speed_x += dx
@@ -231,7 +235,14 @@ class Sprite:
     def replace_canvas_object(self, newobjid):
         self.delete()
         self.spriteid = newobjid
-        
+
+    # - - - -
+
+    @staticmethod
+    def _xy(thing):
+        """Get x, y from a tuple or a sprite."""
+        return thing if isinstance(thing, tuple) else (thing.x, thing.y) 
+
 
 class ImageSprite(Sprite):
     """A sprite for a bitmap GIF image or sequence of image costumes.

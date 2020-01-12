@@ -28,12 +28,11 @@ def follow_mouse():
     """The first sprite follows the mouse, the others follow each other"""
     
     firstsprite = sprites[0]
-    firstsprite.accelerate_towards(mousex(), mousey(), 0.5)
+    firstsprite.accelerate_towards(mouse_pos(), 0.5)
     
     followsprite = firstsprite
     for sprite in sprites[1:]:
-        fx, fy = followsprite.pos()
-        sprite.accelerate_towards(fx, fy, 0.5)
+        sprite.accelerate_towards(followsprite, 0.5)
         followsprite = sprite
 
     for sprite in sprites:

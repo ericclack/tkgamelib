@@ -18,7 +18,7 @@ sprite.pen_width = 4
 
 
 def follow_mouse():
-    sprite.move_towards(mousex(), mousey(), 2)
+    sprite.move_towards(mouse_pos(), 2)
 
 def toggle_pen(event):
     sprite.toggle_pen()

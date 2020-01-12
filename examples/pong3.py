@@ -28,7 +28,7 @@ for y in range(0, 400, 28):
         bricks.append(brick)
 
 def bat_follows_mouse():
-    bat.move_to(mousex(), mousey())
+    bat.move_to(mouse_x(), mouse_y())
 
 def bounce_ball():
     ball.move_with_speed()

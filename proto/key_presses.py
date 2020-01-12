@@ -23,7 +23,7 @@ platforms = [
 # -- these must be defined before the event handlers
 
 def follow_mouse():
-    sprite.move_towards(mousex(), mousey(), 10)
+    sprite.move_towards(mouse_pos(), 10)
 
 def key_control():
     old_speed_x = sprite.speed_x
@@ -39,11 +39,11 @@ def key_control():
 
 def mouse_control():
     old_speed_x = sprite.speed_x
-    if mousex() < sprite.x - sprite.width:
+    if mouse_x() < sprite.x - sprite.width:
         sprite.speed_x -= 1
-    if mousex() > sprite.x + 2 * sprite.width:
+    if mouse_x() > sprite.x + 2 * sprite.width:
         sprite.speed_x += 1
-    if mousey() < sprite.y:
+    if mouse_y() < sprite.y:
         sprite.speed_y -= 1
 
     if old_speed_x == sprite.speed_x:

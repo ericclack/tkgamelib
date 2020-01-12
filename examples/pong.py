@@ -18,7 +18,7 @@ ball.speed_y = random.randint(-8,8)
 bat = ImageSprite(bat_img)
 
 def bat_follows_mouse():
-    bat.move_to(mousex(), mousey())
+    bat.move_to(mouse_x(), mouse_y())
 
 def bounce_ball():
     ball.move_with_speed()

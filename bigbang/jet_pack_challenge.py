@@ -56,11 +56,11 @@ def key_control():
         
 def mouse_control():
     old_speed_x = sprite.speed_x
-    if mousex() > sprite.centre_x - sprite.width:
+    if mouse_x() > sprite.centre_x - sprite.width:
         sprite.speed_x -= 1
-    if mousex() < sprite.centre_x + sprite.width:
+    if mouse_x() < sprite.centre_x + sprite.width:
         sprite.speed_x += 1
-    if mousey() < sprite.y:
+    if mouse_y() < sprite.y:
         sprite.speed_y -= 1
 
     if old_speed_x == sprite.speed_x:

@@ -36,7 +36,7 @@ for i in range(30): # Make 30
 # -- these must be defined before the event handlers
 
 def follow_mouse():
-    sprite.move_towards(mousex(), mousey(), 5)
+    sprite.move_towards(mouse_pos(), 5)
     show_variables([
         ("Score", sprite.score),
         ("Gems left", len(gems))
@@ -65,7 +65,7 @@ def collect_gems():
     
 
 def move_alien():
-    alien.move_towards(sprite.x, sprite.y, 2)
+    alien.move_towards(sprite, 2)
 
 
 # ---------------------------------------------------------

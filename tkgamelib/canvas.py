@@ -89,12 +89,13 @@ def clear_pen():
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-def mousex(): return CANVAS.winfo_pointerx() - CANVAS.winfo_rootx()
-def mousey(): return CANVAS.winfo_pointery() - CANVAS.winfo_rooty()
+def mouse_x(): return CANVAS.winfo_pointerx() - CANVAS.winfo_rootx()
+def mouse_y(): return CANVAS.winfo_pointery() - CANVAS.winfo_rooty()
+def mouse_pos(): return (mouse_x(), mouse_y())
 
 
 def mouse_touching(sprite):
-    return point_inside_box((mousex(), mousey()),
+    return point_inside_box(mouse_pos(),
                             CANVAS.bbox(sprite.spriteid))
 
 

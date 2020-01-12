@@ -23,13 +23,12 @@ def follow_mouse():
     
     steps = len(sprites)/2
     firstsprite = sprites[0]
-    firstsprite.move_towards(mousex(), mousey(), steps)
+    firstsprite.move_towards(mouse_pos(), steps)
     
     followsprite = firstsprite
     for sprite in sprites[1:]:
         steps = steps - 0.5
-        fx, fy = followsprite.pos()
-        sprite.move_towards(fx, fy, steps)
+        sprite.move_towards(followsprite, steps)
         followsprite = sprite
 
 def clear(event):
