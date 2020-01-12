@@ -7,11 +7,11 @@ PygameZero is really cool, but it requires extra libraries to be installed so is
 
 Project aims:
 
-* Makes it easy to get visual or audio effects
-* Gives immediate results (like Scratch does), type some commands, press run, see results
-* Runs easily on the Raspberry Pi
-* Runs easily on Windows PCs in schools, to support my STEM Ambassador work
-* Has depth with plenty to explore.
+* Make it easy to create visual or audio effects
+* Give immediate results (like Scratch does), type some commands, press run, see results
+* Run easily on the Raspberry Pi
+* Run easily on Windows PCs in schools, to support my STEM Ambassador work
+* Provide depth with plenty to explore.
 
 Screen shots
 ------------
