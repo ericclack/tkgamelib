@@ -16,11 +16,13 @@ ASTEROID_SIZE = 100
 # World set up
 #
 
+# Our ship is a polygon defined by these points
 ship_points = [(-20,20), (20,0), (-20,-20), (-5,0), (-20,20)]
 ship = PolygonSprite(ship_points, fill='yellow', outline='white')
 ship.centre()
 ship.speed = 0
 
+# Make a list of asteriods
 asteroids = []
 for i in range(NUM_ASTEROIDS):
     x, y = random.randint(0, CANVAS_WIDTH//3), random.randint(0, CANVAS_HEIGHT//3)
@@ -32,6 +34,7 @@ for i in range(NUM_ASTEROIDS):
     a.speed_y = random.randint(-3, 3)
     asteroids.append( a )
 
+# Make a bullet for later when the user fires
 b = canvas().create_oval(0,0, 5, 5, fill='white')
 bullet = Sprite(b)
 bullet.live = False

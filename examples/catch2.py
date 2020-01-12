@@ -5,13 +5,17 @@ from packages import *
   
 create_canvas()
 
-world = Struct(balls = [], init_speed=-20, gravity=0.2, max_balls=2)
+world = Struct(balls = [], init_speed=-15, gravity=0.2, max_balls=2,
+               size=50)
 
 def new_ball():
-    oval = canvas().create_oval(0,0, 30,30, fill=hsv_to_hex(random.random(),1,1))
+    oval = canvas().create_oval(0,0, world.size, world.size,
+                                fill=hsv_to_hex(random.random(),1,1))
     ball = Sprite(oval)
-    ball.move_to(random.randint(0, CANVAS_WIDTH), CANVAS_HEIGHT-10)
-    ball.speed_y = random.randint(world.init_speed,world.init_speed/2)
+    ball.move_to(random.randint(0, CANVAS_WIDTH-world.size),
+                 CANVAS_HEIGHT-10)
+    ball.speed_y = random.randint(world.init_speed,
+                                  int(world.init_speed/2))
     return ball
 
 def shoot_balls():

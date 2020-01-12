@@ -12,16 +12,15 @@ pydoc3 -w pyscratch
 """
 
 import os
-import random
-import math
-import colorsys
 import time
 import inspect
-import platform
 
 from tkinter import *
 from tkinter import simpledialog
- 
+
+from tkgamelib.util import *
+
+
 CANVAS = None
 def canvas(): return CANVAS
 

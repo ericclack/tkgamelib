@@ -34,7 +34,7 @@ class Sprite:
         self.pen_colour_hex = "#000"
         self.speed_x = 0
         self.speed_y = 0
-        self.max_speed = 5
+        self.max_speed = 20
         self.direction = 0
 
     def pos(self):

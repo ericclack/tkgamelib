@@ -8,7 +8,7 @@ from packages import *
 
 create_canvas()
 
-spriteimg = PhotoImage(file='images/face.gif')
+spriteimg = PhotoImage(file='images/pencil.gif')
 
 sprite = ImageSprite(spriteimg,
              random.randint(1,1000),

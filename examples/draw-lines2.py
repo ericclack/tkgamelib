@@ -17,6 +17,8 @@ def draw(event):
 def clear(event):
     clear_canvas
 
+banner("Drag the mouse to draw lines", 2000)
+
 when_button1_dragged(draw)
 when_button2_clicked(clear)
 

@@ -38,7 +38,8 @@ def delete_lines():
 def clear(event):
     canvas().delete(ALL)
 
-
+banner("Drag the mouse to draw lines", 2000)
+    
 when_button1_dragged(draw)
 when_button2_clicked(clear)
 forever(delete_lines, 50)

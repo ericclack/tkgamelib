@@ -9,14 +9,15 @@ world = Struct(balls = [], init_speed=-10,
                gravity=0.1, max_balls=2, size=50, min_size=25)
 
 def new_ball(x=None, y=None, size=None):
-    oval = canvas().create_oval(0,0, size or world.size, size or world.size,
+    oval = canvas().create_oval(0,0, size or world.size,
+                                size or world.size,
                                 fill=random_colour())
     ball = Sprite(oval)
     ball.size = size or world.size
     if x and y:
         ball.move_to(x,y)
     else:
-        ball.move_to(random.randint(0, CANVAS_WIDTH-30), CANVAS_HEIGHT-100)
+        ball.move_to(random.randint(50, CANVAS_WIDTH-100), CANVAS_HEIGHT-100)
     ball.speed_y = random.randint(world.init_speed,world.init_speed/2)
     return ball
 
