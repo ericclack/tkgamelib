@@ -17,8 +17,15 @@ Start with `pong2.py`:
 Sometimes the ball only moves on one axis (so left/right or up/down)
 and occassionally it doesn't move at all. Fix this.
 
+### 3. Make it faster
 
-### 3. Get all the bricks
+Start with `pong2.py`:
+
+The game is still a bit too easy, make the ball smaller and faster. 
+You'll need to use a paint program to edit the ball. 
+
+
+### 4. Get all the bricks
 
 Start with `pong3.py`:
 
