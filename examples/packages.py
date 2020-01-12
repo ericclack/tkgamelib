@@ -9,4 +9,3 @@ project_path = parent(parent(__file__))
 sys.path.append(project_path)
 
 from tkgamelib import *
-from tkgamelib.sound import *
