@@ -7,7 +7,7 @@ FLAP_POWER=10
 FLOOR_SIZE=50
 GAP_SHRINK=5
 SPEED_INC=1
-world=Struct(gap=150,speed=20,score=0)
+world=Struct(gap=150,speed=10,score=0)
 
 # 3, canvas and the player
 create_canvas()

@@ -6,7 +6,7 @@
 import random, time
 from packages import *
 
-create_canvas()
+create_canvas(background="black")
 
 STARS = []
 MAX_STARS = askinteger("Question", "How many stars?") or 100
@@ -14,7 +14,7 @@ MAX_STARS = askinteger("Question", "How many stars?") or 100
 
 def new_star():
     x, y = random.randint(0, CANVAS_WIDTH), random.randint(0, CANVAS_HEIGHT)
-    star = Sprite(canvas().create_oval(x, y, x+5, y+5))
+    star = Sprite(canvas().create_oval(x, y, x+5, y+5, fill="white"))
     return star
 
 def star_out_of_view(star):

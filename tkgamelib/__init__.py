@@ -25,3 +25,4 @@ pydoc3 -w tkgamelib
 """
 
 from tkgamelib.sprite import *
+from tkgamelib.sound import *
