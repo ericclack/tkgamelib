@@ -3,6 +3,8 @@ TKGameLib: Step up from Scratch to Python
 
 Inspired by MIT Scratch and PygameZero, answers the question "what should I try after Scratch?"
 
+Take a look at TKGameLib in action in this short video: https://youtu.be/J0MHYo8oftU
+
 PygameZero is really cool, but it requires extra libraries to be installed so isn't an option in some organisations such as schools. TKGameLib works on the default Python, it uses TKinter for graphics, sprites etc, and is designed to encourage exploration of everything. 
 
 Project aims:
